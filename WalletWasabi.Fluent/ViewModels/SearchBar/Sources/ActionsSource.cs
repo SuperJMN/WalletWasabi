@@ -14,7 +14,15 @@ public class ActionsSource : ISearchItemSource
 {
 	public IObservable<IChangeSet<ISearchItem, ComposedKey>> Changes => GetItemsFromMetadata()
 		.ToObservable()
+		.Concat(DynamicElements())
 		.ToObservableChangeSet(x => x.Key);
+
+	private static IObservable<NonActionableSearchItem> DynamicElements()
+	{
+		return Observable.Interval(TimeSpan.FromSeconds(5))
+			.Timestamp()
+			.Select(n => new NonActionableSearchItem($"Created at {n.Timestamp:t}", $"Item #{n.Value}", "Dynamic", Enumerable.Empty<string>(), null) { IsDefault = true });
+	}
 
 	private static IEnumerable<ISearchItem> GetItemsFromMetadata()
 	{
