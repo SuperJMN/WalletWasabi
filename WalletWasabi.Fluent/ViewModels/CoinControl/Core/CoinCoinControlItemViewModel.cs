@@ -1,3 +1,5 @@
+using System.Collections.ObjectModel;
+using NBitcoin;
 using WalletWasabi.Blockchain.TransactionOutputs;
 using WalletWasabi.Fluent.Helpers;
 
@@ -5,7 +7,7 @@ namespace WalletWasabi.Fluent.ViewModels.CoinControl.Core;
 
 public class CoinCoinControlItemViewModel : CoinControlItemViewModelBase
 {
-	public CoinCoinControlItemViewModel(SmartCoin smartCoin)
+	public CoinCoinControlItemViewModel(SmartCoin smartCoin) : base(new ObservableCollection<ISelectableModel>())
 	{
 		Amount = smartCoin.Amount;
 		IsConfirmed = smartCoin.Confirmed;
@@ -17,5 +19,9 @@ public class CoinCoinControlItemViewModel : CoinControlItemViewModelBase
 		AnonymityScore = (int) smartCoin.HdPubKey.AnonymitySet;
 		Labels = smartCoin.HdPubKey.Label;
 		BannedUntilUtc = smartCoin.BannedUntilUtc;
+		Outpoint = smartCoin.Outpoint;
+		IsSelected = false;
 	}
+
+	public OutPoint Outpoint { get; }
 }
