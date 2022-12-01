@@ -101,7 +101,7 @@ public partial class SelectCoinsDialogViewModel : DialogViewModelBase<IEnumerabl
 	{
 		var flatten = Flatten(items).ToList();
 		var coins = flatten.OfType<CoinCoinControlItemViewModel>();
-		var coinsToSelect = coins.Select(c => new { c, IsSelected = selectedCoins.Any(other => other.Outpoint == c.Outpoint) });
+		var coinsToSelect = coins.Select(c => new { c, IsSelected = selectedCoins.Any(other => other == c.SmartCoin) });
 
 		foreach (var tuple in coinsToSelect)
 		{
