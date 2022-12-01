@@ -18,8 +18,8 @@ public class CoinCoinControlItemViewModel : CoinControlItemViewModelBase
 		AnonymityScore = (int) smartCoin.HdPubKey.AnonymitySet;
 		Labels = smartCoin.HdPubKey.Label;
 		BannedUntilUtc = smartCoin.BannedUntilUtc;
-		Outpoint = smartCoin.Outpoint;
+		SmartCoin = smartCoin;
 	}
 
-	public OutPoint Outpoint { get; }
+	public SmartCoin SmartCoin { get; set; }
 }
