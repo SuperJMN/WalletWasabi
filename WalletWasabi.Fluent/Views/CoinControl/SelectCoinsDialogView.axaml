@@ -91,11 +91,18 @@
 
     </controls:ContentArea.Styles>
 
-    <TreeDataGrid Source="{Binding Source}" CanUserSortColumns="True">
-      <TreeDataGrid.ElementFactory>
-        <treeDataGrid:PlainTextElementFactory />
-      </TreeDataGrid.ElementFactory>
-    </TreeDataGrid>
+    <DockPanel>
+
+      <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom">
+        <TextBlock Text="{Binding TotalCoins^}" />
+      </StackPanel>
+
+      <TreeDataGrid Source="{Binding Source}" CanUserSortColumns="True">
+        <TreeDataGrid.ElementFactory>
+          <treeDataGrid:PlainTextElementFactory />
+        </TreeDataGrid.ElementFactory>
+      </TreeDataGrid>
+    </DockPanel>
 
   </controls:ContentArea>
 </UserControl>

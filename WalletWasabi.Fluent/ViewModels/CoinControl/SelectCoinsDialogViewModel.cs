@@ -1,9 +1,11 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Reactive.Linq;
 using Avalonia.Controls;
 using Avalonia.Controls.Models.TreeDataGrid;
 using Avalonia.Controls.Templates;
+using DynamicData;
 using NBitcoin;
 using ReactiveUI;
 using WalletWasabi.Blockchain.TransactionOutputs;
@@ -47,6 +49,12 @@ public partial class SelectCoinsDialogViewModel : DialogViewModelBase<IEnumerabl
 			}
 		};
 
+		TotalCoins = GetAllCoinItems(pocketItems)
+			.AsObservableChangeSet()
+			.AutoRefresh(x => x.IsSelected)
+			.ToCollection()
+			.Select(x => x.Count(n => n.IsSelected == true));
+
 		Source.SortBy(pocketColumn, ListSortDirection.Descending);
 		Source.RowSelection!.SingleSelect = true;
 
@@ -56,6 +64,7 @@ public partial class SelectCoinsDialogViewModel : DialogViewModelBase<IEnumerabl
 	}
 
 	public HierarchicalTreeDataGridSource<CoinControlItemViewModelBase> Source { get; }
+	public IObservable<int> TotalCoins { get; }
 
 	private static IEnumerable<CoinCoinControlItemViewModel> GetAllCoinItems(IEnumerable<PocketCoinControlItemViewModel> pockets)
 	{
