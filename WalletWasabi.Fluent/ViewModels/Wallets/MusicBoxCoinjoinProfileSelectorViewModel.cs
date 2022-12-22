@@ -17,7 +17,6 @@ public partial class MusicBoxCoinjoinProfileSelectorViewModel : RoutableViewMode
 {
 	[AutoNotify] private CoinJoinProfileViewModelBase? _selectedProfile;
 	[AutoNotify] private bool _isFlyoutOpen;
-	[AutoNotify] private bool _showProfile;
 
 	public MusicBoxCoinjoinProfileSelectorViewModel(KeyManager keyManager)
 	{
@@ -31,18 +30,18 @@ public partial class MusicBoxCoinjoinProfileSelectorViewModel : RoutableViewMode
 			IsFlyoutOpen = false;
 			IsFlyoutOpen = true;
 		});
+
 		SelectProfileCommand = ReactiveCommand.CreateFromTask<CoinJoinProfileViewModelBase>(async p => await OnCoinjoinProfileSelectedAsync(keyManager, p));
 
-		this.WhenAnyValue(x => x.SelectedProfile)
-			.Select(x => x is null)
-			.CombineLatest(Services.UiConfig.WhenAnyValue(x => x.PrivacyMode))
-			.Subscribe(x =>
-			{
-				Profiles.ForEach(p => p.IsSelected = p.GetType() == SelectedProfile?.GetType());
-				ShowProfile = !x.First && !x.Second;
-			});
+		var isPrivacyModeActive = Services.UiConfig.WhenAnyValue(x => x.PrivacyMode);
+		var selectedProfile = this.WhenAnyValue(x => x.SelectedProfile);
+
+		ShowProfile = selectedProfile
+			.CombineLatest(isPrivacyModeActive, (sp, pm) => new { SelectedProfile = sp, IsPrivacyModeActive = pm } )
+			.Select(tuple => tuple.SelectedProfile is not null && !tuple.IsPrivacyModeActive);
 	}
 
+	public IObservable<bool> ShowProfile { get; }
 	public ICommand OpenFlyoutCommand { get; }
 	public ICommand SelectProfileCommand { get; }
 
@@ -85,7 +84,7 @@ public partial class MusicBoxCoinjoinProfileSelectorViewModel : RoutableViewMode
 		return result;
 	}
 
-	private static CoinJoinProfileViewModelBase[] DefaultProfiles { get; } = new CoinJoinProfileViewModelBase[]
+	private static CoinJoinProfileViewModelBase[] DefaultProfiles { get; } =
 	{
 		new PrivateCoinJoinProfileViewModel(),
 		new SpeedyCoinJoinProfileViewModel(),
