@@ -10,4 +10,9 @@ public class Tester : IHwiClient
 	{
 		return Observable.Return(Result.Failure("Se ha ido al pedo"));
 	}
+
+	public IObservable<Result> Show(string address)
+	{
+		throw new NotImplementedException();
+	}
 }
