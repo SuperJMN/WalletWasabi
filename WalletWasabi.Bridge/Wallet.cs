@@ -2,6 +2,7 @@ using System.Reactive.Linq;
 using DynamicData;
 using NBitcoin;
 using WalletWasabi.Blockchain.Analysis.Clustering;
+using WalletWasabi.Blockchain.Keys;
 using WalletWasabi.Blockchain.Transactions;
 using RawWallet = WalletWasabi.Wallets.Wallet;
 
@@ -49,6 +50,16 @@ public class Wallet : IWallet
 		var hdPubKey = _wallet.KeyManager.GetNextReceiveKey(new SmartLabel(destinationLabels));
 		var address = Address.From(hdPubKey.PubKey, hdPubKey.FullKeyPath, hdPubKey.Label, _wallet);
 		return address;
+	}
+
+	public IEnumerable<Address> Addresses
+	{
+		get
+		{
+			return _wallet.KeyManager
+				.GetKeys(x => !x.Label.IsEmpty && !x.IsInternal && x.KeyState == KeyState.Clean)
+				.Select(key => Address.From(key.PubKey, key.FullKeyPath, key.Label, _wallet));
+		}
 	}
 
 	private IEnumerable<TransactionSummary> BuildSummary()

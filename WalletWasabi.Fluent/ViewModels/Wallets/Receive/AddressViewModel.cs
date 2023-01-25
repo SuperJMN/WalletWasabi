@@ -16,7 +16,7 @@ public partial class AddressViewModel : ViewModelBase
 
 	public AddressViewModel(ReceiveAddressesViewModel parent, Wallet wallet, HdPubKey model, Network network)
 	{
-		_address = model.GetP2wpkhAddress(network).ToString();
+		_address = model.GetP2shOverP2wpkhAddress(network).ToString();
 
 		Label = model.Label;
 

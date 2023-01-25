@@ -11,15 +11,15 @@ public record Address : IAddress
 		HdFingerprint = hdFingerprint;
 		FullKeyPath = fullKeyPath;
 		Labels = labels;
-		P2shOverP2wpkhAddress = pubKey.GetAddress(ScriptPubKeyType.SegwitP2SH, network);
+		P2wpkhAddress = pubKey.GetAddress(ScriptPubKeyType.Segwit, network);
 	}
 
-	public BitcoinAddress P2shOverP2wpkhAddress { get; }
+	public BitcoinAddress P2wpkhAddress { get; }
 	public IEnumerable<string> Labels { get; }
 
-	public static Address From(PubKey hdPubKey, KeyPath fullKeyPath, IEnumerable<string> labels, Wallets.Wallet wallet)
+	public static Address From(PubKey pubKey, KeyPath fullKeyPath, IEnumerable<string> labels, Wallets.Wallet wallet)
 	{
-		return new Address(hdPubKey, wallet.Network, wallet.KeyManager.MasterFingerprint.Value, fullKeyPath, labels);
+		return new Address(pubKey, wallet.Network, wallet.KeyManager.MasterFingerprint.Value, fullKeyPath, labels);
 	}
 
 	public PubKey PubKey { get; }

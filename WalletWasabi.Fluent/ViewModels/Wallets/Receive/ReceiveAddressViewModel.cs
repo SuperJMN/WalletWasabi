@@ -11,7 +11,7 @@ public class ReceiveAddressViewModel : ReactiveObject
 
 	public ReceiveAddressViewModel(IAddress address, IQrCodeGenerator qrCodeGenerator)
 	{
-		Address = address.P2shOverP2wpkhAddress.ToString();
+		Address = address.P2wpkhAddress.ToString();
 		Labels = new SmartLabel(address.Labels);
 
 		GenerateQrCodeCommand = ReactiveCommand.CreateFromObservable(() => qrCodeGenerator.Generate(Address));

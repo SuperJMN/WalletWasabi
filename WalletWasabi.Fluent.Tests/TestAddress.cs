@@ -11,6 +11,6 @@ public class TestAddress : IAddress
 	public Network Network { get; }
 	public HDFingerprint HdFingerprint { get; }
 	public KeyPath FullKeyPath { get; }
-	public BitcoinAddress P2shOverP2wpkhAddress { get; }
+	public BitcoinAddress P2wpkhAddress { get; }
 	public IEnumerable<string> Labels { get; }
 }
