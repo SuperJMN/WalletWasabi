@@ -9,21 +9,36 @@ namespace WalletWasabi.Bridge;
 
 public class Wallet : IWallet
 {
+	private readonly TransactionHistoryBuilder _historyBuilder;
 	private readonly RawWallet _wallet;
 
 	public Wallet(RawWallet wallet)
 	{
 		_wallet = wallet;
-		var historyBuilder = new TransactionHistoryBuilder(_wallet);
-		Transactions = Observable.FromEventPattern(_wallet, nameof(_wallet.WalletRelevantTransactionProcessed))
-			.SelectMany(_ => historyBuilder.BuildHistorySummary())
-			.StartWith(historyBuilder.BuildHistorySummary())
+		_historyBuilder = new TransactionHistoryBuilder(_wallet);
+
+		Transactions = Summaries
 			.ToObservableChangeSet(x => x.TransactionId)
-			.Transform(ts => new Transaction(ts));
+			.Transform(ts => (ITransaction) new Transaction(ts));
+	}
+
+	private IObservable<TransactionSummary> Summaries
+	{
+		get
+		{
+			var fromEvents = Observable
+				.FromEventPattern(_wallet, nameof(_wallet.WalletRelevantTransactionProcessed))
+				.SelectMany(_ => BuildSummary());
+
+			var fromInitial = Observable.Defer(() => BuildSummary().ToObservable());
+
+			return fromInitial.Merge(fromEvents);
+		}
 	}
 
 	public string Name => _wallet.WalletName;
-	public IObservable<IChangeSet<Transaction, uint256>> Transactions { get; }
+	public IObservable<IChangeSet<ITransaction, uint256>> Transactions { get; }
+
 	public IAddress CreateReceiveAddress(IEnumerable<string> destinationLabels)
 	{
 		if (_wallet.KeyManager.MasterFingerprint == null)
@@ -34,5 +49,10 @@ public class Wallet : IWallet
 		var hdPubKey = _wallet.KeyManager.GetNextReceiveKey(new SmartLabel(destinationLabels));
 		var address = Address.From(hdPubKey.PubKey, hdPubKey.FullKeyPath, hdPubKey.Label, _wallet);
 		return address;
+	}
+
+	private IEnumerable<TransactionSummary> BuildSummary()
+	{
+		return _historyBuilder.BuildHistorySummary();
 	}
 }

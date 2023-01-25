@@ -1,12 +1,16 @@
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using DynamicData;
+using DynamicData.Binding;
 using NBitcoin;
 using ReactiveUI;
+using WalletWasabi.Bridge;
 using WalletWasabi.Fluent.Models;
 using WalletWasabi.Fluent.ViewModels.Dialogs.Authorization;
 using WalletWasabi.Fluent.ViewModels.Navigation;
@@ -19,7 +23,7 @@ using WalletWasabi.Fluent.ViewModels.Wallets.Send;
 using WalletWasabi.WabiSabi.Client;
 using WalletWasabi.WabiSabi.Client.CoinJoinProgressEvents;
 using WalletWasabi.WabiSabi.Client.StatusChangedEvents;
-using WalletWasabi.Wallets;
+using Wallet = WalletWasabi.Wallets.Wallet;
 
 namespace WalletWasabi.Fluent.ViewModels.Wallets;
 
@@ -32,9 +36,17 @@ public partial class WalletViewModel : WalletViewModelBase
 	[AutoNotify(SetterModifier = AccessModifier.Private)] private bool _isWalletBalanceZero;
 	[AutoNotify(SetterModifier = AccessModifier.Private)] private bool _isTransactionHistoryEmpty;
 	[AutoNotify(SetterModifier = AccessModifier.Private)] private bool _isSendButtonVisible;
+	private readonly ReadOnlyObservableCollection<ITransaction> _transactions;
+
+	public ReadOnlyObservableCollection<ITransaction> Transactions => _transactions;
 
 	protected WalletViewModel(Wallet wallet) : base(wallet)
 	{
+		var myWallet = new Bridge.Wallet(wallet);
+		myWallet.Transactions
+			.Bind(out _transactions)
+			.Subscribe();
+		
 		Disposables = Disposables is null
 			? new CompositeDisposable()
 			: throw new NotSupportedException($"Cannot open {GetType().Name} before closing it.");

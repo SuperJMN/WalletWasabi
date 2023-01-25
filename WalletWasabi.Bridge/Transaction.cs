@@ -16,5 +16,5 @@ public class Transaction : ITransaction
 
 	public uint256 Id => _transactionSummary.TransactionId;
 
-	public ISet<string> Labels => _transactionSummary.Label.ToHashSet(StringComparer.InvariantCultureIgnoreCase);
+	public IEnumerable<string> Labels => _transactionSummary.Label.ToHashSet(StringComparer.InvariantCultureIgnoreCase);
 }
