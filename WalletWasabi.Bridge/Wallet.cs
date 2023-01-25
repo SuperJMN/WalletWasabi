@@ -17,6 +17,7 @@ public class Wallet : IWallet
 		var historyBuilder = new TransactionHistoryBuilder(_wallet);
 		Transactions = Observable.FromEventPattern(_wallet, nameof(_wallet.WalletRelevantTransactionProcessed))
 			.SelectMany(_ => historyBuilder.BuildHistorySummary())
+			.StartWith(historyBuilder.BuildHistorySummary())
 			.ToObservableChangeSet(x => x.TransactionId)
 			.Transform(ts => new Transaction(ts));
 	}
