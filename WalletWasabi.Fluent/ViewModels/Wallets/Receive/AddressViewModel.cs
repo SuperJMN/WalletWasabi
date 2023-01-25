@@ -37,7 +37,7 @@ public partial class AddressViewModel : ViewModelBase
 
 		NavigateCommand = ReactiveCommand.Create(() =>
 		{
-			var address = Bridge.Address.From(model, wallet);
+			var address = Bridge.Address.From(model.PubKey, model.FullKeyPath, model.Label, wallet);
 			var receiveAddressHostViewModel = ViewModelLocator.CreateReceiveAddressHostViewModel(wallet, address);
 			parent.Navigate().To(receiveAddressHostViewModel);
 		});

@@ -1,11 +1,15 @@
 using System.Reactive;
+using WalletWasabi.Blockchain.Keys;
 
 namespace WalletWasabi.Bridge;
 
 public class HardwareWallet : Wallet, IHardwareWallet
 {
-	public HardwareWallet(Wallets.Wallet wallet) : base(wallet)
+	private readonly IHwiClient _client;
+
+	public HardwareWallet(Wallets.Wallet wallet, IHwiClient client) : base(wallet)
 	{
+		_client = client;
 	}
 
 	public IObservable<Unit> Display(string address)

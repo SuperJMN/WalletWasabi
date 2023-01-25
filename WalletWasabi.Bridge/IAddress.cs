@@ -1,11 +1,15 @@
 using NBitcoin;
-using WalletWasabi.Blockchain.Keys;
 
 namespace WalletWasabi.Bridge;
 
 public interface IAddress
 {
-	HdPubKey HdPubKey { get; }
+	//HdPubKey HdPubKey { get; }
+	public PubKey PubKey { get; }
+
 	Network Network { get; }
 	HDFingerprint HdFingerprint { get; }
+	KeyPath FullKeyPath { get; }
+	BitcoinAddress P2shOverP2wpkhAddress { get; }
+	IEnumerable<string> Labels { get; }
 }

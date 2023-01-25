@@ -24,7 +24,7 @@ public class HardwareInterfaceClient : IHwiClient
 		try
 		{
 			var client = new HwiClient(address.Network);
-			await client.DisplayAddressAsync(address.HdFingerprint, address.HdPubKey.FullKeyPath, cancellationToken);
+			await client.DisplayAddressAsync(address.HdFingerprint, address.FullKeyPath, cancellationToken);
 		}
 		catch (FormatException ex) when (ex.Message.Contains("network") && address.Network == Network.TestNet)
 		{

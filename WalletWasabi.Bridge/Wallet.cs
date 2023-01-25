@@ -31,7 +31,7 @@ public class Wallet : IWallet
 		}
 
 		var hdPubKey = _wallet.KeyManager.GetNextReceiveKey(new SmartLabel(destinationLabels));
-		var address = Address.From(hdPubKey, _wallet);
+		var address = Address.From(hdPubKey.PubKey, hdPubKey.FullKeyPath, hdPubKey.Label, _wallet);
 		return address;
 	}
 }
