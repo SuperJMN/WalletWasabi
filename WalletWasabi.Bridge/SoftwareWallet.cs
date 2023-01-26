@@ -8,12 +8,12 @@ using RawWallet = WalletWasabi.Wallets.Wallet;
 
 namespace WalletWasabi.Bridge;
 
-public class Wallet : IWallet
+public class SoftwareWallet : IWallet
 {
 	private readonly TransactionHistoryBuilder _historyBuilder;
 	private readonly RawWallet _wallet;
 
-	public Wallet(RawWallet wallet)
+	public SoftwareWallet(RawWallet wallet)
 	{
 		_wallet = wallet;
 		_historyBuilder = new TransactionHistoryBuilder(_wallet);
@@ -57,7 +57,7 @@ public class Wallet : IWallet
 		get
 		{
 			return _wallet.KeyManager
-				.GetKeys(x => !x.Label.IsEmpty && !x.IsInternal && x.KeyState == KeyState.Clean)
+				.GetKeys(hdPubKey => !hdPubKey.Label.IsEmpty && !hdPubKey.IsInternal && hdPubKey.KeyState == KeyState.Clean)
 				.Select(key => Address.From(key.PubKey, key.FullKeyPath, key.Label, _wallet));
 		}
 	}

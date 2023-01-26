@@ -3,7 +3,7 @@ using WalletWasabi.Blockchain.Keys;
 
 namespace WalletWasabi.Bridge;
 
-public class HardwareWallet : Wallet, IHardwareWallet
+public class HardwareWallet : SoftwareWallet, IHardwareWallet
 {
 	private readonly IHwiClient _client;
 

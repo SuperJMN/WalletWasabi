@@ -4,11 +4,11 @@ using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Windows.Input;
 using ReactiveUI;
-using WalletWasabi.Blockchain.Analysis.Clustering;
 using WalletWasabi.Blockchain.Keys;
 using WalletWasabi.Fluent.ViewModels.Navigation;
 using WalletWasabi.Fluent.ViewModels.Wallets.Labels;
 using WalletWasabi.Wallets;
+using IWallet = WalletWasabi.Bridge.IWallet;
 
 namespace WalletWasabi.Fluent.ViewModels.Wallets.Receive;
 
@@ -24,11 +24,13 @@ namespace WalletWasabi.Fluent.ViewModels.Wallets.Receive;
 public partial class ReceiveViewModel : RoutableViewModel
 {
 	private readonly Wallet _wallet;
+	private readonly IWallet _myWallet;
 	[AutoNotify] private bool _isExistingAddressesButtonVisible;
 
-	public ReceiveViewModel(Wallet wallet)
+	public ReceiveViewModel(Wallet wallet, Bridge.IWallet myWallet)
 	{
 		_wallet = wallet;
+		_myWallet = myWallet;
 		SetupCancel(enableCancel: true, enableCancelOnEscape: true, enableCancelOnPressed: true);
 
 		EnableBack = false;
@@ -52,12 +54,12 @@ public partial class ReceiveViewModel : RoutableViewModel
 
 	private void OnNext()
 	{
-		var wallet = new Bridge.Wallet(_wallet);
+		var wallet = new Bridge.SoftwareWallet(_wallet);
 		var newAddress = wallet.CreateReceiveAddress(SuggestionLabels.Labels);
 
 		SuggestionLabels.Labels.Clear();
 
-		var vm = ViewModelLocator.CreateReceiveAddressHostViewModel(_wallet, newAddress);
+		var vm = ViewModelLocator.CreateReceiveAddressHostViewModel(_myWallet, newAddress);
 
 		Navigate().To(vm);
 	}

@@ -6,39 +6,41 @@ using NBitcoin;
 using ReactiveUI;
 using WalletWasabi.Blockchain.Analysis.Clustering;
 using WalletWasabi.Blockchain.Keys;
+using WalletWasabi.Bridge;
 using Wallet = WalletWasabi.Wallets.Wallet;
 
 namespace WalletWasabi.Fluent.ViewModels.Wallets.Receive;
 
 public partial class AddressViewModel : ViewModelBase
 {
-	[AutoNotify] private string _address;
+	[AutoNotify] private BitcoinAddress _address;
 
-	public AddressViewModel(ReceiveAddressesViewModel parent, Wallet wallet, HdPubKey model, Network network)
+	public AddressViewModel(ReceiveAddressesViewModel parent, Wallet wallet, HdPubKey model)
 	{
-		_address = model.GetP2shOverP2wpkhAddress(network).ToString();
-
-		Label = model.Label;
+		var address = Bridge.Address.From(model.PubKey, model.FullKeyPath, model.Label, wallet);
+		_address = address.P2wpkhAddress;
+		
+		Label = new SmartLabel(address.Labels);
+		var myWallet = wallet.KeyManager.IsHardwareWallet ? new HardwareWallet(wallet, new HardwareInterfaceClient()) : new SoftwareWallet(wallet);
 
 		CopyAddressCommand =
 			ReactiveCommand.CreateFromTask(async () =>
 			{
 				if (Application.Current is { Clipboard: { } clipboard })
 				{
-					await clipboard.SetTextAsync(Address);
+					await clipboard.SetTextAsync(Address.ToString());
 				}
 			});
 
 		HideAddressCommand =
-			ReactiveCommand.CreateFromTask(async () => await parent.HideAddressAsync(model, Address));
+			ReactiveCommand.CreateFromTask(async () => await parent.HideAddressAsync(model, Address.ToString()));
 
 		EditLabelCommand =
 			ReactiveCommand.Create(() => parent.NavigateToAddressEdit(model, parent.Wallet.KeyManager));
 
 		NavigateCommand = ReactiveCommand.Create(() =>
 		{
-			var address = Bridge.Address.From(model.PubKey, model.FullKeyPath, model.Label, wallet);
-			var receiveAddressHostViewModel = ViewModelLocator.CreateReceiveAddressHostViewModel(wallet, address);
+			var receiveAddressHostViewModel = ViewModelLocator.CreateReceiveAddressHostViewModel(myWallet, address);
 			parent.Navigate().To(receiveAddressHostViewModel);
 		});
 	}

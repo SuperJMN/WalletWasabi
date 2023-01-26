@@ -1,4 +1,5 @@
 using System.Reactive.Linq;
+using CSharpFunctionalExtensions;
 using ReactiveUI;
 using WalletWasabi.Fluent.ViewModels.Navigation;
 
@@ -9,17 +10,16 @@ public partial class ReceiveAddressHostViewModel : RoutableViewModel
 {
 	public ReceiveAddressViewModel ReceiveAddress { get; }
 	public HardwareWalletViewModel HardwareWallet { get; }
-	public bool IsHardwareWallet { get; }
 
-	public ReceiveAddressHostViewModel(ReceiveAddressViewModel receiveAddress, HardwareWalletViewModel hardwareWallet, bool isHardwareWallet)
+	public ReceiveAddressHostViewModel(ReceiveAddressViewModel receiveAddress, Maybe<HardwareWalletViewModel> hardwareWallet)
 	{
 		ReceiveAddress = receiveAddress;
-		HardwareWallet = hardwareWallet;
-		IsHardwareWallet = isHardwareWallet;
+		HardwareWallet = hardwareWallet.GetValueOrDefault();
 		EnableBack = true;
-		CancelCommand = ReactiveCommand.Create(() => Navigate().Clear(), hardwareWallet.IsBusy.Select(b => !b));
+		var canExecute = hardwareWallet.Match(vm => vm.IsBusy.Select(b => !b), () => Observable.Return(true));
+		CancelCommand = ReactiveCommand.Create(() => Navigate().Clear(), canExecute);
 		NextCommand = CancelCommand;
 		SetupCancel(enableCancel: false, enableCancelOnEscape: true, enableCancelOnPressed: true);
-		hardwareWallet.IsBusy.BindTo(this, x => x.IsBusy);
+		hardwareWallet.Execute(vm => vm.IsBusy.BindTo(this, x => x.IsBusy));
 	}
 }

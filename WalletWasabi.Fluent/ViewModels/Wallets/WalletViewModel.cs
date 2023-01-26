@@ -37,13 +37,14 @@ public partial class WalletViewModel : WalletViewModelBase
 	[AutoNotify(SetterModifier = AccessModifier.Private)] private bool _isTransactionHistoryEmpty;
 	[AutoNotify(SetterModifier = AccessModifier.Private)] private bool _isSendButtonVisible;
 	private readonly ReadOnlyObservableCollection<ITransaction> _transactions;
+	private readonly SoftwareWallet _myWallet;
 
 	public ReadOnlyObservableCollection<ITransaction> Transactions => _transactions;
 
 	protected WalletViewModel(Wallet wallet) : base(wallet)
 	{
-		var myWallet = new Bridge.Wallet(wallet);
-		myWallet.Transactions
+		_myWallet = new SoftwareWallet(wallet);
+		_myWallet.Transactions
 			.Bind(out _transactions)
 			.Subscribe();
 		
@@ -96,7 +97,7 @@ public partial class WalletViewModel : WalletViewModelBase
 
 		SendCommand = ReactiveCommand.Create(() => Navigate(NavigationTarget.DialogScreen).To(new SendViewModel(this)));
 
-		ReceiveCommand = ReactiveCommand.Create(() => Navigate(NavigationTarget.DialogScreen).To(new ReceiveViewModel(wallet)));
+		ReceiveCommand = ReactiveCommand.Create(() => Navigate(NavigationTarget.DialogScreen).To(new ReceiveViewModel(wallet, _myWallet)));
 
 		WalletInfoCommand = ReactiveCommand.CreateFromTask(async () =>
 		{
@@ -160,6 +161,7 @@ public partial class WalletViewModel : WalletViewModelBase
 	private CompositeDisposable Disposables { get; }
 
 	public HistoryViewModel History { get; }
+	public IWallet MyWallet => _myWallet;
 
 	public void NavigateAndHighlight(uint256 txid)
 	{

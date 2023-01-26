@@ -25,7 +25,7 @@
             </c:PrivacyContentControl>
 
             <StackPanel Orientation="Horizontal" Spacing="4">
-              <Panel x:Name="ShowOnHWPart" VerticalAlignment="Center">
+              <Panel x:Name="ShowOnHWPart" VerticalAlignment="Center" IsVisible="{Binding HardwareWallet, Converter={x:Static ObjectConverters.IsNotNull}}">
                 <c:AnimatedButton ToolTip.Tip="Show on the hardware wallet"
                                   IsVisible="{Binding !HardwareWallet.IsBusy^}"
                                   NormalIcon="{StaticResource share_regular}"
@@ -34,8 +34,8 @@
                 <c:ProgressRing IsVisible="{Binding HardwareWallet.IsBusy^}" IsIndeterminate="True" Width="22"
                                 Height="22" StrokeThickness="1" />
               </Panel>
-
-              <c:ClipboardCopyButton Text="{Binding ReceiveAddress.Address}" /></StackPanel>
+              <c:ClipboardCopyButton Text="{Binding ReceiveAddress.Address}" />
+            </StackPanel>
 
           </StackPanel>
 

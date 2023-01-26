@@ -124,7 +124,7 @@ public partial class ReceiveAddressesViewModel : RoutableViewModel
 
 			foreach (HdPubKey key in keys)
 			{
-				_addresses.Add(new AddressViewModel(this, Wallet, key, Network));
+				_addresses.Add(new AddressViewModel(this, Wallet, key));
 			}
 		}
 		catch (Exception ex)
