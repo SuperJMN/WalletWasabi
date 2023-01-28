@@ -4,5 +4,5 @@ namespace WalletWasabi.Bridge;
 
 public interface IHwiClient
 {
-	public IObservable<Result> Show(IAddress address);
+	public IObservable<Result> Display(IAddress address);
 }

@@ -5,6 +5,7 @@ using System.Reactive.Linq;
 using System.Windows.Input;
 using ReactiveUI;
 using WalletWasabi.Blockchain.Keys;
+using WalletWasabi.Bridge;
 using WalletWasabi.Fluent.ViewModels.Navigation;
 using WalletWasabi.Fluent.ViewModels.Wallets.Labels;
 using WalletWasabi.Wallets;
@@ -54,8 +55,7 @@ public partial class ReceiveViewModel : RoutableViewModel
 
 	private void OnNext()
 	{
-		var wallet = new Bridge.SoftwareWallet(_wallet);
-		var newAddress = wallet.CreateReceiveAddress(SuggestionLabels.Labels);
+		var newAddress = _myWallet.CreateReceiveAddress(SuggestionLabels.Labels);
 
 		SuggestionLabels.Labels.Clear();
 

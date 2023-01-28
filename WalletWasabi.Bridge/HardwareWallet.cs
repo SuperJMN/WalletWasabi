@@ -1,5 +1,4 @@
-using System.Reactive;
-using WalletWasabi.Blockchain.Keys;
+using CSharpFunctionalExtensions;
 
 namespace WalletWasabi.Bridge;
 
@@ -12,9 +11,8 @@ public class HardwareWallet : SoftwareWallet, IHardwareWallet
 		_client = client;
 	}
 
-	public IObservable<Unit> Display(string address)
+	public IObservable<Result> Display(IAddress address)
 	{
-		// TODO:
-		throw new NotImplementedException();
+		return _client.Display(address);
 	}
 }

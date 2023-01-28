@@ -6,7 +6,7 @@ namespace WalletWasabi.Fluent.Tests;
 
 public class Tester : IHwiClient
 {
-	public IObservable<Result> Show(IAddress address)
+	public IObservable<Result> Display(IAddress address)
 	{
 		return Observable.Return(Result.Failure("Se ha ido al pedo"));
 	}

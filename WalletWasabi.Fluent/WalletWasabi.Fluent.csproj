@@ -40,9 +40,4 @@
 		<RuntimeHostConfigurationOption Include="System.Globalization.Invariant" Value="true" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Compile Update="Views\Wallets\Receive\ReceiveAddressHostView.axaml.cs">
-	    <DependentUpon>ReceiveAddressHostView.axaml</DependentUpon>
-	  </Compile>
-	</ItemGroup>
 </Project>

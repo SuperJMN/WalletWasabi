@@ -3,11 +3,11 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:c="using:WalletWasabi.Fluent.Controls"
-             xmlns:receive="clr-namespace:WalletWasabi.Fluent.ViewModels.Wallets.Receive"
+             xmlns:address="clr-namespace:WalletWasabi.Fluent.ViewModels.Wallets.Receive.Address"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:DataType="receive:ReceiveAddressHostViewModel"
+             x:DataType="address:HardwareAddressViewModel"
              x:CompileBindings="True"
-             x:Class="WalletWasabi.Fluent.Views.Wallets.Receive.ReceiveAddressHostView">
+             x:Class="WalletWasabi.Fluent.Views.Wallets.Receive.Address.HardwareAddressView">
   <c:ContentArea Title="Unused Receive Address"
                  EnableCancel="{Binding EnableCancel}"
                  EnableBack="{Binding EnableBack}"
@@ -25,7 +25,7 @@
             </c:PrivacyContentControl>
 
             <StackPanel Orientation="Horizontal" Spacing="4">
-              <Panel x:Name="ShowOnHWPart" VerticalAlignment="Center" IsVisible="{Binding HardwareWallet, Converter={x:Static ObjectConverters.IsNotNull}}">
+              <Panel x:Name="ShowOnHWPart" VerticalAlignment="Center">
                 <c:AnimatedButton ToolTip.Tip="Show on the hardware wallet"
                                   IsVisible="{Binding !HardwareWallet.IsBusy^}"
                                   NormalIcon="{StaticResource share_regular}"

@@ -1,0 +1,54 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:c="using:WalletWasabi.Fluent.Controls"
+             xmlns:address="clr-namespace:WalletWasabi.Fluent.ViewModels.Wallets.Receive.Address"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="address:SoftwareAddressViewModel"
+             x:CompileBindings="True"
+             x:Class="WalletWasabi.Fluent.Views.Wallets.Receive.Address.SoftwareAddressView">
+  <c:ContentArea Title="Unused Receive Address"
+                 EnableCancel="{Binding EnableCancel}"
+                 EnableBack="{Binding EnableBack}"
+                 EnableNext="True" NextContent="OK"
+                 ScrollViewer.VerticalScrollBarVisibility="Disabled">
+    <DockPanel>
+
+      <StackPanel DockPanel.Dock="Bottom" HorizontalAlignment="Stretch" Spacing="30">
+        <DockPanel HorizontalAlignment="Center">
+
+          <StackPanel Orientation="Horizontal" Spacing="8">
+
+            <c:PrivacyContentControl FontSize="{StaticResource FontSizeH5}">
+              <TextBlock Classes="monoSpaced" Text="{Binding ReceiveAddress.Address}" />
+            </c:PrivacyContentControl>
+            <c:ClipboardCopyButton Text="{Binding ReceiveAddress.Address}" />
+          </StackPanel>
+
+        </DockPanel>
+
+        <c:PrivacyContentControl PrivacyReplacementMode="Text" HorizontalAlignment="Center">
+          <c:LabelsItemsPresenter Items="{Binding ReceiveAddress.Labels}" />
+        </c:PrivacyContentControl>
+      </StackPanel>
+
+      <c:AdorningContentControl MaxHeight="270" HorizontalAlignment="Center" ClipToBounds="False">
+        <c:AdorningContentControl.Adornment>
+          <Panel Margin="0 0 -5 20">
+            <Button ToolTip.Tip="Save" Classes="plain icon"
+                    Command="{Binding #QrCode.SaveCommand}"
+                    HorizontalAlignment="Right" VerticalAlignment="Bottom">
+              <PathIcon Data="{StaticResource save_regular}" />
+            </Button>
+          </Panel>
+        </c:AdorningContentControl.Adornment>
+        <Viewbox Margin="20" MinHeight="100">
+          <c:PrivacyContentControl Height="250" Margin="0 0 0 -18" PrivacyReplacementMode="Icon">
+            <c:QrCode x:Name="QrCode" Matrix="{Binding ReceiveAddress.QrCode}" />
+          </c:PrivacyContentControl>
+        </Viewbox>
+      </c:AdorningContentControl>
+    </DockPanel>
+  </c:ContentArea>
+</UserControl>

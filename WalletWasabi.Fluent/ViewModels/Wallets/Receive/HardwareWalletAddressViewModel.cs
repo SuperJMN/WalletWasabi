@@ -6,14 +6,14 @@ using WalletWasabi.Bridge;
 
 namespace WalletWasabi.Fluent.ViewModels.Wallets.Receive;
 
-public partial class HardwareWalletViewModel : ViewModelBase
+public partial class HardwareWalletAddressViewModel : ViewModelBase
 {
 	[AutoNotify] private string _errorMessage = "";
 
-	public HardwareWalletViewModel(IAddress address, IHwiClient hwiClient)
+	public HardwareWalletAddressViewModel(IAddress address, IHardwareWallet hardwareWallet)
 	{
 		ShowOnHwWalletCommand = ReactiveCommand
-			.CreateFromObservable(() => hwiClient.Show(address));
+			.CreateFromObservable(() => hardwareWallet.Display(address));
 
 		ShowOnHwWalletCommand
 			.Where(x => x.IsFailure)

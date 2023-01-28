@@ -1,8 +1,8 @@
-using System.Reactive;
+using CSharpFunctionalExtensions;
 
 namespace WalletWasabi.Bridge;
 
 public interface IHardwareWallet : IWallet
 {
-	public IObservable<Unit> Display(string address);
+	public IObservable<Result> Display(IAddress address);
 }

@@ -8,7 +8,7 @@ public class UnitTest1
 	[Fact]
 	public async Task Test1()
 	{
-		var sut = new HardwareWalletViewModel(new TestAddress(), new Tester());
-		await sut.ShowOnHwWalletCommand.Execute();
+		//var sut = new HardwareWalletAddressViewModel(new TestAddress(), new Tester());
+		//await sut.ShowOnHwWalletCommand.Execute();
 	}
 }

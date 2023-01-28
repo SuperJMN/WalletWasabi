@@ -9,7 +9,7 @@ namespace WalletWasabi.Bridge;
 
 public class HardwareInterfaceClient : IHwiClient
 {
-	public IObservable<Result> Show(IAddress address)
+	public IObservable<Result> Display(IAddress address)
 	{
 		var observable = Observable
 			.StartAsync(ct => ShowCore(address, ct))
