@@ -1,7 +1,6 @@
 using System.Reactive.Linq;
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Media;
 using ReactiveUI;
 using WalletWasabi.Fluent.Extensions;
 using WalletWasabi.Fluent.Helpers;
@@ -29,6 +28,7 @@ public class PrivacyContentControl : ContentControl
 	{
 		if (Design.IsDesignMode)
 		{
+			IsContentRevealed = Observable.Return(true);
 			return;
 		}
 

@@ -28,7 +28,7 @@ public partial class ReceiveViewModel : RoutableViewModel
 	private readonly IWallet _myWallet;
 	[AutoNotify] private bool _isExistingAddressesButtonVisible;
 
-	public ReceiveViewModel(Wallet wallet, Bridge.IWallet myWallet)
+	public ReceiveViewModel(Wallet wallet, IWallet myWallet)
 	{
 		_wallet = wallet;
 		_myWallet = myWallet;

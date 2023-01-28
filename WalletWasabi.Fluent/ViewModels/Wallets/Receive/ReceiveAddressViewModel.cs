@@ -5,7 +5,7 @@ using WalletWasabi.Bridge;
 
 namespace WalletWasabi.Fluent.ViewModels.Wallets.Receive;
 
-public class ReceiveAddressViewModel : ReactiveObject
+public class ReceiveAddressViewModel : ReactiveObject, IReceiveAddressViewModel
 {
 	private readonly ObservableAsPropertyHelper<bool[,]> _qrCode;
 
