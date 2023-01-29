@@ -9,6 +9,7 @@ public partial class HardwareAddressViewModel : RoutableViewModel
 {
 	public HardwareAddressViewModel(HardwareWalletAddressViewModel hardwareWalletAddressViewModel, ReceiveAddressViewModel receiveAddress)
 	{
+		EnableBack = true;
 		ReceiveAddress = receiveAddress;
 		HardwareWallet = hardwareWalletAddressViewModel;
 		var canExecute = hardwareWalletAddressViewModel.IsBusy.Select(b => !b);

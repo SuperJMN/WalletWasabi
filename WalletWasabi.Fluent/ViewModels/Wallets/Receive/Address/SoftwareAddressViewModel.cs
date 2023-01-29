@@ -9,6 +9,7 @@ public partial class SoftwareAddressViewModel : RoutableViewModel
 {
 	public SoftwareAddressViewModel(IAddress address, IQrCodeGenerator qrCodeGenerator)
 	{
+		EnableBack = true;
 		ReceiveAddress = new ReceiveAddressViewModel(address, qrCodeGenerator);
 		CancelCommand = ReactiveCommand.Create(() => Navigate().Clear());
 		NextCommand = CancelCommand;
