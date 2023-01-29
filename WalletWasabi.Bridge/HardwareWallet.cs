@@ -4,9 +4,9 @@ namespace WalletWasabi.Bridge;
 
 public class HardwareWallet : SoftwareWallet, IHardwareWallet
 {
-	private readonly IHwiClient _client;
+	private readonly IHardwareInterfaceClient _client;
 
-	public HardwareWallet(Wallets.Wallet wallet, IHwiClient client) : base(wallet)
+	public HardwareWallet(Wallets.Wallet wallet, IHardwareInterfaceClient client) : base(wallet)
 	{
 		_client = client;
 	}

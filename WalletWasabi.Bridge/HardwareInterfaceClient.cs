@@ -7,7 +7,7 @@ using WalletWasabi.Logging;
 
 namespace WalletWasabi.Bridge;
 
-public class HardwareInterfaceClient : IHwiClient
+public class HardwareInterfaceClient : IHardwareInterfaceClient
 {
 	public IObservable<Result> Display(IAddress address)
 	{

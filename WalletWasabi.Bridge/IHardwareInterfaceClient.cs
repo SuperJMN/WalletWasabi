@@ -2,7 +2,7 @@ using CSharpFunctionalExtensions;
 
 namespace WalletWasabi.Bridge;
 
-public interface IHwiClient
+public interface IHardwareInterfaceClient
 {
 	public IObservable<Result> Display(IAddress address);
 }
