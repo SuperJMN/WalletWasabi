@@ -8,7 +8,7 @@ namespace WalletWasabi.Fluent.ViewModels.Wallets.Receive;
 
 public partial class HardwareWalletAddressViewModel : ViewModelBase
 {
-	[AutoNotify] private string _errorMessage = "";
+	[AutoNotify(SetterModifier = AccessModifier.Private)] private string _errorMessage = "";
 
 	public HardwareWalletAddressViewModel(IAddress address, IHardwareWallet hardwareWallet)
 	{
