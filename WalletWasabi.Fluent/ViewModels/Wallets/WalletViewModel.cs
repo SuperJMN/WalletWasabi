@@ -36,18 +36,12 @@ public partial class WalletViewModel : WalletViewModelBase
 	[AutoNotify(SetterModifier = AccessModifier.Private)] private bool _isWalletBalanceZero;
 	[AutoNotify(SetterModifier = AccessModifier.Private)] private bool _isTransactionHistoryEmpty;
 	[AutoNotify(SetterModifier = AccessModifier.Private)] private bool _isSendButtonVisible;
-	private readonly ReadOnlyObservableCollection<ITransaction> _transactions;
 	private readonly SoftwareWallet _myWallet;
-
-	public ReadOnlyObservableCollection<ITransaction> Transactions => _transactions;
-
+	
 	protected WalletViewModel(Wallet wallet) : base(wallet)
 	{
 		_myWallet = new HardwareWallet(wallet, new HardwareInterfaceClient());
-		_myWallet.Transactions
-			.Bind(out _transactions)
-			.Subscribe();
-		
+
 		Disposables = Disposables is null
 			? new CompositeDisposable()
 			: throw new NotSupportedException($"Cannot open {GetType().Name} before closing it.");
