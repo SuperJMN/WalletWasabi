@@ -1,16 +1,23 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:controls="clr-namespace:WalletWasabi.Fluent.Controls"
-        xmlns:fluent="clr-namespace:WalletWasabi.Fluent">
+        xmlns:fluent="clr-namespace:WalletWasabi.Fluent"
+        xmlns:generic="clr-namespace:System.Collections.Generic;assembly=System.Collections">
 
   <Design.PreviewWith>
-    <controls:ReceiveAddressControl Width="300">
+    <controls:ReceiveAddressControl Width="300"
+                                    Address="Some address"
+                                    QrCode="{x:Static fluent:RandomQrDesign.RandomQrCode}">
+      <controls:ReceiveAddressControl.Labels>
+        <generic:List x:TypeArguments="x:String">
+          <x:String>Label 1</x:String>
+          <x:String>Label 2</x:String>
+          <x:String>Label 3</x:String>
+        </generic:List>
+      </controls:ReceiveAddressControl.Labels>
       <controls:ReceiveAddressControl.ExtraContent>
         <Button>Hi</Button>
       </controls:ReceiveAddressControl.ExtraContent>
-      <controls:ReceiveAddressControl.ReceiveAddress>
-        <fluent:ReceiveAddressViewModelDesign />
-      </controls:ReceiveAddressControl.ReceiveAddress>
     </controls:ReceiveAddressControl>
   </Design.PreviewWith>
 
@@ -22,14 +29,14 @@
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="8">
               <controls:PrivacyContentControl FontSize="{StaticResource FontSizeH5}">
-                <TextBlock Classes="monoSpaced" Text="{Binding ReceiveAddress.Address, RelativeSource={RelativeSource TemplatedParent}}" />
+                <TextBlock Classes="monoSpaced" Text="{TemplateBinding Address}" />
               </controls:PrivacyContentControl>
-              <controls:ClipboardCopyButton Text="{Binding ReceiveAddress.Address, RelativeSource={RelativeSource TemplatedParent}}" />
+              <controls:ClipboardCopyButton Text="{TemplateBinding Address}" />
               <ContentPresenter Content="{TemplateBinding ExtraContent}" />
             </StackPanel>
 
             <controls:PrivacyContentControl PrivacyReplacementMode="Text" HorizontalAlignment="Center">
-              <controls:LabelsItemsPresenter Items="{Binding ReceiveAddress.Labels, RelativeSource={RelativeSource TemplatedParent}}" />
+              <controls:LabelsItemsPresenter Items="{TemplateBinding Labels}" />
             </controls:PrivacyContentControl>
           </StackPanel>
 
@@ -45,7 +52,7 @@
             </controls:AdorningContentControl.Adornment>
             <Viewbox Margin="20" MinHeight="100">
               <controls:PrivacyContentControl Height="250" Margin="0 0 0 -18" PrivacyReplacementMode="Icon">
-                <controls:QrCode x:Name="QrCode" Matrix="{Binding ReceiveAddress.QrCode, RelativeSource={RelativeSource TemplatedParent}}" />
+                <controls:QrCode x:Name="QrCode" Matrix="{TemplateBinding QrCode}" />
               </controls:PrivacyContentControl>
             </Viewbox>
           </controls:AdorningContentControl>

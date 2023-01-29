@@ -13,6 +13,8 @@
                  EnableBack="{Binding EnableBack}"
                  EnableNext="True" NextContent="OK"
                  ScrollViewer.VerticalScrollBarVisibility="Disabled">
-    <c:ReceiveAddressControl ReceiveAddress="{Binding ReceiveAddress}" />
+    <c:ReceiveAddressControl Address="{Binding ReceiveAddress.Address}"
+                             Labels="{Binding ReceiveAddress.Labels}"
+                             QrCode="{Binding ReceiveAddress.QrCode}" />
   </c:ContentArea>
 </UserControl>

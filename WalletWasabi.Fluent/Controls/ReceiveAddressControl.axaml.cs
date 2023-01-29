@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Avalonia;
 using Avalonia.Controls.Primitives;
 using WalletWasabi.Fluent.ViewModels.Wallets.Receive;
@@ -19,5 +20,29 @@ public class ReceiveAddressControl : TemplatedControl
 	{
 		get => GetValue(ReceiveAddressProperty);
 		set => SetValue(ReceiveAddressProperty, value);
+	}
+
+	public static readonly StyledProperty<string> AddressProperty = AvaloniaProperty.Register<ReceiveAddressControl, string>("Address");
+
+	public string Address
+	{
+		get => GetValue(AddressProperty);
+		set => SetValue(AddressProperty, value);
+	}
+
+	public static readonly StyledProperty<IEnumerable<string>> LabelsProperty = AvaloniaProperty.Register<ReceiveAddressControl, IEnumerable<string>>("Labels");
+
+	public IEnumerable<string> Labels
+	{
+		get => GetValue(LabelsProperty);
+		set => SetValue(LabelsProperty, value);
+	}
+
+	public static readonly StyledProperty<bool[,]> QrCodeProperty = AvaloniaProperty.Register<ReceiveAddressControl, bool[,]>("QrCode");
+
+	public bool[,] QrCode
+	{
+		get => GetValue(QrCodeProperty);
+		set => SetValue(QrCodeProperty, value);
 	}
 }
