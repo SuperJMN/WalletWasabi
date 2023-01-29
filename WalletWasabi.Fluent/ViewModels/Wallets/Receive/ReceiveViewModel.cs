@@ -59,14 +59,14 @@ public partial class ReceiveViewModel : RoutableViewModel
 
 		SuggestionLabels.Labels.Clear();
 
-		var vm = ViewModelLocator.CreateReceiveAddressHostViewModel(_myWallet, newAddress);
+		var vm = ViewModelLocator.CreateAddressViewModel(_myWallet, newAddress);
 
 		Navigate().To(vm);
 	}
 
 	private void OnShowExistingAddresses()
 	{
-		Navigate().To(new ReceiveAddressesViewModel(_wallet));
+		Navigate().To(new ReceiveAddressesViewModel(_wallet, _myWallet));
 	}
 
 	protected override void OnNavigatedTo(bool isInHistory, CompositeDisposable disposable)

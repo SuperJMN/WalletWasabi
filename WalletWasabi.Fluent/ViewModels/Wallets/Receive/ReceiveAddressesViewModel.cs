@@ -16,16 +16,19 @@ using WalletWasabi.Fluent.ViewModels.Navigation;
 using WalletWasabi.Fluent.Views.Wallets.Receive.Columns;
 using WalletWasabi.Logging;
 using WalletWasabi.Wallets;
+using IWallet = WalletWasabi.Bridge.IWallet;
 
 namespace WalletWasabi.Fluent.ViewModels.Wallets.Receive;
 
 [NavigationMetaData(Title = "Receive Addresses")]
 public partial class ReceiveAddressesViewModel : RoutableViewModel
 {
+	private readonly IWallet _myWallet;
 	private ObservableCollection<AddressViewModel> _addresses;
 
-	public ReceiveAddressesViewModel(Wallet wallet)
+	public ReceiveAddressesViewModel(Wallet wallet, IWallet myWallet)
 	{
+		_myWallet = myWallet;
 		Wallet = wallet;
 		Network = wallet.Network;
 		_addresses = new ObservableCollection<AddressViewModel>();
@@ -124,7 +127,7 @@ public partial class ReceiveAddressesViewModel : RoutableViewModel
 
 			foreach (HdPubKey key in keys)
 			{
-				_addresses.Add(new AddressViewModel(this, Wallet, key));
+				_addresses.Add(new AddressViewModel(this, Wallet, key, _myWallet));
 			}
 		}
 		catch (Exception ex)

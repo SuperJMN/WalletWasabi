@@ -15,13 +15,12 @@ public partial class AddressViewModel : ViewModelBase
 {
 	[AutoNotify] private BitcoinAddress _address;
 
-	public AddressViewModel(ReceiveAddressesViewModel parent, Wallet wallet, HdPubKey model)
+	public AddressViewModel(ReceiveAddressesViewModel parent, Wallet wallet, HdPubKey model, IWallet myWallet)
 	{
 		var address = Bridge.Address.From(model.PubKey, model.FullKeyPath, model.Label, wallet);
 		_address = address.P2wpkhAddress;
 		
 		Label = new SmartLabel(address.Labels);
-		var myWallet = wallet.KeyManager.IsHardwareWallet ? new HardwareWallet(wallet, new HardwareInterfaceClient()) : new SoftwareWallet(wallet);
 
 		CopyAddressCommand =
 			ReactiveCommand.CreateFromTask(async () =>
@@ -40,7 +39,7 @@ public partial class AddressViewModel : ViewModelBase
 
 		NavigateCommand = ReactiveCommand.Create(() =>
 		{
-			var receiveAddressHostViewModel = ViewModelLocator.CreateReceiveAddressHostViewModel(myWallet, address);
+			var receiveAddressHostViewModel = ViewModelLocator.CreateAddressViewModel(myWallet, address);
 			parent.Navigate().To(receiveAddressHostViewModel);
 		});
 	}

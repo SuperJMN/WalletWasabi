@@ -7,7 +7,7 @@ namespace WalletWasabi.Fluent.ViewModels;
 
 public static class ViewModelLocator
 {
-	public static RoutableViewModel CreateReceiveAddressHostViewModel(IWallet wallet, IAddress address)
+	public static RoutableViewModel CreateAddressViewModel(IWallet wallet, IAddress address)
 	{
 		if (wallet is IHardwareWallet hw)
 		{
