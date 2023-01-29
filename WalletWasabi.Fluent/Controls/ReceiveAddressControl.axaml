@@ -1,0 +1,57 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:WalletWasabi.Fluent.Controls"
+        xmlns:fluent="clr-namespace:WalletWasabi.Fluent">
+
+  <Design.PreviewWith>
+    <controls:ReceiveAddressControl Width="300">
+      <controls:ReceiveAddressControl.ExtraContent>
+        <Button>Hi</Button>
+      </controls:ReceiveAddressControl.ExtraContent>
+      <controls:ReceiveAddressControl.ReceiveAddress>
+        <fluent:ReceiveAddressViewModelDesign />
+      </controls:ReceiveAddressControl.ReceiveAddress>
+    </controls:ReceiveAddressControl>
+  </Design.PreviewWith>
+
+  <Style Selector="controls|ReceiveAddressControl">
+    <Setter Property="Template">
+      <ControlTemplate>
+        <DockPanel>
+          <StackPanel DockPanel.Dock="Bottom" Spacing="30">
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="8">
+              <controls:PrivacyContentControl FontSize="{StaticResource FontSizeH5}">
+                <TextBlock Classes="monoSpaced" Text="{Binding ReceiveAddress.Address, RelativeSource={RelativeSource TemplatedParent}}" />
+              </controls:PrivacyContentControl>
+              <controls:ClipboardCopyButton Text="{Binding ReceiveAddress.Address, RelativeSource={RelativeSource TemplatedParent}}" />
+              <ContentPresenter Content="{TemplateBinding ExtraContent}" />
+            </StackPanel>
+
+            <controls:PrivacyContentControl PrivacyReplacementMode="Text" HorizontalAlignment="Center">
+              <controls:LabelsItemsPresenter Items="{Binding ReceiveAddress.Labels, RelativeSource={RelativeSource TemplatedParent}}" />
+            </controls:PrivacyContentControl>
+          </StackPanel>
+
+          <controls:AdorningContentControl MaxHeight="270" HorizontalAlignment="Center" ClipToBounds="False">
+            <controls:AdorningContentControl.Adornment>
+              <Panel Margin="0 0 -5 20">
+                <Button ToolTip.Tip="Save" Classes="plain icon"
+                        Command="{Binding #QrCode.SaveCommand}"
+                        HorizontalAlignment="Right" VerticalAlignment="Bottom">
+                  <PathIcon Data="{StaticResource save_regular}" />
+                </Button>
+              </Panel>
+            </controls:AdorningContentControl.Adornment>
+            <Viewbox Margin="20" MinHeight="100">
+              <controls:PrivacyContentControl Height="250" Margin="0 0 0 -18" PrivacyReplacementMode="Icon">
+                <controls:QrCode x:Name="QrCode" Matrix="{Binding ReceiveAddress.QrCode, RelativeSource={RelativeSource TemplatedParent}}" />
+              </controls:PrivacyContentControl>
+            </Viewbox>
+          </controls:AdorningContentControl>
+
+        </DockPanel>
+      </ControlTemplate>
+    </Setter>
+  </Style>
+</Styles>

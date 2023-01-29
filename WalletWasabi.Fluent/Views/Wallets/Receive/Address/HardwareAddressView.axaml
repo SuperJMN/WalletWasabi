@@ -13,57 +13,18 @@
                  EnableBack="{Binding EnableBack}"
                  EnableNext="True" NextContent="OK"
                  ScrollViewer.VerticalScrollBarVisibility="Disabled">
-    <DockPanel>
-
-      <StackPanel DockPanel.Dock="Bottom" HorizontalAlignment="Stretch" Spacing="30">
-        <DockPanel HorizontalAlignment="Center">
-
-          <StackPanel Orientation="Horizontal" Spacing="8">
-
-            <c:PrivacyContentControl FontSize="{StaticResource FontSizeH5}">
-              <TextBlock Classes="monoSpaced" Text="{Binding ReceiveAddress.Address}" />
-            </c:PrivacyContentControl>
-
-            <StackPanel Orientation="Horizontal" Spacing="4">
-              <Panel x:Name="ShowOnHWPart" VerticalAlignment="Center">
-                <c:AnimatedButton ToolTip.Tip="Show on the hardware wallet"
-                                  IsVisible="{Binding !HardwareWallet.IsBusy^}"
-                                  NormalIcon="{StaticResource share_regular}"
-                                  Command="{Binding HardwareWallet.ShowOnHwWalletCommand}"
-                                  ClickIcon="{StaticResource copy_confirmed}" />
-                <c:ProgressRing IsVisible="{Binding HardwareWallet.IsBusy^}" IsIndeterminate="True" Width="22"
-                                Height="22" StrokeThickness="1" />
-              </Panel>
-              <c:ClipboardCopyButton Text="{Binding ReceiveAddress.Address}" />
-            </StackPanel>
-
-          </StackPanel>
-
-        </DockPanel>
-
-        <TextBlock TextAlignment="Center" DockPanel.Dock="Bottom" Foreground="{DynamicResource WarningMessageForeground}" Text="{Binding HardwareWallet.ErrorMessage}" />
-
-        <c:PrivacyContentControl PrivacyReplacementMode="Text" HorizontalAlignment="Center">
-          <c:LabelsItemsPresenter Items="{Binding ReceiveAddress.Labels}" />
-        </c:PrivacyContentControl>
-      </StackPanel>
-
-      <c:AdorningContentControl MaxHeight="270" HorizontalAlignment="Center" ClipToBounds="False">
-        <c:AdorningContentControl.Adornment>
-          <Panel Margin="0 0 -5 20">
-            <Button ToolTip.Tip="Save" Classes="plain icon"
-                    Command="{Binding #QrCode.SaveCommand}"
-                    HorizontalAlignment="Right" VerticalAlignment="Bottom">
-              <PathIcon Data="{StaticResource save_regular}" />
-            </Button>
-          </Panel>
-        </c:AdorningContentControl.Adornment>
-        <Viewbox Margin="20" MinHeight="100">
-          <c:PrivacyContentControl Height="250" Margin="0 0 0 -18" PrivacyReplacementMode="Icon">
-            <c:QrCode x:Name="QrCode" Matrix="{Binding ReceiveAddress.QrCode}" />
-          </c:PrivacyContentControl>
-        </Viewbox>
-      </c:AdorningContentControl>
-    </DockPanel>
+    <c:ReceiveAddressControl ReceiveAddress="{Binding ReceiveAddress}">
+      <c:ReceiveAddressControl.ExtraContent>
+        <Panel VerticalAlignment="Center">
+          <c:AnimatedButton ToolTip.Tip="Show on the hardware wallet"
+                            IsVisible="{Binding !HardwareWallet.IsBusy^}"
+                            NormalIcon="{StaticResource share_regular}"
+                            Command="{Binding HardwareWallet.ShowOnHwWalletCommand}"
+                            ClickIcon="{StaticResource copy_confirmed}" />
+          <c:ProgressRing IsVisible="{Binding HardwareWallet.IsBusy^}" IsIndeterminate="True" Width="22"
+                          Height="22" StrokeThickness="1" />
+        </Panel>
+      </c:ReceiveAddressControl.ExtraContent>
+    </c:ReceiveAddressControl>
   </c:ContentArea>
 </UserControl>

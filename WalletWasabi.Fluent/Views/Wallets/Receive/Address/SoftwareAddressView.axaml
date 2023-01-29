@@ -4,7 +4,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:c="using:WalletWasabi.Fluent.Controls"
              xmlns:address="clr-namespace:WalletWasabi.Fluent.ViewModels.Wallets.Receive.Address"
-             xmlns:receive="clr-namespace:WalletWasabi.Fluent.Views.Wallets.Receive"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:DataType="address:SoftwareAddressViewModel"
              x:CompileBindings="True"
@@ -14,6 +13,6 @@
                  EnableBack="{Binding EnableBack}"
                  EnableNext="True" NextContent="OK"
                  ScrollViewer.VerticalScrollBarVisibility="Disabled">
-    <receive:ReceiveAddressView DataContext="{Binding ReceiveAddress}" />
+    <c:ReceiveAddressControl ReceiveAddress="{Binding ReceiveAddress}" />
   </c:ContentArea>
 </UserControl>

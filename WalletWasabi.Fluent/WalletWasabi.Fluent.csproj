@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFramework>net7.0</TargetFramework>
 		<DisableImplicitNamespaceImports>true</DisableImplicitNamespaceImports>
@@ -38,6 +38,12 @@
 
 	<ItemGroup>
 		<RuntimeHostConfigurationOption Include="System.Globalization.Invariant" Value="true" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Update="Controls\ReceiveAddressControl.axaml.cs">
+	    <DependentUpon>ReceiveAddressControl.axaml</DependentUpon>
+	  </Compile>
 	</ItemGroup>
 
 </Project>

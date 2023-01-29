@@ -43,7 +43,7 @@ public partial class WalletViewModel : WalletViewModelBase
 
 	protected WalletViewModel(Wallet wallet) : base(wallet)
 	{
-		_myWallet = new SoftwareWallet(wallet);
+		_myWallet = new HardwareWallet(wallet, new HardwareInterfaceClient());
 		_myWallet.Transactions
 			.Bind(out _transactions)
 			.Subscribe();
