@@ -5,9 +5,13 @@
              xmlns:vm="using:WalletWasabi.Fluent.ViewModels.Wallets.Home.Tiles"
              xmlns:converters="clr-namespace:WalletWasabi.Fluent.Converters"
              xmlns:controls="clr-namespace:WalletWasabi.Fluent.Controls"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:CompileBindings="True" x:DataType="vm:BtcPriceTileViewModel"
+             mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="180"
+             x:CompileBindings="True" x:DataType="vm:IBtcPriceTileViewModel"
              x:Class="WalletWasabi.Fluent.Views.Wallets.Home.Tiles.BtcPriceTileView">
+
+  <Design.DataContext>
+    <vm:BtcPriceTileViewModelDesign UsdPerBtcValue="123" />
+  </Design.DataContext>
 
   <controls:TileControl Title="EXCHANGE RATE" IsBottomContentVisible="False">
     <TextBlock Margin="0 3"

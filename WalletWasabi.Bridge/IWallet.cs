@@ -12,6 +12,6 @@ public interface IWallet
 	IAddress CreateReceiveAddress(IEnumerable<string> destinationLabels);
 	IObservable<Money> Balance { get; }
 
-	// TODO: Can this be as simple as this?
+	// TODO: Can we leave this simple??
 	IObservable<Result> Send(Money amount, IAddress destination);
 }

@@ -1,10 +1,18 @@
 using System.Reactive.Linq;
+using DynamicData.Binding;
 using NBitcoin;
 using WalletWasabi.Bridge;
 
 namespace WalletWasabi.Fluent.ViewModels.Wallets.Home.Tiles;
 
-public class NewWalletBalanceTileViewModel : ActivatableViewModel
+public interface INewWalletBalanceTileViewModel
+{
+	IObservable<bool> HasBalance { get; }
+	IObservable<decimal> BalanceFiat { get; }
+	IObservable<Money> BalanceBtc { get; }
+}
+
+public class NewWalletBalanceTileViewModel : ActivatableViewModel, INewWalletBalanceTileViewModel
 {
 	public NewWalletBalanceTileViewModel(IWallet wallet, IExchangeRateProvider rateProvider)
 	{
