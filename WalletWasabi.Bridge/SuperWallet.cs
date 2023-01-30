@@ -11,12 +11,12 @@ using WalletWasabi.Wallets;
 
 namespace WalletWasabi.Bridge;
 
-public class SuperWallet : IWallet
+public class ImprovedWallet : IWallet
 {
 	private readonly TransactionHistoryBuilder _historyBuilder;
 	private readonly Wallet _wallet;
 
-	protected SuperWallet(Wallet wallet)
+	protected ImprovedWallet(Wallet wallet)
 	{
 		_wallet = wallet;
 		_historyBuilder = new TransactionHistoryBuilder(_wallet);
