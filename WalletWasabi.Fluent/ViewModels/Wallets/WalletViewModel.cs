@@ -203,6 +203,6 @@ public partial class WalletViewModel : WalletViewModelBase
 			yield return new PrivacyControlTileViewModel(this);
 		}
 
-		yield return new BtcPriceTileViewModel(Wallet);
+		yield return new BtcPriceTileViewModel(_exchangeRateProvider);
 	}
 }
