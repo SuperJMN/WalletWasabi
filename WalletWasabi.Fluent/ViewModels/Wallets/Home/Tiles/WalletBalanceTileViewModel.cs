@@ -1,7 +1,6 @@
 using System.Reactive.Linq;
 using NBitcoin;
 using WalletWasabi.Fluent.Extensions;
-using WalletWasabi.Fluent.Helpers;
 
 namespace WalletWasabi.Fluent.ViewModels.Wallets.Home.Tiles;
 

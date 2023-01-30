@@ -1,5 +1,6 @@
 using System.Reactive;
 using System.Reactive.Linq;
+using CSharpFunctionalExtensions;
 using DynamicData;
 using NBitcoin;
 using WalletWasabi.Blockchain.Analysis.Clustering;
@@ -58,6 +59,11 @@ public class SuperWallet : IWallet
 	}
 
 	public IObservable<Money> Balance { get; }
+
+	public IObservable<Result> Send(Money amount, IAddress destination)
+	{
+		throw new NotImplementedException();
+	}
 
 	public IEnumerable<Address> Addresses =>
 		_wallet.KeyManager

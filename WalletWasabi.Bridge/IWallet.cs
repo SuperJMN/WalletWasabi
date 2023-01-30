@@ -1,3 +1,4 @@
+using CSharpFunctionalExtensions;
 using DynamicData;
 using NBitcoin;
 
@@ -10,4 +11,7 @@ public interface IWallet
 	IEnumerable<Address> Addresses { get; }
 	IAddress CreateReceiveAddress(IEnumerable<string> destinationLabels);
 	IObservable<Money> Balance { get; }
+
+	// TODO: Can this be as simple as this?
+	IObservable<Result> Send(Money amount, IAddress destination);
 }

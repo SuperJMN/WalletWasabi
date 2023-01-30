@@ -37,11 +37,13 @@ public partial class WalletViewModel : WalletViewModelBase
 	[AutoNotify(SetterModifier = AccessModifier.Private)] private bool _isTransactionHistoryEmpty;
 	[AutoNotify(SetterModifier = AccessModifier.Private)] private bool _isSendButtonVisible;
 	private readonly SoftwareWallet _myWallet;
-	
+	private readonly ExchangeRateProvider _exchangeRateProvider;
+
 	protected WalletViewModel(Wallet wallet) : base(wallet)
 	{
 		_myWallet = new HardwareWallet(wallet, new HardwareInterfaceClient());
 		Balance = _myWallet.Balance;
+		_exchangeRateProvider = new ExchangeRateProvider(wallet.Synchronizer);
 
 		Disposables = Disposables is null
 			? new CompositeDisposable()
@@ -194,7 +196,7 @@ public partial class WalletViewModel : WalletViewModelBase
 
 	private IEnumerable<ActivatableViewModel> GetTiles()
 	{
-		yield return new WalletBalanceTileViewModel(this);
+		yield return new NewWalletBalanceTileViewModel(_myWallet, _exchangeRateProvider);
 
 		if (!IsWatchOnly)
 		{

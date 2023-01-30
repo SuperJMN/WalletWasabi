@@ -309,6 +309,14 @@
           "Newtonsoft.Json": "12.0.1"
         }
       },
+      "ReactiveMarbles.PropertyChanged": {
+        "type": "Transitive",
+        "resolved": "2.0.27",
+        "contentHash": "uvKd1R4XqXAb1XnGwKziHX4bvXrMqyua9YF4QekwnH2pnNlaXmv20qK5wtFmeyjEfHZ4xG7wl8xLI2/OVn9yOw==",
+        "dependencies": {
+          "System.Reactive": "5.0.0"
+        }
+      },
       "ReactiveUI": {
         "type": "Transitive",
         "resolved": "13.2.10",
@@ -606,6 +614,7 @@
         "dependencies": {
           "DynamicData": "[7.12.11, )",
           "NBitcoin": "[7.0.14, )",
+          "ReactiveMarbles.PropertyChanged": "[2.0.27, )",
           "WalletWasabi": "[1.0.0, )"
         }
       }
