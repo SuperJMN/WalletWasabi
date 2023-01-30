@@ -1,8 +1,10 @@
+using System.Reactive;
 using System.Reactive.Linq;
 using DynamicData;
 using NBitcoin;
 using WalletWasabi.Blockchain.Analysis.Clustering;
 using WalletWasabi.Blockchain.Keys;
+using WalletWasabi.Blockchain.TransactionProcessing;
 using WalletWasabi.Blockchain.Transactions;
 using WalletWasabi.Wallets;
 
@@ -13,7 +15,7 @@ public class SuperWallet : IWallet
 	private readonly TransactionHistoryBuilder _historyBuilder;
 	private readonly Wallet _wallet;
 
-	public SuperWallet(Wallet wallet)
+	protected SuperWallet(Wallet wallet)
 	{
 		_wallet = wallet;
 		_historyBuilder = new TransactionHistoryBuilder(_wallet);
@@ -21,19 +23,22 @@ public class SuperWallet : IWallet
 		Transactions = Summaries
 			.ToObservableChangeSet(x => x.TransactionId)
 			.Transform(ts => (ITransaction) new Transaction(ts));
+
+		Balance = Balances();
 	}
+
+	private IObservable<EventPattern<ProcessedResult?>> RelevantTransactionProcessed =>
+		Observable
+			.FromEventPattern<ProcessedResult?>(_wallet, nameof(_wallet.WalletRelevantTransactionProcessed));
 
 	private IObservable<TransactionSummary> Summaries
 	{
 		get
 		{
-			var fromEvents = Observable
-				.FromEventPattern(_wallet, nameof(_wallet.WalletRelevantTransactionProcessed))
-				.SelectMany(_ => BuildSummary());
-
+			var fromEvents = RelevantTransactionProcessed.SelectMany(_ => BuildSummary());
 			var fromInitial = Observable.Defer(() => BuildSummary().ToObservable());
 
-			return fromInitial.Merge(fromEvents);
+			return fromInitial.Concat(fromEvents);
 		}
 	}
 
@@ -52,14 +57,18 @@ public class SuperWallet : IWallet
 		return address;
 	}
 
-	public IEnumerable<Address> Addresses
+	public IObservable<Money> Balance { get; }
+
+	public IEnumerable<Address> Addresses =>
+		_wallet.KeyManager
+			.GetKeys(hdPubKey => !hdPubKey.Label.IsEmpty && !hdPubKey.IsInternal && hdPubKey.KeyState == KeyState.Clean)
+			.Select(key => Address.From(key.PubKey, key.FullKeyPath, key.Label, _wallet));
+
+	private IObservable<Money> Balances()
 	{
-		get
-		{
-			return _wallet.KeyManager
-				.GetKeys(hdPubKey => !hdPubKey.Label.IsEmpty && !hdPubKey.IsInternal && hdPubKey.KeyState == KeyState.Clean)
-				.Select(key => Address.From(key.PubKey, key.FullKeyPath, key.Label, _wallet));
-		}
+		return Observable
+			.Defer(() => Observable.Return(_wallet.Coins.TotalAmount()))
+			.Concat(RelevantTransactionProcessed.Select(_ => _wallet.Coins.TotalAmount()));
 	}
 
 	private IEnumerable<TransactionSummary> BuildSummary()

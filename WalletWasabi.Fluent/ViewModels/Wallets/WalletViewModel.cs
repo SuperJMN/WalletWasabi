@@ -41,6 +41,7 @@ public partial class WalletViewModel : WalletViewModelBase
 	protected WalletViewModel(Wallet wallet) : base(wallet)
 	{
 		_myWallet = new HardwareWallet(wallet, new HardwareInterfaceClient());
+		Balance = _myWallet.Balance;
 
 		Disposables = Disposables is null
 			? new CompositeDisposable()
@@ -121,6 +122,8 @@ public partial class WalletViewModel : WalletViewModelBase
 
 		Tiles = GetTiles().ToList();
 	}
+
+	public IObservable<Money> Balance { get; }
 
 	public IEnumerable<ActivatableViewModel> Tiles { get; }
 

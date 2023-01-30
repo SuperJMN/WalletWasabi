@@ -9,4 +9,5 @@ public interface IWallet
 	IObservable<IChangeSet<ITransaction, uint256>> Transactions { get; }
 	IEnumerable<Address> Addresses { get; }
 	IAddress CreateReceiveAddress(IEnumerable<string> destinationLabels);
+	IObservable<Money> Balance { get; }
 }

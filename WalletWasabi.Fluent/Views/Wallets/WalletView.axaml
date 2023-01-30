@@ -87,17 +87,6 @@
       <history:HistoryTable Name="HistoryTable"
                             DataContext="{Binding History}"
                             HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-      <!--<ItemsControl Items="{Binding Transactions}">
-        <ItemsControl.ItemTemplate>
-          <DataTemplate DataType="bridge:ITransaction">
-            <StackPanel Orientation="Horizontal" Spacing="8">
-              <TextBlock Text="{Binding Id}" />
-              <TextBlock Text="{Binding Amount}" />
-              <TextBlock Text="{Binding Labels}" />
-            </StackPanel>
-          </DataTemplate>
-        </ItemsControl.ItemTemplate>
-      </ItemsControl>-->
     </DockPanel>
   </c:ContentArea>
 </UserControl>
