@@ -2,7 +2,7 @@ using CSharpFunctionalExtensions;
 
 namespace WalletWasabi.Bridge;
 
-public class HardwareWallet : SoftwareWallet, IHardwareWallet
+public class HardwareWallet : ImprovedWallet, IHardwareWallet
 {
 	private readonly IHardwareInterfaceClient _client;
 

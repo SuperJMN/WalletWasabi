@@ -36,7 +36,7 @@ public partial class WalletViewModel : WalletViewModelBase
 	[AutoNotify(SetterModifier = AccessModifier.Private)] private bool _isWalletBalanceZero;
 	[AutoNotify(SetterModifier = AccessModifier.Private)] private bool _isTransactionHistoryEmpty;
 	[AutoNotify(SetterModifier = AccessModifier.Private)] private bool _isSendButtonVisible;
-	private readonly SoftwareWallet _myWallet;
+	private readonly IWallet _myWallet;
 	private readonly ExchangeRateProvider _exchangeRateProvider;
 
 	protected WalletViewModel(Wallet wallet) : base(wallet)
