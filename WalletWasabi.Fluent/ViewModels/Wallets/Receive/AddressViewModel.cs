@@ -39,7 +39,7 @@ public partial class AddressViewModel : ViewModelBase
 
 		NavigateCommand = ReactiveCommand.Create(() =>
 		{
-			var receiveAddressHostViewModel = ViewModelLocator.CreateAddressViewModel(myWallet, address);
+			var receiveAddressHostViewModel = ViewModelLocator.GetAddressViewModel(myWallet, address);
 			parent.Navigate().To(receiveAddressHostViewModel);
 		});
 	}

@@ -59,7 +59,7 @@ public partial class ReceiveViewModel : RoutableViewModel
 
 		SuggestionLabels.Labels.Clear();
 
-		var vm = ViewModelLocator.CreateAddressViewModel(_myWallet, newAddress);
+		var vm = ViewModelLocator.GetAddressViewModel(_myWallet, newAddress);
 
 		Navigate().To(vm);
 	}

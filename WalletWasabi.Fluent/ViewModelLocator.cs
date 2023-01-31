@@ -3,11 +3,11 @@ using WalletWasabi.Fluent.ViewModels.Navigation;
 using WalletWasabi.Fluent.ViewModels.Wallets.Receive;
 using WalletWasabi.Fluent.ViewModels.Wallets.Receive.Address;
 
-namespace WalletWasabi.Fluent.ViewModels;
+namespace WalletWasabi.Fluent;
 
 public static class ViewModelLocator
 {
-	public static RoutableViewModel CreateAddressViewModel(IWallet wallet, IAddress address)
+	public static RoutableViewModel GetAddressViewModel(IWallet wallet, IAddress address)
 	{
 		if (wallet is IHardwareWallet hw)
 		{
