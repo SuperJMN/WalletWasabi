@@ -2,22 +2,16 @@ using System.Reactive.Linq;
 using DynamicData.Binding;
 using NBitcoin;
 using WalletWasabi.Bridge;
+using WalletWasabi.Fluent.Helpers;
 
 namespace WalletWasabi.Fluent.ViewModels.Wallets.Home.Tiles;
-
-public interface INewWalletBalanceTileViewModel
-{
-	IObservable<bool> HasBalance { get; }
-	IObservable<decimal> BalanceFiat { get; }
-	IObservable<Money> BalanceBtc { get; }
-}
 
 public class NewWalletBalanceTileViewModel : ActivatableViewModel, INewWalletBalanceTileViewModel
 {
 	public NewWalletBalanceTileViewModel(IWallet wallet, IExchangeRateProvider rateProvider)
 	{
 		BalanceBtc = wallet.Balance;
-		BalanceFiat = wallet.Balance.WithLatestFrom(rateProvider.BtcToUsdRate, (money, ur) => (ulong) money / ur);
+		BalanceFiat = CalcHelper.UsdBalance(wallet.Balance, rateProvider.BtcToUsdRate);
 		HasBalance = wallet.Balance.Select(money => money != Money.Zero);
 	}
 

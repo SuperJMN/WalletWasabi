@@ -1,15 +1,15 @@
-using System.Reactive.Linq;
 using NBitcoin;
+using WalletWasabi.Fluent.Helpers;
 
 namespace WalletWasabi.Fluent.ViewModels.Wallets;
 
 public class WalletBalances
 {
-	public WalletBalances(IObservable<decimal> exchangeRate, IObservable<Money> btcBalance)
+	public WalletBalances(IObservable<Money> btcBalance, IObservable<decimal> exchangeRate)
 	{
 		ExchangeRate = exchangeRate;
 		BtcBalance = btcBalance;
-		UsdBalance = btcBalance.CombineLatest(exchangeRate, (b, er) => b.ToDecimal(MoneyUnit.BTC) * er);
+		UsdBalance = CalcHelper.UsdBalance(btcBalance, exchangeRate);
 	}
 
 	public IObservable<Money> BtcBalance { get; }

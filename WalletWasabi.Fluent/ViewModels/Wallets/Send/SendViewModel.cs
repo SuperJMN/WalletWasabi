@@ -9,6 +9,7 @@ using NBitcoin;
 using NBitcoin.Payment;
 using ReactiveUI;
 using WalletWasabi.Blockchain.Analysis.Clustering;
+using WalletWasabi.Bridge;
 using WalletWasabi.Extensions;
 using WalletWasabi.Fluent.Models;
 using WalletWasabi.Fluent.Validation;
@@ -55,7 +56,7 @@ public partial class SendViewModel : RoutableViewModel
 	[AutoNotify] private string? _payJoinEndPoint;
 	[AutoNotify] private bool _conversionReversed;
 	
-	public SendViewModel(WalletViewModel walletVm)
+	public SendViewModel(WalletViewModel walletVm, IExchangeRateProvider exchangeRateProvider)
 	{
 		WalletVm = walletVm;
 		_to = "";
@@ -134,11 +135,8 @@ public partial class SendViewModel : RoutableViewModel
 		this.WhenAnyValue(x => x.ConversionReversed)
 			.Skip(1)
 			.Subscribe(x => Services.UiConfig.SendAmountConversionReversed = x);
-
-		var exchangeRates = this.WhenAnyValue(x => x.WalletVm.Wallet.Synchronizer.UsdExchangeRate);
-		var balances = this.WhenAnyValue(x => x.WalletVm.UiTriggers.BalanceUpdateTrigger).Select(_ => walletVm.Wallet.Coins.TotalAmount());
-
-		_clipboardObserver = new ClipboardObserver(new WalletBalances(exchangeRates, balances));
+		
+		_clipboardObserver = new ClipboardObserver(new WalletBalances(walletVm.ImprovedWallet.Balance, exchangeRateProvider.BtcToUsdRate));
 	}
 
 	public IObservable<string?> UsdContent => _clipboardObserver.ClipboardUsdContentChanged(RxApp.MainThreadScheduler);

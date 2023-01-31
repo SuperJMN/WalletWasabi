@@ -249,7 +249,7 @@ public partial class MainViewModel : ViewModelBase
 			if (UiServices.WalletManager.TryGetSelectedAndLoggedInWalletViewModel(out var walletViewModel))
 			{
 				// TODO: Check if we can send?
-				return new SendViewModel(walletViewModel);
+				return new SendViewModel(walletViewModel, walletViewModel.ExchangeRateProvider);
 			}
 
 			return null;
@@ -259,7 +259,7 @@ public partial class MainViewModel : ViewModelBase
 		{
 			if (UiServices.WalletManager.TryGetSelectedAndLoggedInWalletViewModel(out var walletViewModel))
 			{
-				return new ReceiveViewModel(walletViewModel.Wallet, walletViewModel.MyWallet);
+				return new ReceiveViewModel(walletViewModel.Wallet, walletViewModel.ImprovedWallet);
 			}
 
 			return null;

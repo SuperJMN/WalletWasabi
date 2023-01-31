@@ -37,14 +37,15 @@ public partial class WalletViewModel : WalletViewModelBase
 	[AutoNotify(SetterModifier = AccessModifier.Private)] private bool _isTransactionHistoryEmpty;
 	[AutoNotify(SetterModifier = AccessModifier.Private)] private bool _isSendButtonVisible;
 
-	private readonly IWallet _myWallet;
 	private readonly ExchangeRateProvider _exchangeRateProvider;
 
 	protected WalletViewModel(Wallet wallet) : base(wallet)
 	{
-		_myWallet = new HardwareWallet(wallet, new HardwareInterfaceClient());
-		Balance = _myWallet.Balance;
+		ImprovedWallet = new HardwareWallet(wallet, new HardwareInterfaceClient());
+
 		_exchangeRateProvider = new ExchangeRateProvider(wallet.Synchronizer);
+
+		ExchangeRateProvider = _exchangeRateProvider;
 
 		Disposables = Disposables is null
 			? new CompositeDisposable()
@@ -93,9 +94,9 @@ public partial class WalletViewModel : WalletViewModelBase
 					return (isSelected && !isWalletBalanceZero && (!areAllCoinsPrivate || pointerOver)) && !wallet.KeyManager.IsWatchOnly;
 				});
 
-		SendCommand = ReactiveCommand.Create(() => Navigate(NavigationTarget.DialogScreen).To(new SendViewModel(this)));
+		SendCommand = ReactiveCommand.Create(() => Navigate(NavigationTarget.DialogScreen).To(new SendViewModel(this, _exchangeRateProvider)));
 
-		ReceiveCommand = ReactiveCommand.Create(() => Navigate(NavigationTarget.DialogScreen).To(new ReceiveViewModel(wallet, _myWallet)));
+		ReceiveCommand = ReactiveCommand.Create(() => Navigate(NavigationTarget.DialogScreen).To(new ReceiveViewModel(wallet, ImprovedWallet)));
 
 		WalletInfoCommand = ReactiveCommand.CreateFromTask(async () =>
 		{
@@ -126,7 +127,9 @@ public partial class WalletViewModel : WalletViewModelBase
 		Tiles = GetTiles().ToList();
 	}
 
-	public IObservable<Money> Balance { get; }
+	public HardwareWallet ImprovedWallet { get; set; }
+
+	public IObservable<Money> Balance => ImprovedWallet.Balance;
 
 	public IEnumerable<ActivatableViewModel> Tiles { get; }
 
@@ -161,7 +164,8 @@ public partial class WalletViewModel : WalletViewModelBase
 	private CompositeDisposable Disposables { get; }
 
 	public HistoryViewModel History { get; }
-	public IWallet MyWallet => _myWallet;
+
+	public IExchangeRateProvider ExchangeRateProvider { get; }
 
 	public void NavigateAndHighlight(uint256 txid)
 	{
@@ -197,7 +201,7 @@ public partial class WalletViewModel : WalletViewModelBase
 
 	private IEnumerable<ActivatableViewModel> GetTiles()
 	{
-		yield return new NewWalletBalanceTileViewModel(_myWallet, _exchangeRateProvider);
+		yield return new NewWalletBalanceTileViewModel(ImprovedWallet, _exchangeRateProvider);
 
 		if (!IsWatchOnly)
 		{

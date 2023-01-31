@@ -23,12 +23,12 @@ namespace WalletWasabi.Fluent.ViewModels.Wallets.Receive;
 [NavigationMetaData(Title = "Receive Addresses")]
 public partial class ReceiveAddressesViewModel : RoutableViewModel
 {
-	private readonly IWallet _myWallet;
+	private readonly IWallet improvedWallet;
 	private ObservableCollection<AddressViewModel> _addresses;
 
 	public ReceiveAddressesViewModel(Wallet wallet, IWallet myWallet)
 	{
-		_myWallet = myWallet;
+		improvedWallet = myWallet;
 		Wallet = wallet;
 		Network = wallet.Network;
 		_addresses = new ObservableCollection<AddressViewModel>();
@@ -131,7 +131,7 @@ public partial class ReceiveAddressesViewModel : RoutableViewModel
 				HDFingerprint masterFingerprint = wallet.KeyManager.MasterFingerprint.Value;
 				Network walletNetwork = wallet.Network;
 				var address = Bridge.Address.From(key.PubKey, key.FullKeyPath, key.Label, masterFingerprint, walletNetwork);
-				_addresses.Add(new AddressViewModel(this, key, _myWallet, address));
+				_addresses.Add(new AddressViewModel(this, key, improvedWallet, address));
 			}
 		}
 		catch (Exception ex)

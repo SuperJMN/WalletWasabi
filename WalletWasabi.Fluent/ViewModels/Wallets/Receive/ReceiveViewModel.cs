@@ -25,13 +25,13 @@ namespace WalletWasabi.Fluent.ViewModels.Wallets.Receive;
 public partial class ReceiveViewModel : RoutableViewModel
 {
 	private readonly Wallet _wallet;
-	private readonly IWallet _myWallet;
+	private readonly IWallet improvedWallet;
 	[AutoNotify] private bool _isExistingAddressesButtonVisible;
 
 	public ReceiveViewModel(Wallet wallet, IWallet myWallet)
 	{
 		_wallet = wallet;
-		_myWallet = myWallet;
+		improvedWallet = myWallet;
 		SetupCancel(enableCancel: true, enableCancelOnEscape: true, enableCancelOnPressed: true);
 
 		EnableBack = false;
@@ -55,18 +55,18 @@ public partial class ReceiveViewModel : RoutableViewModel
 
 	private void OnNext()
 	{
-		var newAddress = _myWallet.CreateReceiveAddress(SuggestionLabels.Labels);
+		var newAddress = improvedWallet.CreateReceiveAddress(SuggestionLabels.Labels);
 
 		SuggestionLabels.Labels.Clear();
 
-		var vm = ViewModelLocator.GetAddressViewModel(_myWallet, newAddress);
+		var vm = ViewModelLocator.GetAddressViewModel(improvedWallet, newAddress);
 
 		Navigate().To(vm);
 	}
 
 	private void OnShowExistingAddresses()
 	{
-		Navigate().To(new ReceiveAddressesViewModel(_wallet, _myWallet));
+		Navigate().To(new ReceiveAddressesViewModel(_wallet, improvedWallet));
 	}
 
 	protected override void OnNavigatedTo(bool isInHistory, CompositeDisposable disposable)
