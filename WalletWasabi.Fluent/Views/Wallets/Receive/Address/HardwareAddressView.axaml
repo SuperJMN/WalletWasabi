@@ -13,20 +13,28 @@
                  EnableBack="{Binding EnableBack}"
                  EnableNext="True" NextContent="OK"
                  ScrollViewer.VerticalScrollBarVisibility="Disabled">
-    <c:ReceiveAddressControl Address="{Binding ReceiveAddress.Address}"
-                             Labels="{Binding ReceiveAddress.Labels}"
-                             QrCode="{Binding ReceiveAddress.QrCode}">
-      <c:ReceiveAddressControl.ExtraContent>
-        <Panel VerticalAlignment="Center">
-          <c:AnimatedButton ToolTip.Tip="Show on the hardware wallet"
-                            IsVisible="{Binding !HardwareWallet.IsBusy^}"
-                            NormalIcon="{StaticResource share_regular}"
-                            Command="{Binding HardwareWallet.ShowOnHwWalletCommand}"
-                            ClickIcon="{StaticResource copy_confirmed}" />
-          <c:ProgressRing IsVisible="{Binding HardwareWallet.IsBusy^}" IsIndeterminate="True" Width="22"
-                          Height="22" StrokeThickness="1" />
-        </Panel>
-      </c:ReceiveAddressControl.ExtraContent>
-    </c:ReceiveAddressControl>
+    <DockPanel>
+
+      <TextBlock Text="{Binding HardwareWallet.ErrorMessage}"
+                 Foreground="{DynamicResource WarningMessageForeground}"
+                 TextAlignment="Center"
+                 DockPanel.Dock="Bottom" Margin="0 15 0 0" />
+
+      <c:ReceiveAddressControl Address="{Binding ReceiveAddress.Address}"
+                               Labels="{Binding ReceiveAddress.Labels}"
+                               QrCode="{Binding ReceiveAddress.QrCode}">
+        <c:ReceiveAddressControl.ExtraContent>
+          <Panel VerticalAlignment="Center">
+            <c:AnimatedButton ToolTip.Tip="Show on the hardware wallet"
+                              IsVisible="{Binding !HardwareWallet.IsBusy^}"
+                              NormalIcon="{StaticResource share_regular}"
+                              Command="{Binding HardwareWallet.ShowOnHwWalletCommand}"
+                              ClickIcon="{StaticResource copy_confirmed}" />
+            <c:ProgressRing IsVisible="{Binding HardwareWallet.IsBusy^}" IsIndeterminate="True" Width="20"
+                            Height="22" StrokeThickness="1" />
+          </Panel>
+        </c:ReceiveAddressControl.ExtraContent>
+      </c:ReceiveAddressControl>
+    </DockPanel>
   </c:ContentArea>
 </UserControl>
