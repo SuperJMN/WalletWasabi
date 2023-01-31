@@ -127,7 +127,11 @@ public partial class ReceiveAddressesViewModel : RoutableViewModel
 
 			foreach (HdPubKey key in keys)
 			{
-				_addresses.Add(new AddressViewModel(this, Wallet, key, _myWallet));
+				Wallet wallet = Wallet;
+				HDFingerprint masterFingerprint = wallet.KeyManager.MasterFingerprint.Value;
+				Network walletNetwork = wallet.Network;
+				var address = Bridge.Address.From(key.PubKey, key.FullKeyPath, key.Label, masterFingerprint, walletNetwork);
+				_addresses.Add(new AddressViewModel(this, key, _myWallet, address));
 			}
 		}
 		catch (Exception ex)

@@ -7,7 +7,6 @@ using ReactiveUI;
 using WalletWasabi.Blockchain.Analysis.Clustering;
 using WalletWasabi.Blockchain.Keys;
 using WalletWasabi.Bridge;
-using Wallet = WalletWasabi.Wallets.Wallet;
 
 namespace WalletWasabi.Fluent.ViewModels.Wallets.Receive;
 
@@ -15,9 +14,8 @@ public partial class AddressViewModel : ViewModelBase
 {
 	[AutoNotify] private BitcoinAddress _address;
 
-	public AddressViewModel(ReceiveAddressesViewModel parent, Wallet wallet, HdPubKey model, IWallet myWallet)
+	public AddressViewModel(ReceiveAddressesViewModel parent, HdPubKey model, IWallet myWallet, IAddress address)
 	{
-		var address = Bridge.Address.From(model.PubKey, model.FullKeyPath, model.Label, wallet);
 		_address = address.P2wpkhAddress;
 		
 		Label = new SmartLabel(address.Labels);

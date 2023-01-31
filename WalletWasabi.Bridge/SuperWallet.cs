@@ -54,7 +54,7 @@ public class ImprovedWallet : IWallet
 		}
 
 		var hdPubKey = _wallet.KeyManager.GetNextReceiveKey(new SmartLabel(destinationLabels));
-		var address = Address.From(hdPubKey.PubKey, hdPubKey.FullKeyPath, hdPubKey.Label, _wallet);
+		var address = Address.From(hdPubKey.PubKey, hdPubKey.FullKeyPath, hdPubKey.Label, _wallet.KeyManager.MasterFingerprint.Value, _wallet.Network);
 		return address;
 	}
 
@@ -68,7 +68,7 @@ public class ImprovedWallet : IWallet
 	public IEnumerable<Address> Addresses =>
 		_wallet.KeyManager
 			.GetKeys(hdPubKey => !hdPubKey.Label.IsEmpty && !hdPubKey.IsInternal && hdPubKey.KeyState == KeyState.Clean)
-			.Select(key => Address.From(key.PubKey, key.FullKeyPath, key.Label, _wallet));
+			.Select(key => Address.From(key.PubKey, key.FullKeyPath, key.Label, _wallet.KeyManager.MasterFingerprint.Value, _wallet.Network));
 
 	private IObservable<Money> Balances()
 	{

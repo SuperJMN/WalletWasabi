@@ -16,14 +16,13 @@ public record Address : IAddress
 
 	public BitcoinAddress P2wpkhAddress { get; }
 	public IEnumerable<string> Labels { get; }
-
-	public static Address From(PubKey pubKey, KeyPath fullKeyPath, IEnumerable<string> labels, Wallets.Wallet wallet)
-	{
-		return new Address(pubKey, wallet.Network, wallet.KeyManager.MasterFingerprint.Value, fullKeyPath, labels);
-	}
-
 	public PubKey PubKey { get; }
 	public Network Network { get; }
 	public HDFingerprint HdFingerprint { get; }
 	public KeyPath FullKeyPath { get; }
+
+	public static Address From(PubKey pubKey, KeyPath fullKeyPath, IEnumerable<string> labels, HDFingerprint keyManagerMasterFingerprint, Network walletNetwork)
+	{
+		return new Address(pubKey, walletNetwork, keyManagerMasterFingerprint, fullKeyPath, labels);
+	}
 }
