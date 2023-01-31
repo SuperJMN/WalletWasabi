@@ -5,12 +5,12 @@ using ReactiveUI;
 
 namespace WalletWasabi.Fluent.ViewModels.Wallets.Home.Tiles;
 
-public partial class NewWalletBalanceTileViewModelDesign : ReactiveObject, INewWalletBalanceTileViewModel
+public partial class WalletBalanceTileViewModelDesign : ReactiveObject, IWalletBalanceTileViewModel
 {
 	[AutoNotify] private decimal _exchangeRate;
 	[AutoNotify] private decimal _balanceBtcValue;
 
-	public NewWalletBalanceTileViewModelDesign()
+	public WalletBalanceTileViewModelDesign()
 	{
 		BalanceBtc = this.WhenChanged(x => x.BalanceBtcValue).Select(Money.Coins);
 		BalanceFiat = BalanceBtc.WithLatestFrom(this.WhenChanged(x => x.ExchangeRate), (money, er) => money.ToDecimal(MoneyUnit.BTC) * er);

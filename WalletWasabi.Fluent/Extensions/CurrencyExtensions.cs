@@ -1,5 +1,6 @@
 using System.Globalization;
 using System.Linq;
+using System.Reactive.Linq;
 using NBitcoin;
 using WalletWasabi.Blockchain.TransactionBuilding;
 
@@ -59,5 +60,10 @@ public static class CurrencyExtensions
 			>= 1 => n.ToString("N1", FormatInfo),
 			_ => n.ToString("N2", FormatInfo)
 		};
+	}
+
+	public static IObservable<decimal> ToUsd(this IObservable<Money> btcBalance, IObservable<decimal> btcToUsdExchangeRate)
+	{
+		return btcBalance.WithLatestFrom(btcToUsdExchangeRate, (money, er) => money.ToDecimal(MoneyUnit.BTC) * er);
 	}
 }

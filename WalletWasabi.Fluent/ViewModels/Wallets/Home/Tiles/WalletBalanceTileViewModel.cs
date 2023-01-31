@@ -1,25 +1,17 @@
 using System.Reactive.Linq;
 using NBitcoin;
+using WalletWasabi.Bridge;
 using WalletWasabi.Fluent.Extensions;
 
 namespace WalletWasabi.Fluent.ViewModels.Wallets.Home.Tiles;
 
-public class WalletBalanceTileViewModel : ActivatableViewModel
+public class WalletBalanceTileViewModel : ActivatableViewModel, IWalletBalanceTileViewModel
 {
-	public WalletBalanceTileViewModel(WalletViewModel walletVm)
+	public WalletBalanceTileViewModel(IWallet wallet, IExchangeRateProvider rateProvider)
 	{
-		var wallet = walletVm.Wallet;
-
-		var balanceBtc = walletVm.UiTriggers.BalanceUpdateTrigger
-			.Select(_ => wallet.Coins.TotalAmount());
-
-		BalanceBtc = balanceBtc;
-
-		BalanceFiat = balanceBtc
-			.Select(money => money.BtcToUsd(wallet.Synchronizer.UsdExchangeRate));
-
-		HasBalance = balanceBtc
-			.Select(money => money > Money.Zero);
+		BalanceBtc = wallet.Balance;
+		BalanceFiat = wallet.Balance.ToUsd(rateProvider.BtcToUsdRate);
+		HasBalance = wallet.Balance.Select(money => money != Money.Zero);
 	}
 
 	public IObservable<bool> HasBalance { get; }

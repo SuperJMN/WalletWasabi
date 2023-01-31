@@ -44,8 +44,8 @@
 	  <Compile Update="Controls\ReceiveAddressControl.axaml.cs">
 	    <DependentUpon>ReceiveAddressControl.axaml</DependentUpon>
 	  </Compile>
-	  <Compile Update="Views\Wallets\Home\Tiles\NewWalletBalanceTileView.axaml.cs">
-	    <DependentUpon>NewWalletBalanceTileView.axaml</DependentUpon>
+	  <Compile Update="Views\Wallets\Home\Tiles\WalletBalanceTileView.axaml.cs">
+	    <DependentUpon>WalletBalanceTileView.axaml</DependentUpon>
 	  </Compile>
 	</ItemGroup>
 

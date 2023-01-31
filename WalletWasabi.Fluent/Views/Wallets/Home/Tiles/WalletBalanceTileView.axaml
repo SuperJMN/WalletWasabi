@@ -7,11 +7,11 @@
              xmlns:tiles="clr-namespace:WalletWasabi.Fluent.ViewModels.Wallets.Home.Tiles"
              mc:Ignorable="d" d:DesignWidth="320" d:DesignHeight="140"
              x:CompileBindings="True"
-             x:DataType="tiles:INewWalletBalanceTileViewModel"
-             x:Class="WalletWasabi.Fluent.Views.Wallets.Home.Tiles.NewWalletBalanceTileView" ClipToBounds="False">
+             x:DataType="tiles:IWalletBalanceTileViewModel"
+             x:Class="WalletWasabi.Fluent.Views.Wallets.Home.Tiles.WalletBalanceTileView" ClipToBounds="False">
 
   <Design.DataContext>
-    <tiles:NewWalletBalanceTileViewModelDesign
+    <tiles:WalletBalanceTileViewModelDesign
       BalanceBtcValue="1.1700"
       ExchangeRate="22000" />
   </Design.DataContext>

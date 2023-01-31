@@ -94,7 +94,7 @@ public partial class WalletViewModel : WalletViewModelBase
 					return (isSelected && !isWalletBalanceZero && (!areAllCoinsPrivate || pointerOver)) && !wallet.KeyManager.IsWatchOnly;
 				});
 
-		SendCommand = ReactiveCommand.Create(() => Navigate(NavigationTarget.DialogScreen).To(new SendViewModel(this, _exchangeRateProvider)));
+		SendCommand = ReactiveCommand.Create(() => Navigate(NavigationTarget.DialogScreen).To(new SendViewModel(this, _exchangeRateProvider, ImprovedWallet)));
 
 		ReceiveCommand = ReactiveCommand.Create(() => Navigate(NavigationTarget.DialogScreen).To(new ReceiveViewModel(wallet, ImprovedWallet)));
 
@@ -201,7 +201,7 @@ public partial class WalletViewModel : WalletViewModelBase
 
 	private IEnumerable<ActivatableViewModel> GetTiles()
 	{
-		yield return new NewWalletBalanceTileViewModel(ImprovedWallet, _exchangeRateProvider);
+		yield return new WalletBalanceTileViewModel(ImprovedWallet, _exchangeRateProvider);
 
 		if (!IsWatchOnly)
 		{

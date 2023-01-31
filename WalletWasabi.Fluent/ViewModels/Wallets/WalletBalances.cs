@@ -1,5 +1,5 @@
 using NBitcoin;
-using WalletWasabi.Fluent.Helpers;
+using WalletWasabi.Fluent.Extensions;
 
 namespace WalletWasabi.Fluent.ViewModels.Wallets;
 
@@ -9,7 +9,7 @@ public class WalletBalances
 	{
 		ExchangeRate = exchangeRate;
 		BtcBalance = btcBalance;
-		UsdBalance = CalcHelper.UsdBalance(btcBalance, exchangeRate);
+		UsdBalance = btcBalance.ToUsd(exchangeRate);
 	}
 
 	public IObservable<Money> BtcBalance { get; }

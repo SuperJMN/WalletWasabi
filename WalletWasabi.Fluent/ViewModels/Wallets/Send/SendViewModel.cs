@@ -26,6 +26,8 @@ using WalletWasabi.Wallets;
 using WalletWasabi.WebClients.PayJoin;
 using Constants = WalletWasabi.Helpers.Constants;
 using WalletWasabi.Fluent.Infrastructure;
+using IWallet = WalletWasabi.Bridge.IWallet;
+using WalletWasabi.Fluent.Extensions;
 
 namespace WalletWasabi.Fluent.ViewModels.Wallets.Send;
 
@@ -56,20 +58,20 @@ public partial class SendViewModel : RoutableViewModel
 	[AutoNotify] private string? _payJoinEndPoint;
 	[AutoNotify] private bool _conversionReversed;
 	
-	public SendViewModel(WalletViewModel walletVm, IExchangeRateProvider exchangeRateProvider)
+	public SendViewModel(WalletViewModel walletVm, IExchangeRateProvider exchangeRateProvider, IWallet wallet)
 	{
 		WalletVm = walletVm;
 		_to = "";
 		_wallet = walletVm.Wallet;
 		_coinJoinManager = Services.HostedServices.GetOrDefault<CoinJoinManager>();
+		BalanceBtc = wallet.Balance;
+		BalanceFiat = wallet.Balance.ToUsd(exchangeRateProvider.BtcToUsdRate);
 
 		_conversionReversed = Services.UiConfig.SendAmountConversionReversed;
 
 		IsQrButtonVisible = WebcamQrReader.IsOsPlatformSupported;
 
 		ExchangeRate = _wallet.Synchronizer.UsdExchangeRate;
-
-		Balance = new WalletBalanceTileViewModel(walletVm);
 
 		SetupCancel(enableCancel: true, enableCancelOnEscape: true, enableCancelOnPressed: true);
 
@@ -136,8 +138,12 @@ public partial class SendViewModel : RoutableViewModel
 			.Skip(1)
 			.Subscribe(x => Services.UiConfig.SendAmountConversionReversed = x);
 		
-		_clipboardObserver = new ClipboardObserver(new WalletBalances(walletVm.ImprovedWallet.Balance, exchangeRateProvider.BtcToUsdRate));
+		_clipboardObserver = new ClipboardObserver(new WalletBalances(wallet.Balance, exchangeRateProvider.BtcToUsdRate));
 	}
+
+	public IObservable<Money> BalanceBtc { get; }
+
+	public IObservable<decimal> BalanceFiat { get; }
 
 	public IObservable<string?> UsdContent => _clipboardObserver.ClipboardUsdContentChanged(RxApp.MainThreadScheduler);
 
@@ -153,7 +159,6 @@ public partial class SendViewModel : RoutableViewModel
 
 	public ICommand InsertMaxCommand { get; }
 
-	public WalletBalanceTileViewModel Balance { get; }
 
 	public WalletViewModel WalletVm { get; }
 
@@ -336,8 +341,6 @@ public partial class SendViewModel : RoutableViewModel
 			.DisposeWith(disposables);
 
 		RxApp.MainThreadScheduler.Schedule(async () => await OnAutoPasteAsync());
-
-		Balance.Activate(disposables);
 
 		base.OnNavigatedTo(inHistory, disposables);
 	}
