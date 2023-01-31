@@ -49,7 +49,7 @@ public partial class SuggestionLabelsViewModel : ViewModelBase
 
 	private void CreateSuggestions(int topSuggestionsCount)
 	{
-		var ranking = LabelRanking.Calculate(KeyManager.GetReceiveLabels(), WalletHelpers.GetReceiveAddressLabels(), WalletHelpers.GetChangeAddressLabels(), WalletHelpers.GetTransactionLabels(), Intent);
+		var ranking = LabelRanking.Rank(new RankInput(KeyManager.GetReceiveLabels(), WalletHelpers.GetReceiveAddressLabels(), WalletHelpers.GetChangeAddressLabels(), WalletHelpers.GetTransactionLabels()), Intent);
 		var sourceLabels = ranking
 			.Select(pair => new SuggestionLabelViewModel(pair.Key, pair.Value))
 			.AsObservableChangeSet();
