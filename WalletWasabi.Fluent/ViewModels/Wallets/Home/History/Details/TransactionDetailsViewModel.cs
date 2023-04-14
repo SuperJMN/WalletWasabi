@@ -4,9 +4,9 @@ using System.Reactive.Disposables;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Avalonia;
+using NBitcoin;
 using ReactiveUI;
 using WalletWasabi.Blockchain.Analysis.Clustering;
-using WalletWasabi.Blockchain.Transactions;
 using WalletWasabi.Blockchain.Transactions.Summary;
 using WalletWasabi.Fluent.Extensions;
 using WalletWasabi.Fluent.ViewModels.Navigation;
@@ -34,6 +34,9 @@ public partial class TransactionDetailsViewModel : RoutableViewModel
 
 		NextCommand = ReactiveCommand.Create(OnNext);
 		CopyTransactionIdCommand = ReactiveCommand.CreateFromTask(OnCopyTransactionIdAsync);
+		var model = TransactionModel.Create(transactionSummary);
+
+		Fee = model.Fee();
 
 		SetupCancel(enableCancel: false, enableCancelOnEscape: true, enableCancelOnPressed: true);
 
@@ -41,6 +44,8 @@ public partial class TransactionDetailsViewModel : RoutableViewModel
 
 		ShowDetails = ReactiveCommand.Create(() => Navigate(NavigationTarget.DialogScreen).To(new TransactionDetails2ViewModel(new ReactiveTransaction(_walletVm.Wallet, transactionSummary.TransactionId))));
 	}
+
+	public Money? Fee { get; set; }
 
 	public ReactiveCommand<Unit, Unit> ShowDetails { get; set; }
 
