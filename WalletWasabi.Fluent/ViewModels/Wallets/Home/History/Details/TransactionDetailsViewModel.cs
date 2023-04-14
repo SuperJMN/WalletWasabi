@@ -41,13 +41,9 @@ public partial class TransactionDetailsViewModel : RoutableViewModel
 		SetupCancel(enableCancel: false, enableCancelOnEscape: true, enableCancelOnPressed: true);
 
 		UpdateValues(transactionSummary);
-
-		ShowDetails = ReactiveCommand.Create(() => Navigate(NavigationTarget.DialogScreen).To(new TransactionDetails2ViewModel(new ReactiveTransaction(_walletVm.Wallet, transactionSummary.TransactionId))));
 	}
 
 	public Money? Fee { get; set; }
-
-	public ReactiveCommand<Unit, Unit> ShowDetails { get; set; }
 
 	public ICommand CopyTransactionIdCommand { get; }
 
