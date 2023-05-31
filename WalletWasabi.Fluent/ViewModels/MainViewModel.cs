@@ -182,7 +182,7 @@ public partial class MainViewModel : ViewModelBase
 	{
 		StatusIcon.Initialize();
 
-		if (Services.PersistentConfig.Network != Network.Main)
+		if (Services.Config.Network != Network.Main)
 		{
 			Title += $" - {Services.PersistentConfig.Network}";
 		}
