@@ -8,21 +8,46 @@ namespace WalletWasabi.Fluent.Controls;
 
 public class DualCurrencyBox2 : TemplatedControl
 {
+	private const decimal Tolerance = (decimal)0.00000001;
+
 	public static readonly StyledProperty<decimal?> BtcBoxValueProperty = AvaloniaProperty.Register<DualCurrencyBox2, decimal?>(nameof(BtcBoxValue), defaultBindingMode: BindingMode.TwoWay);
 
 	public static readonly StyledProperty<decimal?> UsdBoxValueProperty = AvaloniaProperty.Register<DualCurrencyBox2, decimal?>(nameof(UsdBoxValue), defaultBindingMode: BindingMode.TwoWay);
 
-	public static readonly StyledProperty<decimal?> ValueProperty = AvaloniaProperty.Register<DualCurrencyBox2, decimal?>(nameof(Value), defaultBindingMode: BindingMode.TwoWay);
+	public static readonly StyledProperty<decimal?> ValueProperty = AvaloniaProperty.Register<DualCurrencyBox2, decimal?>(nameof(Value), defaultBindingMode: BindingMode.TwoWay,
+		coerce: (obj, newValue) =>
+		{
+			var instance = (DualCurrencyBox2) obj;
+
+			if (instance.Value is null)
+			{
+				return newValue;
+			}
+
+			if (newValue is null)
+			{
+				return default;
+			}
+
+			var dcbValue = (decimal)(instance.Value - newValue);
+
+			if (Math.Abs(dcbValue) > Tolerance)
+			{
+				return newValue;
+			}
+
+			return instance.Value;
+		});
 
 	public DualCurrencyBox2()
 	{
 		this
 			.WhenAnyValue(x => x.BtcBoxValue)
 			.Do(
-				x =>
+				btcValue =>
 				{
-					Value = x;
-					UsdBoxValue = x * ExchangeRate;
+					Value = btcValue;
+					UsdBoxValue = BtcToUsd(btcValue);
 				})
 			.Subscribe();
 
@@ -33,12 +58,22 @@ public class DualCurrencyBox2 : TemplatedControl
 
 		this.WhenAnyValue(x => x.Value)
 			.Do(
-				x =>
+				btcValue =>
 				{
-					BtcBoxValue = x;
-					UsdBoxValue = x * ExchangeRate;
+					BtcBoxValue = btcValue;
+					UsdBoxValue = BtcToUsd(btcValue);
 				})
 			.Subscribe();
+	}
+
+	private decimal? BtcToUsd(decimal? x)
+	{
+		if (x is null)
+		{
+			return default;
+		}
+
+		return Math.Round((decimal) (x * ExchangeRate), 2);
 	}
 
 	public decimal? BtcBoxValue
