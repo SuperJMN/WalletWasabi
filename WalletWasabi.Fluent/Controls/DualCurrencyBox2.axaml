@@ -1,0 +1,58 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:WalletWasabi.Fluent.Controls"
+        xmlns:c="clr-namespace:AvaloniaApplication2;assembly=AvaloniaApplication2"
+        xmlns:system="clr-namespace:System;assembly=System.Runtime"
+        xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
+        xmlns:d="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions">
+  <Design.PreviewWith>
+    <Border Padding="20" Width="400">
+      <controls:DualCurrencyBox2>
+        <controls:DualCurrencyBox2.Value>
+          <system:Decimal>2</system:Decimal>
+        </controls:DualCurrencyBox2.Value>
+      </controls:DualCurrencyBox2>
+    </Border>
+  </Design.PreviewWith>
+
+  <Style Selector="controls|DualCurrencyBox2 TextBlock.Unit">
+    <Setter Property="VerticalAlignment" Value="Center"></Setter>
+  </Style>
+
+  <Style Selector="controls|DualCurrencyBox2">
+    <!-- Set Defaults -->
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Grid ColumnDefinitions="*,Auto,*">
+          <c:DecimalTextEntry x:Name="BtcEntry" Value="{Binding BtcBoxValue, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
+            <c:DecimalTextEntry.RightContentTemplate>
+              <ControlTemplate>
+                <TextBlock Classes="Unit" Text="BTC" />
+              </ControlTemplate>
+            </c:DecimalTextEntry.RightContentTemplate>
+          </c:DecimalTextEntry>
+          <ToggleButton x:Name="Invert" VerticalAlignment="Center" Content="Invert" Margin="10" Grid.Column="1" />
+          <c:DecimalTextEntry x:Name="UsdEntry" Value="{Binding UsdBoxValue, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
+            <c:DecimalTextEntry.RightContentTemplate>
+              <ControlTemplate>
+                <TextBlock Classes="Unit" Text="USD" />
+              </ControlTemplate>
+            </c:DecimalTextEntry.RightContentTemplate>
+          </c:DecimalTextEntry>
+
+          <i:Interaction.Behaviors>
+            <d:DataTriggerBehavior Binding="{Binding #Invert.IsChecked}" Value="True">
+              <d:ChangePropertyAction TargetObject="BtcEntry" Value="0" PropertyName="Grid.Column" />
+              <d:ChangePropertyAction TargetObject="UsdEntry" Value="2" PropertyName="Grid.Column" />
+            </d:DataTriggerBehavior>
+            <d:DataTriggerBehavior Binding="{Binding #Invert.IsChecked}" Value="False">
+              <d:ChangePropertyAction TargetObject="BtcEntry" Value="2" PropertyName="Grid.Column" />
+              <d:ChangePropertyAction TargetObject="UsdEntry" Value="0" PropertyName="Grid.Column" />
+            </d:DataTriggerBehavior>
+          </i:Interaction.Behaviors>
+
+        </Grid>
+      </ControlTemplate>
+    </Setter>
+  </Style>
+</Styles>

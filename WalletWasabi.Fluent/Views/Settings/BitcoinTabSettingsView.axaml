@@ -5,6 +5,8 @@
              xmlns:c="using:WalletWasabi.Fluent.Controls"
              xmlns:settings="using:WalletWasabi.Fluent.ViewModels.Settings"
              xmlns:controls="clr-namespace:WalletWasabi.Fluent.Controls"
+             xmlns:avaloniaApplication2="clr-namespace:AvaloniaApplication2;assembly=AvaloniaApplication2"
+             xmlns:fluent="clr-namespace:WalletWasabi.Fluent"
              mc:Ignorable="d" d:DesignWidth="428" d:DesignHeight="371"
              x:DataType="settings:BitcoinTabSettingsViewModel"
              x:Class="WalletWasabi.Fluent.Views.Settings.BitcoinTabSettingsView"
@@ -49,7 +51,13 @@
     <StackPanel Spacing="10"
                 ToolTip.Tip="Coins under the dust threshold won't appear.">
       <TextBlock Text="Dust Threshold" />
-      <controls:CurrencyEntryBox Text="{Binding DustThreshold}" CurrencyCode="BTC" />
+      <avaloniaApplication2:DecimalTextEntry Formatter="{x:Static fluent:MyFormatter.Instance}" Value="{Binding DustThreshold}">
+        <avaloniaApplication2:DecimalTextEntry.RightContentTemplate>
+          <ControlTemplate>
+            <TextBlock VerticalAlignment="Center" Text="BTC" Margin="0 0 10 0" />
+          </ControlTemplate>
+        </avaloniaApplication2:DecimalTextEntry.RightContentTemplate>
+      </avaloniaApplication2:DecimalTextEntry>
     </StackPanel>
   </StackPanel>
 </UserControl>

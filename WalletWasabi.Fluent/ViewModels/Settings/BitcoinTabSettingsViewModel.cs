@@ -29,7 +29,7 @@ public partial class BitcoinTabSettingsViewModel : SettingsTabViewModelBase
 	[AutoNotify] private string _localBitcoinCoreDataDir;
 	[AutoNotify] private bool _stopLocalBitcoinCoreOnShutdown;
 	[AutoNotify] private string _bitcoinP2PEndPoint;
-	[AutoNotify] private string _dustThreshold;
+	[AutoNotify] private decimal _dustThreshold;
 
 	public BitcoinTabSettingsViewModel()
 	{
@@ -41,7 +41,7 @@ public partial class BitcoinTabSettingsViewModel : SettingsTabViewModelBase
 		_localBitcoinCoreDataDir = Services.PersistentConfig.LocalBitcoinCoreDataDir;
 		_stopLocalBitcoinCoreOnShutdown = Services.PersistentConfig.StopLocalBitcoinCoreOnShutdown;
 		_bitcoinP2PEndPoint = Services.PersistentConfig.GetBitcoinP2pEndPoint().ToString(defaultPort: -1);
-		_dustThreshold = Services.PersistentConfig.DustThreshold.ToString();
+		_dustThreshold = Services.PersistentConfig.DustThreshold.ToDecimal(MoneyUnit.BTC);
 
 		this.WhenAnyValue(
 				x => x.Network,
@@ -82,21 +82,11 @@ public partial class BitcoinTabSettingsViewModel : SettingsTabViewModelBase
 	private void ValidateDustThreshold(IValidationErrors errors) =>
 		ValidateDustThreshold(errors, DustThreshold, whiteSpaceOk: true);
 
-	private static void ValidateDustThreshold(IValidationErrors errors, string dustThreshold, bool whiteSpaceOk)
+	private static void ValidateDustThreshold(IValidationErrors errors, decimal dustThreshold, bool whiteSpaceOk)
 	{
-		if (!whiteSpaceOk || !string.IsNullOrWhiteSpace(dustThreshold))
+		if (dustThreshold < (decimal) 0.1)
 		{
-			if (!string.IsNullOrEmpty(dustThreshold) && dustThreshold.Contains(
-				',',
-				StringComparison.InvariantCultureIgnoreCase))
-			{
-				errors.Add(ErrorSeverity.Error, "Use decimal point instead of comma.");
-			}
-
-			if (!decimal.TryParse(dustThreshold, out var dust) || dust < 0)
-			{
-				errors.Add(ErrorSeverity.Error, "Invalid dust threshold.");
-			}
+			errors.Add(ErrorSeverity.Error, "que no, tío");
 		}
 	}
 
@@ -112,9 +102,7 @@ public partial class BitcoinTabSettingsViewModel : SettingsTabViewModelBase
 			persistentConfig.StartLocalBitcoinCoreOnStartup = StartLocalBitcoinCoreOnStartup;
 			persistentConfig.StopLocalBitcoinCoreOnShutdown = StopLocalBitcoinCoreOnShutdown;
 			persistentConfig.LocalBitcoinCoreDataDir = Guard.Correct(LocalBitcoinCoreDataDir);
-			persistentConfig.DustThreshold = decimal.TryParse(DustThreshold, out var threshold)
-				? Money.Coins(threshold)
-				: PersistentConfig.DefaultDustThreshold;
+			persistentConfig.DustThreshold = new Money(DustThreshold, MoneyUnit.BTC);
 		}
 		else
 		{
