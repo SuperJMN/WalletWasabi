@@ -6,7 +6,7 @@
         xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
         xmlns:d="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions">
   <Design.PreviewWith>
-    <Border Padding="20" Width="400">
+    <Border Width="600">
       <controls:DualCurrencyBox2>
         <controls:DualCurrencyBox2.Value>
           <system:Decimal>2</system:Decimal>
@@ -15,8 +15,22 @@
     </Border>
   </Design.PreviewWith>
 
+  <Styles.Resources>
+    <Thickness x:Key="TextControlBorderThemeThickness">0,0,0,0</Thickness>
+    <Thickness x:Key="TextControlBorderThemeThicknessFocused">0,0,0,0</Thickness>
+  </Styles.Resources>
+
   <Style Selector="controls|DualCurrencyBox2 TextBlock.Unit">
-    <Setter Property="VerticalAlignment" Value="Center"></Setter>
+    <Setter Property="VerticalAlignment" Value="Center" />
+  </Style>
+
+  <Style Selector="controls|DualCurrencyBox2 TextBox">
+    <Setter Property="VerticalAlignment" Value="Center" />
+    <Setter Property="BorderThickness" Value="0" />
+  </Style>
+
+  <Style Selector="controls|DualCurrencyBox2 TextBox:focus">
+    <Setter Property="BorderThickness" Value="0" />
   </Style>
 
   <Style Selector="controls|DualCurrencyBox2">
@@ -24,6 +38,7 @@
     <Setter Property="Template">
       <ControlTemplate>
         <Grid ColumnDefinitions="*,Auto,*">
+
           <c:DecimalTextEntry x:Name="BtcEntry" Value="{Binding BtcBoxValue, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
             <c:DecimalTextEntry.RightContentTemplate>
               <ControlTemplate>
@@ -31,7 +46,13 @@
               </ControlTemplate>
             </c:DecimalTextEntry.RightContentTemplate>
           </c:DecimalTextEntry>
-          <ToggleButton x:Name="Invert" VerticalAlignment="Center" Content="Invert" Margin="10" Grid.Column="1" />
+
+          <ToggleButton x:Name="Invert" VerticalAlignment="Center" Margin="10" Grid.Column="1">
+            <ToggleButton.Content>
+              <PathIcon Data="{StaticResource arrow_swap}" Width="16" />
+            </ToggleButton.Content>
+          </ToggleButton>
+
           <c:DecimalTextEntry x:Name="UsdEntry" Value="{Binding UsdBoxValue, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
             <c:DecimalTextEntry.RightContentTemplate>
               <ControlTemplate>

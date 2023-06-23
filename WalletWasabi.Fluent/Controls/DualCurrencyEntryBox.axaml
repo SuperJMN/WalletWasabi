@@ -7,6 +7,12 @@
     <Thickness x:Key="TextControlThemePadding">15,10,15,8</Thickness>
   </Styles.Resources>
 
+  <Design.PreviewWith>
+    <Border Padding="10" Width="500">
+      <c:CurrencyEntryBox  />
+    </Border>
+  </Design.PreviewWith>
+
   <Style Selector="c|DualCurrencyEntryBox">
     <Setter Property="LeftColumn" Value="1" />
     <Setter Property="RightColumn" Value="3" />

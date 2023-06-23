@@ -11,6 +11,10 @@
     <Thickness x:Key="TextControlThemePadding">15,10,15,8</Thickness>
   </Styles.Resources>
 
+  <Design.PreviewWith>
+    <TextBox Text="Hello" BorderThickness="0" />
+  </Design.PreviewWith>
+
   <Style Selector="TextBox">
     <Setter Property="Template">
       <ControlTemplate>
