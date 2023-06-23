@@ -51,7 +51,7 @@
     <StackPanel Spacing="10"
                 ToolTip.Tip="Coins under the dust threshold won't appear.">
       <TextBlock Text="Dust Threshold" />
-      <avaloniaApplication2:DecimalTextEntry Formatter="{x:Static fluent:MyFormatter.Instance}" Value="{Binding DustThreshold}">
+      <avaloniaApplication2:DecimalTextEntry Format="{x:Static fluent:MyFormatter.BtcFormat}" Value="{Binding DustThreshold}">
         <avaloniaApplication2:DecimalTextEntry.RightContentTemplate>
           <ControlTemplate>
             <TextBlock VerticalAlignment="Center" Text="BTC" Margin="0 0 10 0" />

@@ -4,7 +4,8 @@
         xmlns:c="clr-namespace:AvaloniaApplication2;assembly=AvaloniaApplication2"
         xmlns:system="clr-namespace:System;assembly=System.Runtime"
         xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
-        xmlns:d="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions">
+        xmlns:d="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
+        xmlns:fluent="clr-namespace:WalletWasabi.Fluent">
   <Design.PreviewWith>
     <Border Width="600">
       <controls:DualCurrencyBox2>
@@ -39,7 +40,7 @@
       <ControlTemplate>
         <Grid ColumnDefinitions="*,Auto,*">
 
-          <c:DecimalTextEntry x:Name="BtcEntry" Value="{Binding BtcBoxValue, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
+          <c:DecimalTextEntry Format="{x:Static fluent:MyFormatter.BtcFormat}" x:Name="BtcEntry" Value="{Binding BtcBoxValue, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
             <c:DecimalTextEntry.RightContentTemplate>
               <ControlTemplate>
                 <TextBlock Classes="Unit" Text="BTC" />
@@ -53,7 +54,7 @@
             </ToggleButton.Content>
           </ToggleButton>
 
-          <c:DecimalTextEntry x:Name="UsdEntry" Value="{Binding UsdBoxValue, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
+          <c:DecimalTextEntry Format="{x:Static fluent:MyFormatter.UsdFormat}" x:Name="UsdEntry" Value="{Binding UsdBoxValue, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
             <c:DecimalTextEntry.RightContentTemplate>
               <ControlTemplate>
                 <TextBlock Classes="Unit" Text="USD" />
