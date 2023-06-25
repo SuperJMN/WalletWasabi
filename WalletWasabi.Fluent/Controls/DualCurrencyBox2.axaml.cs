@@ -8,9 +8,17 @@ namespace WalletWasabi.Fluent.Controls;
 
 public class DualCurrencyBox2 : TemplatedControl
 {
-	private const decimal Tolerance = (decimal)0.00000001;
+	private const decimal Tolerance = (decimal)0.00000010;
 
-	public static readonly StyledProperty<decimal?> BtcBoxValueProperty = AvaloniaProperty.Register<DualCurrencyBox2, decimal?>(nameof(BtcBoxValue), defaultBindingMode: BindingMode.TwoWay);
+	public static readonly StyledProperty<decimal?> BtcBoxValueProperty = AvaloniaProperty.Register<DualCurrencyBox2, decimal?>(nameof(BtcBoxValue), defaultBindingMode: BindingMode.TwoWay, coerce: (o, newValue) =>
+	{
+		if (newValue == null)
+		{
+			return default;
+		}
+
+		return Math.Round(newValue.Value, 8);
+	});
 
 	public static readonly StyledProperty<decimal?> UsdBoxValueProperty = AvaloniaProperty.Register<DualCurrencyBox2, decimal?>(nameof(UsdBoxValue), defaultBindingMode: BindingMode.TwoWay);
 
@@ -29,11 +37,11 @@ public class DualCurrencyBox2 : TemplatedControl
 				return default;
 			}
 
-			var dcbValue = (decimal)(instance.Value - newValue);
+			var diff = (decimal)(instance.Value - newValue);
 
-			if (Math.Abs(dcbValue) > Tolerance)
+			if (Math.Abs(diff) > Tolerance)
 			{
-				return newValue;
+				return newValue.Value;
 			}
 
 			return instance.Value;
