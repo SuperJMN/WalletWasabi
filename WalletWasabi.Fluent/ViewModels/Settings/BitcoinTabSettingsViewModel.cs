@@ -80,13 +80,13 @@ public partial class BitcoinTabSettingsViewModel : SettingsTabViewModelBase
 	}
 
 	private void ValidateDustThreshold(IValidationErrors errors) =>
-		ValidateDustThreshold(errors, DustThreshold, whiteSpaceOk: true);
+		ValidateDustThreshold(errors, DustThreshold);
 
-	private static void ValidateDustThreshold(IValidationErrors errors, decimal dustThreshold, bool whiteSpaceOk)
+	private static void ValidateDustThreshold(IValidationErrors errors, decimal dustThreshold)
 	{
-		if (dustThreshold < (decimal) 0.1)
+		if (dustThreshold < 0)
 		{
-			errors.Add(ErrorSeverity.Error, "que no, tío");
+			errors.Add(ErrorSeverity.Error, "Invalid dust threshold.");
 		}
 	}
 
