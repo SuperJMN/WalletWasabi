@@ -11,38 +11,28 @@ namespace WalletWasabi.Fluent.Controls;
 
 public class DecimalTextEntry : TemplatedControl
 {
-	public static readonly DirectProperty<DecimalTextEntry, string> FormattedValueProperty = AvaloniaProperty.RegisterDirect<DecimalTextEntry, string>(nameof(FormattedValue), o => o.FormattedValue, (o, v) => o.FormattedValue = v);
+	public static readonly DirectProperty<DecimalTextEntry, string?> FormattedValueProperty = AvaloniaProperty.RegisterDirect<DecimalTextEntry, string?>(nameof(FormattedValue), o => o.FormattedValue, (o, v) => o.FormattedValue = v);
 
-	public static readonly StyledProperty<string> TextProperty = AvaloniaProperty.Register<DecimalTextEntry, string>(nameof(Text), "", coerce: (o, s) => s ?? "");
+	public static readonly StyledProperty<string> TextProperty = AvaloniaProperty.Register<DecimalTextEntry, string>(nameof(Text), "");
 
 	public static readonly DirectProperty<DecimalTextEntry, decimal?> ValueProperty = AvaloniaProperty.RegisterDirect<DecimalTextEntry, decimal?>(nameof(Value), o => o.Value, (o, v) => o.Value = v, enableDataValidation: true, defaultBindingMode: BindingMode.TwoWay);
 
-	public static readonly StyledProperty<DataTemplate> LeftContentTemplateProperty = AvaloniaProperty.Register<DecimalTextEntry, DataTemplate>(nameof(LeftContentTemplate));
-
 	public static readonly StyledProperty<ControlTemplate> RightContentTemplateProperty = AvaloniaProperty.Register<DecimalTextEntry, ControlTemplate>(nameof(RightContentTemplate));
 
-	public static readonly StyledProperty<string> FormatProperty = AvaloniaProperty.Register<DecimalTextEntry, string>(nameof(Format));
+	public static readonly StyledProperty<string?> FormatProperty = AvaloniaProperty.Register<DecimalTextEntry, string?>(nameof(Format));
 
-	private string _formattedValue;
+	private string? _formattedValue;
 
 	private decimal? _value;
 
 	public DecimalTextEntry()
 	{
 		this
-			.WhenAnyValue(x => x.Value, x => x.Format)
-			.Do(
-				s =>
-				{
-					if (s.Item2 == null)
-					{
-						FormattedValue = s.Item1?.ToString(CultureInfo.CurrentCulture) ?? "";
-					}
-					else
-					{
-						FormattedValue = s.Item1?.ToString(s.Item2) ?? "";
-					}
-				})
+			.WhenAnyValue(x => x.Value, x => x.Format, (value, format) => new { value, format })
+			.Do(tuple =>
+			{
+				FormattedValue = tuple.value?.ToString(tuple.format, CultureInfo.CurrentCulture) ?? "";
+			})
 			.Subscribe();
 
 		this
@@ -56,7 +46,7 @@ public class DecimalTextEntry : TemplatedControl
 			.Subscribe();
 	}
 
-	public string Format
+	public string? Format
 	{
 		get => GetValue(FormatProperty);
 		set => SetValue(FormatProperty, value);
@@ -68,19 +58,13 @@ public class DecimalTextEntry : TemplatedControl
 		set => SetValue(RightContentTemplateProperty, value);
 	}
 
-	public DataTemplate LeftContentTemplate
-	{
-		get => GetValue(LeftContentTemplateProperty);
-		set => SetValue(LeftContentTemplateProperty, value);
-	}
-
 	public decimal? Value
 	{
 		get => _value;
 		set => SetAndRaise(ValueProperty, ref _value, value);
 	}
 
-	public string FormattedValue
+	public string? FormattedValue
 	{
 		get => _formattedValue;
 		private set => SetAndRaise(FormattedValueProperty, ref _formattedValue, value);
@@ -97,7 +81,7 @@ public class DecimalTextEntry : TemplatedControl
 		DataValidationErrors.SetError(this, value.Error);
 	}
 
-	private decimal? Parse(string s)
+	private static decimal? Parse(string s)
 	{
 		if (string.IsNullOrWhiteSpace(s))
 		{
