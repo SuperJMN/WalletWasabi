@@ -6,7 +6,7 @@
         xmlns:controls="clr-namespace:WalletWasabi.Fluent.Controls">
 
   <Design.PreviewWith>
-    <Border Background="Bisque" Padding="10" Width="200" Focusable="True">
+    <Border Background="#0DB35F" Padding="10" Width="200" Focusable="True">
       <StackPanel>
         <controls:DecimalTextEntry Background="GreenYellow" HorizontalAlignment="Left">
           <controls:DecimalTextEntry.RightContentTemplate>
@@ -28,11 +28,6 @@
             <system:Decimal>12</system:Decimal>
           </controls:DecimalTextEntry.Value>
         </controls:DecimalTextEntry>
-        <TextBox Text="Saludos">
-          <TextBox.InnerRightContent>
-            <TextBlock VerticalAlignment="Center">BTC</TextBlock>
-          </TextBox.InnerRightContent>
-        </TextBox>
       </StackPanel>
     </Border>
   </Design.PreviewWith>
