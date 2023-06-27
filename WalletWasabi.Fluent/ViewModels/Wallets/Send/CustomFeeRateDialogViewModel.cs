@@ -1,4 +1,3 @@
-using System.Globalization;
 using System.Reactive.Linq;
 using NBitcoin;
 using ReactiveUI;
@@ -15,15 +14,15 @@ public partial class CustomFeeRateDialogViewModel : DialogViewModelBase<FeeRate>
 {
 	private readonly TransactionInfo _transactionInfo;
 
-	[AutoNotify] private string _customFee;
+	[AutoNotify] private decimal? _customFee;
 
 	public CustomFeeRateDialogViewModel(TransactionInfo transactionInfo)
 	{
 		_transactionInfo = transactionInfo;
 
 		_customFee = transactionInfo.IsCustomFeeUsed
-			? transactionInfo.FeeRate.SatoshiPerByte.ToString(CultureInfo.InvariantCulture)
-			: "";
+			? transactionInfo.FeeRate.SatoshiPerByte
+			: null;
 
 		EnableBack = false;
 		SetupCancel(enableCancel: true, enableCancelOnEscape: true, enableCancelOnPressed: true);
@@ -35,7 +34,7 @@ public partial class CustomFeeRateDialogViewModel : DialogViewModelBase<FeeRate>
 				.Select(_ =>
 				{
 					var noError = !Validations.Any;
-					var somethingFilled = CustomFee is not null or "";
+					var somethingFilled = CustomFee is not null;
 
 					return noError && somethingFilled;
 				});
@@ -45,10 +44,10 @@ public partial class CustomFeeRateDialogViewModel : DialogViewModelBase<FeeRate>
 
 	private void OnNext()
 	{
-		if (decimal.TryParse(CustomFee, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var feeRate))
+		if (CustomFee.HasValue)
 		{
 			_transactionInfo.IsCustomFeeUsed = true;
-			Close(DialogResultKind.Normal, new FeeRate(feeRate));
+			Close(DialogResultKind.Normal, new FeeRate(CustomFee!.Value));
 		}
 		else
 		{
@@ -59,20 +58,12 @@ public partial class CustomFeeRateDialogViewModel : DialogViewModelBase<FeeRate>
 
 	private void ValidateCustomFee(IValidationErrors errors)
 	{
-		var customFeeString = CustomFee;
-
-		if (customFeeString is "")
+		if (CustomFee is null)
 		{
 			return;
 		}
 
-		if (!decimal.TryParse(customFeeString, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var value))
-		{
-			errors.Add(ErrorSeverity.Error, "The entered fee is not valid.");
-			return;
-		}
-
-		if (value < decimal.One)
+		if (CustomFee < decimal.One)
 		{
 			errors.Add(ErrorSeverity.Error, "Cannot be less than 1 sat/vByte.");
 			return;
@@ -80,12 +71,11 @@ public partial class CustomFeeRateDialogViewModel : DialogViewModelBase<FeeRate>
 
 		try
 		{
-			_ = new FeeRate(value);
+			_ = new FeeRate(CustomFee.Value);
 		}
 		catch (OverflowException)
 		{
 			errors.Add(ErrorSeverity.Error, "The entered fee is too high.");
-			return;
 		}
 	}
 }

@@ -4,7 +4,8 @@
         xmlns:ic="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
         xmlns:system="clr-namespace:System;assembly=System.Runtime"
         xmlns:controls="clr-namespace:WalletWasabi.Fluent.Controls"
-        xmlns:behaviors="clr-namespace:WalletWasabi.Fluent.Behaviors">
+        xmlns:behaviors="clr-namespace:WalletWasabi.Fluent.Behaviors"
+        xmlns:models="clr-namespace:WalletWasabi.Models;assembly=WalletWasabi">
 
   <Design.PreviewWith>
     <Border Background="#0DB35F" Padding="10" Width="200" Focusable="True">
@@ -128,8 +129,8 @@
               <DataTemplate>
                 <ItemsControl Items="{Binding}">
                   <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                      <TextBlock Text="{Binding}" Foreground="{DynamicResource SystemErrorTextColor}" />
+                    <DataTemplate DataType="models:ErrorDescriptor">
+                      <TextBlock Text="{Binding Message}" Foreground="{DynamicResource SystemErrorTextColor}" />
                     </DataTemplate>
                   </ItemsControl.ItemTemplate>
                 </ItemsControl>
