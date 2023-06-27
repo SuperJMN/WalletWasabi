@@ -8,9 +8,9 @@
         xmlns:fluent="clr-namespace:WalletWasabi.Fluent">
   <Design.PreviewWith>
     <Border Width="640">
-      <controls:DualCurrencyBox2>
+      <controls:DualCurrencyBox2 ExchangeRate="5">
         <controls:DualCurrencyBox2.Value>
-          <system:Decimal>2</system:Decimal>
+          <system:Decimal>3.2444411</system:Decimal>
         </controls:DualCurrencyBox2.Value>
       </controls:DualCurrencyBox2>
     </Border>
