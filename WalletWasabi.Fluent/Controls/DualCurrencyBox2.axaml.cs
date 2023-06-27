@@ -1,5 +1,6 @@
 using System.Reactive.Linq;
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using ReactiveUI;
@@ -8,7 +9,7 @@ namespace WalletWasabi.Fluent.Controls;
 
 public class DualCurrencyBox2 : TemplatedControl
 {
-	private const decimal Tolerance = (decimal)0.00000010;
+	private const decimal Tolerance = (decimal)0.00000100;
 
 	public static readonly StyledProperty<decimal?> BtcBoxValueProperty = AvaloniaProperty.Register<DualCurrencyBox2, decimal?>(nameof(BtcBoxValue), defaultBindingMode: BindingMode.TwoWay, coerce: (o, newValue) =>
 	{
@@ -22,30 +23,37 @@ public class DualCurrencyBox2 : TemplatedControl
 
 	public static readonly StyledProperty<decimal?> UsdBoxValueProperty = AvaloniaProperty.Register<DualCurrencyBox2, decimal?>(nameof(UsdBoxValue), defaultBindingMode: BindingMode.TwoWay);
 
-	public static readonly StyledProperty<decimal?> ValueProperty = AvaloniaProperty.Register<DualCurrencyBox2, decimal?>(nameof(Value), defaultBindingMode: BindingMode.TwoWay,
-		coerce: (obj, newValue) =>
+	private decimal? _value;
+
+	public static readonly DirectProperty<DualCurrencyBox2, decimal?> ValueProperty = AvaloniaProperty.RegisterDirect<DualCurrencyBox2, decimal?>(nameof(Value), o => o.Value, (o, v) => o.Value = SetCoercedValue(o.Value,v), enableDataValidation: true);
+
+	private static decimal? SetCoercedValue(decimal? currentValue, decimal? newValue)
+	{
+		if (currentValue is null)
 		{
-			var instance = (DualCurrencyBox2) obj;
+			return newValue;
+		}
 
-			if (instance.Value is null)
-			{
-				return newValue;
-			}
+		if (newValue is null)
+		{
+			return default;
+		}
 
-			if (newValue is null)
-			{
-				return default;
-			}
+		var diff = (decimal)(currentValue - newValue);
 
-			var diff = (decimal)(instance.Value - newValue);
+		if (Math.Abs(diff) <= Tolerance)
+		{
+			return currentValue;
+		}
 
-			if (Math.Abs(diff) > Tolerance)
-			{
-				return newValue.Value;
-			}
+		return newValue.Value;
+	}
 
-			return instance.Value;
-		});
+	public decimal? Value
+	{
+		get => _value;
+		set => SetAndRaise(ValueProperty, ref _value, value);
+	}
 
 	public DualCurrencyBox2()
 	{
@@ -96,17 +104,16 @@ public class DualCurrencyBox2 : TemplatedControl
 		set => SetValue(UsdBoxValueProperty, value);
 	}
 
-	public decimal? Value
-	{
-		get => GetValue(ValueProperty);
-		set => SetValue(ValueProperty, value);
-	}
-
 	public static readonly StyledProperty<decimal> ExchangeRateProperty = AvaloniaProperty.Register<DualCurrencyBox2, decimal>(nameof(ExchangeRate), new decimal(1));
 
 	public decimal ExchangeRate
 	{
 		get => GetValue(ExchangeRateProperty);
 		set => SetValue(ExchangeRateProperty, value);
+	}
+
+	protected override void UpdateDataValidation<T>(AvaloniaProperty<T> property, BindingValue<T> value)
+	{
+		DataValidationErrors.SetError(this, value.Error);
 	}
 }

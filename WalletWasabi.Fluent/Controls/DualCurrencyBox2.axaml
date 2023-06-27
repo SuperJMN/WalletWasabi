@@ -4,7 +4,8 @@
         xmlns:system="clr-namespace:System;assembly=System.Runtime"
         xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
         xmlns:d="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
-        xmlns:fluent="clr-namespace:WalletWasabi.Fluent">
+        xmlns:fluent="clr-namespace:WalletWasabi.Fluent"
+        xmlns:models="clr-namespace:WalletWasabi.Models;assembly=WalletWasabi">
   <Design.PreviewWith>
     <Border Width="640">
       <c:DualCurrencyBox2 ExchangeRate="5">
@@ -33,57 +34,70 @@
     <Setter Property="BorderThickness" Value="0 0 0 2" />
     <Setter Property="Template">
       <ControlTemplate>
-        <Border BorderThickness="{TemplateBinding BorderThickness}"
-                Background="{TemplateBinding Background}"
-                BorderBrush="{TemplateBinding BorderBrush}" CornerRadius="4" HorizontalAlignment="Stretch">
-          <Panel>
+        <DataValidationErrors>
+          <DataValidationErrors.ErrorTemplate>
+            <DataTemplate>
+              <ItemsControl Margin="0 5 0 0" Items="{Binding}">
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate DataType="models:ErrorDescriptor">
+                    <TextBlock Text="{Binding Message}" Foreground="{DynamicResource SystemControlErrorTextForegroundBrush}" />
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+            </DataTemplate>
+          </DataValidationErrors.ErrorTemplate>
+          <Border BorderThickness="{TemplateBinding BorderThickness}"
+                  Background="{TemplateBinding Background}"
+                  BorderBrush="{TemplateBinding BorderBrush}" CornerRadius="4" HorizontalAlignment="Stretch">
+            <Panel>
 
-            <c:DecimalTextEntry Classes="Transparent" Format="{x:Static fluent:MyFormatter.BtcFormat}"
-                                x:Name="BtcEntry"
-                                Value="{Binding BtcBoxValue, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
-              <c:DecimalTextEntry.RightContentTemplate>
-                <ControlTemplate>
-                  <TextBlock Classes="Unit" Text="BTC" />
-                </ControlTemplate>
-              </c:DecimalTextEntry.RightContentTemplate>
-            </c:DecimalTextEntry>
+              <c:DecimalTextEntry Classes="Transparent" Format="{x:Static fluent:MyFormatter.BtcFormat}"
+                                  x:Name="BtcEntry"
+                                  Value="{Binding BtcBoxValue, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
+                <c:DecimalTextEntry.RightContentTemplate>
+                  <ControlTemplate>
+                    <TextBlock Classes="Unit" Text="BTC" />
+                  </ControlTemplate>
+                </c:DecimalTextEntry.RightContentTemplate>
+              </c:DecimalTextEntry>
 
-            <c:DecimalTextEntry Classes="Transparent" Format="{x:Static fluent:MyFormatter.UsdFormat}"
-                                x:Name="UsdEntry"
-                                Value="{Binding UsdBoxValue, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
-              <c:DecimalTextEntry.RightContentTemplate>
-                <ControlTemplate>
-                  <TextBlock Classes="Unit" Text="USD" />
-                </ControlTemplate>
-              </c:DecimalTextEntry.RightContentTemplate>
-            </c:DecimalTextEntry>
+              <c:DecimalTextEntry Classes="Transparent" Format="{x:Static fluent:MyFormatter.UsdFormat}"
+                                  x:Name="UsdEntry"
+                                  Value="{Binding UsdBoxValue, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
+                <c:DecimalTextEntry.RightContentTemplate>
+                  <ControlTemplate>
+                    <TextBlock Classes="Unit" Text="USD" />
+                  </ControlTemplate>
+                </c:DecimalTextEntry.RightContentTemplate>
+              </c:DecimalTextEntry>
 
-            <ToggleButton x:Name="Invert" VerticalAlignment="Center" HorizontalAlignment="Center">
-              <ToggleButton.Content>
-                <PathIcon Data="{StaticResource arrow_swap}" Width="16" />
-              </ToggleButton.Content>
-            </ToggleButton>
+              <ToggleButton Background="Transparent" x:Name="Invert" VerticalAlignment="Center"
+                            HorizontalAlignment="Center">
+                <ToggleButton.Content>
+                  <PathIcon Data="{StaticResource arrow_swap}" Width="16" />
+                </ToggleButton.Content>
+              </ToggleButton>
 
-            <i:Interaction.Behaviors>
-              <d:DataTriggerBehavior Binding="{Binding #Invert.IsChecked}" Value="False">
-                <d:ChangePropertyAction TargetObject="BtcEntry" PropertyName="HorizontalAlignment"
-                                        Value="Left" />
-                <d:ChangePropertyAction TargetObject="UsdEntry" PropertyName="HorizontalAlignment"
-                                        Value="Right" />
-              </d:DataTriggerBehavior>
-              <d:DataTriggerBehavior Binding="{Binding #Invert.IsChecked}" Value="True">
-                <d:ChangePropertyAction TargetObject="BtcEntry" PropertyName="HorizontalAlignment" Value="Right" />
-                <d:ChangePropertyAction TargetObject="UsdEntry" PropertyName="HorizontalAlignment"
-                                        Value="Left" />
-              </d:DataTriggerBehavior>
-            </i:Interaction.Behaviors>
+              <i:Interaction.Behaviors>
+                <d:DataTriggerBehavior Binding="{Binding #Invert.IsChecked}" Value="False">
+                  <d:ChangePropertyAction TargetObject="BtcEntry" PropertyName="HorizontalAlignment"
+                                          Value="Left" />
+                  <d:ChangePropertyAction TargetObject="UsdEntry" PropertyName="HorizontalAlignment"
+                                          Value="Right" />
+                </d:DataTriggerBehavior>
+                <d:DataTriggerBehavior Binding="{Binding #Invert.IsChecked}" Value="True">
+                  <d:ChangePropertyAction TargetObject="BtcEntry" PropertyName="HorizontalAlignment" Value="Right" />
+                  <d:ChangePropertyAction TargetObject="UsdEntry" PropertyName="HorizontalAlignment"
+                                          Value="Left" />
+                </d:DataTriggerBehavior>
+              </i:Interaction.Behaviors>
 
-          </Panel>
-        </Border>
+            </Panel>
+          </Border>
+        </DataValidationErrors>
       </ControlTemplate>
     </Setter>
   </Style>
-
 
   <Style Selector="c|DualCurrencyBox2:pointerover">
     <Setter Property="BorderBrush" Value="{DynamicResource TextControlBorderBrushPointerOver}" />
@@ -93,8 +107,8 @@
     <Setter Property="BorderBrush" Value="{DynamicResource TextControlBorderBrushFocused}" />
   </Style>
 
-  <Style Selector="c|DualCurrencyBox2:focus-within:pointerover">
-    <Setter Property="BorderBrush" Value="{DynamicResource TextControlBorderBrushFocused}" />
+  <Style Selector="c|DualCurrencyBox2:error">
+    <Setter Property="BorderBrush" Value="{DynamicResource SystemControlErrorTextForegroundBrush}" />
   </Style>
 
 </Styles>
