@@ -21,6 +21,8 @@ public class DecimalTextEntry : TemplatedControl
 
 	public static readonly StyledProperty<string?> FormatProperty = AvaloniaProperty.Register<DecimalTextEntry, string?>(nameof(Format));
 
+	public static readonly StyledProperty<TextBox?> TextBoxProperty = AvaloniaProperty.Register<DecimalTextEntry, TextBox?>(nameof(TextBox));
+
 	private string? _formattedValue;
 
 	private decimal? _value;
@@ -29,10 +31,7 @@ public class DecimalTextEntry : TemplatedControl
 	{
 		this
 			.WhenAnyValue(x => x.Value, x => x.Format, (value, format) => new { value, format })
-			.Do(tuple =>
-			{
-				FormattedValue = tuple.value?.ToString(tuple.format, CultureInfo.CurrentCulture) ?? "";
-			})
+			.Do(tuple => { FormattedValue = tuple.value?.ToString(tuple.format, CultureInfo.CurrentCulture) ?? ""; })
 			.Subscribe();
 
 		this
@@ -76,9 +75,22 @@ public class DecimalTextEntry : TemplatedControl
 		set => SetValue(TextProperty, value);
 	}
 
+	public TextBox? TextBox
+	{
+		get => GetValue(TextBoxProperty);
+		set => SetValue(TextBoxProperty, value);
+	}
+
 	protected override void UpdateDataValidation<T>(AvaloniaProperty<T> property, BindingValue<T> value)
 	{
 		DataValidationErrors.SetError(this, value.Error);
+	}
+
+	protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
+	{
+		base.OnApplyTemplate(e);
+
+		TextBox = e.NameScope.Find<TextBox>("FocusedTextBox");
 	}
 
 	private static decimal? Parse(string s)
