@@ -1,9 +1,10 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:c="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
-        xmlns:d="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
+        xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
+        xmlns:ic="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
         xmlns:system="clr-namespace:System;assembly=System.Runtime"
-        xmlns:controls="clr-namespace:WalletWasabi.Fluent.Controls">
+        xmlns:controls="clr-namespace:WalletWasabi.Fluent.Controls"
+        xmlns:behaviors="clr-namespace:WalletWasabi.Fluent.Behaviors">
 
   <Design.PreviewWith>
     <Border Background="#0DB35F" Padding="10" Width="200" Focusable="True">
@@ -32,7 +33,7 @@
     </Border>
   </Design.PreviewWith>
 
-  <Style Selector="TextBox.Modified">
+  <Style Selector="controls|DecimalTextEntry TextBox">
     <Setter Property="Foreground" Value="{DynamicResource TextControlForeground}" />
     <Setter Property="Background" Value="{DynamicResource TextControlBackground}" />
     <Setter Property="CaretBrush" Value="{DynamicResource TextControlForeground}" />
@@ -46,6 +47,13 @@
     <Setter Property="Padding" Value="{DynamicResource TextControlThemePadding}" />
     <Setter Property="FocusAdorner" Value="{x:Null}" />
     <Setter Property="ContextFlyout" Value="{StaticResource DefaultTextBoxContextFlyout}" />
+    <Setter Property="i:Interaction.Behaviors">
+      <BehaviorCollectionTemplate>
+        <BehaviorCollection>
+          <behaviors:NumberBoxBehavior />
+        </BehaviorCollection>
+      </BehaviorCollectionTemplate>
+    </Setter>
     <Setter Property="Template">
       <ControlTemplate>
         <DataValidationErrors>
@@ -128,21 +136,20 @@
               </DataTemplate>
             </DataValidationErrors.ErrorTemplate>
             <Panel>
-              <TextBox Classes="Modified" x:Name="FocusedTextBox"
+              <TextBox x:Name="FocusedTextBox"
                        IsVisible="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=IsKeyboardFocusWithin}"
                        Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Text, Mode=TwoWay}">
                 <TextBox.InnerRightContent>
                   <ContentControl
                     Template="{Binding RightContentTemplate, RelativeSource={RelativeSource FindAncestor, AncestorType=controls:DecimalTextEntry}}" />
                 </TextBox.InnerRightContent>
-                <c:Interaction.Behaviors>
-                  <d:EventTriggerBehavior SourceObject="UnfocusedTextBox" EventName="GotFocus">
-                    <d:CallMethodAction TargetObject="FocusedTextBox" MethodName="Focus" />
-                  </d:EventTriggerBehavior>
-                </c:Interaction.Behaviors>
+                <i:Interaction.Behaviors>
+                  <ic:EventTriggerBehavior SourceObject="UnfocusedTextBox" EventName="GotFocus">
+                    <ic:CallMethodAction TargetObject="FocusedTextBox" MethodName="Focus" />
+                  </ic:EventTriggerBehavior>
+                </i:Interaction.Behaviors>
               </TextBox>
               <TextBox x:Name="UnfocusedTextBox"
-                       Classes="Modified"
                        IsVisible="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=!IsKeyboardFocusWithin}"
                        Text="{TemplateBinding FormattedValue}">
                 <TextBox.InnerRightContent>
