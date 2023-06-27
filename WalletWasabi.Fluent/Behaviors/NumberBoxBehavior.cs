@@ -1,50 +1,151 @@
+using System.Globalization;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Xaml.Interactivity;
 using WalletWasabi.Fluent.Extensions;
 
 namespace WalletWasabi.Fluent.Behaviors;
 
-public class NumberBoxBehavior : DisposingBehavior<TextBox>
+public class NumberBoxBehavior : Behavior<TextBox>
 {
-	protected override void OnAttached(CompositeDisposable disposables)
-	{
-		if (AssociatedObject is null)
-		{
-			return;
-		}
+    private static readonly string Separator = CultureInfo.CurrentUICulture.NumberFormat.NumberDecimalSeparator;
+    private readonly CompositeDisposable _disposables = new();
 
-		AssociatedObject
-			.AddDisposableHandler(InputElement.TextInputEvent, (_, e) =>
-			{
-				if (e.Text is { })
-				{
-					e.Text = CorrectInput(e.Text);
-				}
-			}, RoutingStrategies.Tunnel)
-			.DisposeWith(disposables);
+    protected override void OnAttachedToVisualTree()
+    {
+        base.OnAttachedToVisualTree();
 
-		Observable
-			.FromEventPattern<RoutedEventArgs>(AssociatedObject, nameof(AssociatedObject.PastingFromClipboard))
-			.Select(x => x.EventArgs)
-			.SubscribeAsync(async e =>
-			{
-				e.Handled = true;
+        if (AssociatedObject is null)
+        {
+            return;
+        }
 
-				if (Application.Current is { Clipboard: { } clipboard })
-				{
-					AssociatedObject.Text = CorrectInput(await clipboard.GetTextAsync());
-				}
-			})
-			.DisposeWith(disposables);
-	}
+        AssociatedObject.OnEvent(InputElement.TextInputEvent, RoutingStrategies.Tunnel)
+            .Select(x => x.EventArgs)
+            .Do(x => InsertImplicitZero(x, AssociatedObject, x.Text ?? ""))
+            .Do(x => Filter(x, AssociatedObject, x.Text))
+            .Subscribe()
+            .DisposeWith(_disposables);
 
-	private string CorrectInput(string input)
-	{
-		return new string(input.Where(c => char.IsDigit(c) || c == '.').ToArray());
-	}
+        AssociatedObject.OnEvent(TextBox.PastingFromClipboardEvent, RoutingStrategies.Bubble)
+            .SelectMany(async x => (x.EventArgs, Text: await GetClipboardText()))
+            .Do(x => PrependZeroOnPaste(x.EventArgs, AssociatedObject, x.Text))
+            .Do(pasting => Filter(pasting.EventArgs, AssociatedObject, pasting.Text))
+            .Subscribe()
+            .DisposeWith(_disposables);
+    }
+
+    protected override void OnDetachedFromVisualTree()
+    {
+        _disposables.Dispose();
+    }
+
+    private static async Task<string> GetClipboardText()
+    {
+        if (Application.Current is {Clipboard: { } clipboard})
+        {
+            return (string?) await clipboard.GetTextAsync() ?? "";
+        }
+
+        return "";
+    }
+
+    private static void PrependZeroOnPaste(RoutedEventArgs pastingEventArgs, TextBox textBox, string toPaste)
+    {
+        if (textBox.SelectedText == textBox.Text && toPaste.StartsWith(Separator))
+        {
+            pastingEventArgs.Handled = true;
+            textBox.Text = "0" + toPaste;
+            textBox.ClearSelection();
+            textBox.CaretIndex = textBox.Text.Length;
+            return;
+        }
+
+        if (textBox.Text.Contains(CultureInfo.CurrentUICulture.NumberFormat.NumberDecimalSeparator) ||
+            !toPaste.StartsWith('.'))
+        {
+            return;
+        }
+
+        if (textBox.CaretIndex != 0)
+        {
+            return;
+        }
+
+        pastingEventArgs.Handled = true;
+        textBox.Text = "0" + toPaste;
+    }
+
+    private static void Filter(RoutedEventArgs arg, TextBox tb, string? newText)
+    {
+        if (tb.Text is null)
+        {
+            return;
+        }
+
+        arg.Handled = !IsValid(SimulateNextText(newText, tb), tb.Text);
+    }
+
+
+    private static bool IsValid(string str, string currentText)
+    {
+        if (currentText == "" && str == CultureInfo.CurrentUICulture.NumberFormat.NegativeSign)
+        {
+            return true;
+        }
+
+        if (str.Any(char.IsWhiteSpace))
+        {
+            return false;
+        }
+
+        return decimal.TryParse(str, NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.CurrentUICulture, out _);
+    }
+
+    private static string SimulateNextText(string? text, TextBox tb)
+    {
+        var start = Math.Min(tb.SelectionStart, tb.SelectionEnd);
+        var end = Math.Max(tb.SelectionStart, tb.SelectionEnd);
+
+        return tb.Text[..start] + text + tb.Text[end..];
+    }
+
+    private static void InsertImplicitZero(TextInputEventArgs textInputEventArgs, TextBox textBox, string text)
+    {
+
+        if (textBox.Text is null)
+        {
+            return;
+        }
+
+        if (textBox.SelectedText == textBox.Text && text.StartsWith(Separator))
+        {
+            textInputEventArgs.Text = "0" + text;
+            return;
+        }
+
+        if (textBox.Text.Contains(Separator) || !text.StartsWith(Separator))
+        {
+            return;
+        }
+
+        if (textBox.CaretIndex != 0)
+        {
+            return;
+        }
+
+        var finalText = "0" + text;
+        if (!decimal.TryParse(finalText, out _))
+        {
+            return;
+        }
+
+        textInputEventArgs.Text = finalText;
+    }
 }

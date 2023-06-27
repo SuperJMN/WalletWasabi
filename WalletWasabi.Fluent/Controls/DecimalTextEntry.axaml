@@ -1,0 +1,180 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:c="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
+        xmlns:d="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
+        xmlns:system="clr-namespace:System;assembly=System.Runtime"
+        xmlns:controls="clr-namespace:WalletWasabi.Fluent.Controls">
+
+	<Design.PreviewWith>
+		<Border Background="Bisque" Padding="10" Width="200" Focusable="True">
+			<StackPanel>
+				<controls:DecimalTextEntry Background="GreenYellow" HorizontalAlignment="Left">
+					<controls:DecimalTextEntry.RightContentTemplate>
+						<ControlTemplate>
+							<TextBlock VerticalAlignment="Center" Margin="0 0 10 0">BTC</TextBlock>
+						</ControlTemplate>
+					</controls:DecimalTextEntry.RightContentTemplate>
+					<controls:DecimalTextEntry.Value>
+						<system:Decimal>12</system:Decimal>
+					</controls:DecimalTextEntry.Value>
+				</controls:DecimalTextEntry>
+                <controls:DecimalTextEntry Classes="Transparent" HorizontalAlignment="Left">
+                    <controls:DecimalTextEntry.RightContentTemplate>
+                        <ControlTemplate>
+                            <TextBlock VerticalAlignment="Center" Margin="0 0 10 0">BTC</TextBlock>
+                        </ControlTemplate>
+                    </controls:DecimalTextEntry.RightContentTemplate>
+                    <controls:DecimalTextEntry.Value>
+                        <system:Decimal>12</system:Decimal>
+                    </controls:DecimalTextEntry.Value>
+                </controls:DecimalTextEntry>
+				<TextBox Text="Saludos">
+					<TextBox.InnerRightContent>
+						<TextBlock VerticalAlignment="Center">BTC</TextBlock>
+					</TextBox.InnerRightContent>
+				</TextBox>
+			</StackPanel>
+		</Border>
+	</Design.PreviewWith>
+
+	<Style Selector="TextBox.Modified">
+		<Setter Property="Foreground" Value="{DynamicResource TextControlForeground}" />
+		<Setter Property="Background" Value="{DynamicResource TextControlBackground}" />
+		<Setter Property="CaretBrush" Value="{DynamicResource TextControlForeground}" />
+		<Setter Property="BorderBrush" Value="{DynamicResource TextControlBorderBrush}" />
+		<Setter Property="SelectionBrush" Value="{DynamicResource TextControlSelectionHighlightColor}" />
+		<Setter Property="BorderThickness" Value="{DynamicResource TextControlBorderThemeThickness}" />
+		<Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
+		<Setter Property="FontSize" Value="{DynamicResource ControlContentThemeFontSize}" />
+		<Setter Property="MinHeight" Value="{DynamicResource TextControlThemeMinHeight}" />
+		<Setter Property="MinWidth" Value="{DynamicResource TextControlThemeMinWidth}" />
+		<Setter Property="Padding" Value="{DynamicResource TextControlThemePadding}" />
+		<Setter Property="FocusAdorner" Value="{x:Null}" />
+		<Setter Property="ContextFlyout" Value="{StaticResource DefaultTextBoxContextFlyout}" />
+		<Setter Property="Template">
+			<ControlTemplate>
+				<DataValidationErrors>
+					<Panel>
+						<Border
+						  Name="PART_BorderElement"
+						  Background="{TemplateBinding Background}"
+						  BorderBrush="{TemplateBinding BorderBrush}"
+						  BorderThickness="{TemplateBinding BorderThickness}"
+						  CornerRadius="{TemplateBinding CornerRadius}"
+						  MinWidth="{TemplateBinding MinWidth}"
+						  MinHeight="{TemplateBinding MinHeight}">
+						</Border>
+
+						<Border
+						  Margin="{TemplateBinding BorderThickness}">
+							<Grid ColumnDefinitions="Auto,Auto,Auto" >
+								<ContentPresenter Grid.Column="0" Grid.ColumnSpan="1" Content="{TemplateBinding InnerLeftContent}"/>
+								<DockPanel x:Name="PART_InnerDockPanel" Grid.Column="1" Grid.ColumnSpan="1" Margin="{TemplateBinding Padding}">
+									<TextBlock Name="PART_FloatingWatermark"
+											   Foreground="{DynamicResource SystemAccentColor}"
+											   FontSize="{TemplateBinding FontSize}"
+											   Text="{TemplateBinding Watermark}"
+											   DockPanel.Dock="Top" />
+									<ScrollViewer HorizontalScrollBarVisibility="{TemplateBinding (ScrollViewer.HorizontalScrollBarVisibility)}"
+												  VerticalScrollBarVisibility="{TemplateBinding (ScrollViewer.VerticalScrollBarVisibility)}">
+										<Panel>
+											<TextBlock Name="PART_Watermark"
+													Opacity="0.5"
+													Text="{TemplateBinding Watermark}"
+													TextAlignment="{TemplateBinding TextAlignment}"
+													TextWrapping="{TemplateBinding TextWrapping}"
+													IsVisible="{TemplateBinding Text, Converter={x:Static StringConverters.IsNullOrEmpty}}"
+													HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+													VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+											<TextPresenter Name="PART_TextPresenter"
+														  Text="{TemplateBinding Text, Mode=TwoWay}"
+														  CaretIndex="{TemplateBinding CaretIndex}"
+														  SelectionStart="{TemplateBinding SelectionStart}"
+														  SelectionEnd="{TemplateBinding SelectionEnd}"
+														  TextAlignment="{TemplateBinding TextAlignment}"
+														  TextWrapping="{TemplateBinding TextWrapping}"
+														  PasswordChar="{TemplateBinding PasswordChar}"
+														  RevealPassword="{TemplateBinding RevealPassword}"
+														  SelectionBrush="{TemplateBinding SelectionBrush}"
+														  SelectionForegroundBrush="{TemplateBinding SelectionForegroundBrush}"
+														  CaretBrush="{TemplateBinding CaretBrush}"
+														  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+														  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+										</Panel>
+									</ScrollViewer>
+								</DockPanel>
+								<ContentPresenter Grid.Column="2" Grid.ColumnSpan="1" Content="{TemplateBinding InnerRightContent}"/>
+							</Grid>
+						</Border>
+					</Panel>
+				</DataValidationErrors>
+			</ControlTemplate>
+		</Setter>
+	</Style>
+
+    <Style Selector="controls|DecimalTextEntry">
+
+		<Setter Property="Template">
+			<ControlTemplate>
+				<Border Background="{TemplateBinding Background}"
+						BorderThickness="{TemplateBinding BorderThickness}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        HorizontalAlignment="{TemplateBinding HorizontalAlignment}">
+
+					<!--<Border.Styles>
+                        <StyleInclude Source="avares://AvaloniaApplication2/ModifiedTextBox.axaml" />
+                    </Border.Styles>-->
+
+                    <DataValidationErrors>
+						<DataValidationErrors.ErrorTemplate>
+							<DataTemplate>
+								<ItemsControl Items="{Binding}">
+									<ItemsControl.ItemTemplate>
+										<DataTemplate>
+											<TextBlock Text="{Binding}"
+                                                       Foreground="{DynamicResource SystemErrorTextColor}" />
+										</DataTemplate>
+									</ItemsControl.ItemTemplate>
+								</ItemsControl>
+							</DataTemplate>
+						</DataValidationErrors.ErrorTemplate>
+						<Panel >
+							<TextBox Classes="Modified" x:Name="FocusedTextBox"
+                                     IsVisible="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=IsKeyboardFocusWithin}"
+                                     Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Text, Mode=TwoWay}">
+								<TextBox.InnerRightContent>
+									<ContentControl
+                                        Template="{Binding RightContentTemplate, RelativeSource={RelativeSource FindAncestor, AncestorType=controls:DecimalTextEntry}}" />
+								</TextBox.InnerRightContent>
+								<c:Interaction.Behaviors>
+									<d:EventTriggerBehavior SourceObject="UnfocusedTextBox" EventName="GotFocus">
+										<d:CallMethodAction TargetObject="FocusedTextBox" MethodName="Focus" />
+									</d:EventTriggerBehavior>
+								</c:Interaction.Behaviors>
+							</TextBox>
+							<TextBox x:Name="UnfocusedTextBox"
+                                     Classes="Modified"
+                                     IsVisible="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=!IsKeyboardFocusWithin}"
+                                     Text="{TemplateBinding FormattedValue}">
+								<TextBox.InnerRightContent>
+									<ContentControl
+                                        Template="{Binding RightContentTemplate, RelativeSource={RelativeSource FindAncestor, AncestorType=controls:DecimalTextEntry}}" />
+								</TextBox.InnerRightContent>
+							</TextBox>
+						</Panel>
+					</DataValidationErrors>
+				</Border>
+			</ControlTemplate>
+		</Setter>
+	</Style>
+
+	<Style Selector="controls|DecimalTextEntry.Transparent">
+        <Setter Property="BorderThickness" Value="0" />
+    </Style>
+
+    <Style Selector="controls|DecimalTextEntry.Transparent /template/ TextBox /template/ Border#PART_BorderElement">
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Background" Value="Transparent" />
+    </Style>
+
+</Styles>

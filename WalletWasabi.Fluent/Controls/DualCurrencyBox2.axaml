@@ -1,39 +1,40 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:controls="using:WalletWasabi.Fluent.Controls"
-        xmlns:c="clr-namespace:AvaloniaApplication2;assembly=AvaloniaApplication2"
+        xmlns:c="using:WalletWasabi.Fluent.Controls"
         xmlns:system="clr-namespace:System;assembly=System.Runtime"
         xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
         xmlns:d="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
         xmlns:fluent="clr-namespace:WalletWasabi.Fluent">
   <Design.PreviewWith>
     <Border Width="640">
-      <controls:DualCurrencyBox2 ExchangeRate="5">
-        <controls:DualCurrencyBox2.Value>
+      <c:DualCurrencyBox2 ExchangeRate="5">
+        <c:DualCurrencyBox2.Value>
           <system:Decimal>3.2444411</system:Decimal>
-        </controls:DualCurrencyBox2.Value>
-      </controls:DualCurrencyBox2>
+        </c:DualCurrencyBox2.Value>
+      </c:DualCurrencyBox2>
     </Border>
   </Design.PreviewWith>
 
-  <Style Selector="controls|DualCurrencyBox2 TextBlock.Unit">
+  <Style Selector="c|DualCurrencyBox2 TextBlock.Unit">
     <Setter Property="VerticalAlignment" Value="Center" />
     <Setter Property="Margin" Value="0 0 10 0" />
     <Setter Property="Opacity" Value="0.6" />
   </Style>
 
-  <Style Selector="controls|DualCurrencyBox2 TextBox">
+  <Style Selector="c|DualCurrencyBox2 TextBox.Modified">
     <Setter Property="VerticalAlignment" Value="Center" />
     <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderThickness" Value="0" />
   </Style>
 
-  <Style Selector="controls|DualCurrencyBox2">
+  <Style Selector="c|DualCurrencyBox2">
     <Setter Property="Background" Value="{DynamicResource TextControlBackground}" />
     <Setter Property="BorderBrush" Value="{DynamicResource TextControlBorderBrush}" />
     <Setter Property="BorderThickness" Value="0 0 0 2" />
     <Setter Property="Template">
       <ControlTemplate>
         <Border BorderThickness="{TemplateBinding BorderThickness}"
+                Background="{TemplateBinding Background}"
                 BorderBrush="{TemplateBinding BorderBrush}" CornerRadius="4" HorizontalAlignment="Stretch">
           <Panel>
 
@@ -83,38 +84,16 @@
     </Setter>
   </Style>
 
-  <!--<Style Selector="controls|DualCurrencyBox2">
-    <Setter Property="Background" Value="{DynamicResource TextControlBackground}" />
-    <Setter Property="BorderBrush" Value="{DynamicResource TextControlBorderBrush}" />
-    <Setter Property="BorderThickness" Value="0 0 0 2" />
-    <Setter Property="Template">
-      <ControlTemplate>
-        <Border Background="{TemplateBinding Background}"
-                BorderThickness="{TemplateBinding BorderThickness}"
-                BorderBrush="{TemplateBinding BorderBrush}" CornerRadius="4">
-           <c:DecimalTextEntry Classes="Transparent" Format="{x:Static fluent:MyFormatter.BtcFormat}"
-                                x:Name="BtcEntry"
-                                Value="{Binding BtcBoxValue, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
-              <c:DecimalTextEntry.RightContentTemplate>
-                <ControlTemplate>
-                  <TextBlock Classes="Unit" Text="BTC" />
-                </ControlTemplate>
-              </c:DecimalTextEntry.RightContentTemplate>
-            </c:DecimalTextEntry>
-        </Border>
-      </ControlTemplate>
-    </Setter>
-  </Style>-->
 
-  <Style Selector="controls|DualCurrencyBox2:pointerover">
+  <Style Selector="c|DualCurrencyBox2:pointerover">
     <Setter Property="BorderBrush" Value="{DynamicResource TextControlBorderBrushPointerOver}" />
   </Style>
 
-  <Style Selector="controls|DualCurrencyBox2:focus-within">
+  <Style Selector="c|DualCurrencyBox2:focus-within">
     <Setter Property="BorderBrush" Value="{DynamicResource TextControlBorderBrushFocused}" />
   </Style>
 
-  <Style Selector="controls|DualCurrencyBox2:focus-within:pointerover">
+  <Style Selector="c|DualCurrencyBox2:focus-within:pointerover">
     <Setter Property="BorderBrush" Value="{DynamicResource TextControlBorderBrushFocused}" />
   </Style>
 
