@@ -3,7 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
-             xmlns:behaviors="using:WalletWasabi.Fluent.Behaviors"
+             xmlns:b="using:WalletWasabi.Fluent.Behaviors"
              xmlns:c="using:WalletWasabi.Fluent.Controls"
              xmlns:vm="using:WalletWasabi.Fluent.ViewModels.Wallets.Send"
              xmlns:converters="clr-namespace:WalletWasabi.Fluent.Converters"
@@ -40,6 +40,31 @@
 
     <Style Selector="FlyoutPresenter PathIcon">
       <Setter Property="Foreground" Value="{DynamicResource AcrylicTrimForeground}" />
+    </Style>
+
+    <Style Selector="c|DualCurrencyBox2 /template/ c|DecimalTextEntry#BtcEntry /template/ TextBox#FocusedTextBox">
+      <Setter Property="(i:Interaction.Behaviors)">
+        <BehaviorCollectionTemplate>
+          <i:BehaviorCollection>
+            <b:FlyoutSuggestionBehavior Content="{Binding BitcoinContent^}"
+                                        Target="{Binding $self}"
+                                        EqualityComparer="{x:Static helpers:AmountStringComparer.Instance}"
+                                        PlacementMode="BottomEdgeAlignedLeft" />
+          </i:BehaviorCollection>
+        </BehaviorCollectionTemplate>
+      </Setter>
+    </Style>
+    <Style Selector="c|DualCurrencyBox2 /template/ c|DecimalTextEntry#UsdEntry /template/ TextBox#FocusedTextBox">
+      <Setter Property="(i:Interaction.Behaviors)">
+        <BehaviorCollectionTemplate>
+          <i:BehaviorCollection>
+            <b:FlyoutSuggestionBehavior Content="{Binding UsdContent^}"
+                                        Target="{Binding $self}"
+                                        EqualityComparer="{x:Static helpers:AmountStringComparer.Instance}"
+                                        PlacementMode="BottomEdgeAlignedRight" />
+          </i:BehaviorCollection>
+        </BehaviorCollectionTemplate>
+      </Setter>
     </Style>
 
   </UserControl.Styles>
@@ -105,9 +130,9 @@
                  ScrollViewer.VerticalScrollBarVisibility="Disabled"
                  AcceptsReturn="False">
           <i:Interaction.Behaviors>
-            <behaviors:FocusOnAttachedBehavior />
-            <behaviors:ExecuteCommandOnActivatedBehavior Command="{Binding AutoPasteCommand}" />
-            <behaviors:FocusNextWhenValidBehavior />
+            <b:FocusOnAttachedBehavior />
+            <b:ExecuteCommandOnActivatedBehavior Command="{Binding AutoPasteCommand}" />
+            <b:FocusNextWhenValidBehavior />
           </i:Interaction.Behaviors>
           <TextBox.InnerRightContent>
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Spacing="10" Margin="10 0">
@@ -118,7 +143,7 @@
                                 NormalIcon="{StaticResource paste_regular}"
                                 ClickIcon="{StaticResource copy_confirmed}">
                 <i:Interaction.Behaviors>
-                  <behaviors:PasteButtonFlashBehavior FlashAnimation="flash" CurrentAddress="{Binding To}" />
+                  <b:PasteButtonFlashBehavior FlashAnimation="flash" CurrentAddress="{Binding To}" />
                 </i:Interaction.Behaviors>
               </c:AnimatedButton>
               <c:AnimatedButton IsVisible="{Binding IsQrButtonVisible}"
@@ -138,14 +163,7 @@
           <Image Width="120" Source="avares://WalletWasabi.Fluent/Assets/TechnologyLogos/payjoin.png"
                  DockPanel.Dock="Right" IsVisible="{Binding IsPayJoin}" Margin="0 8 8 0" VerticalAlignment="Top" />
           <c:DualCurrencyBox2 VerticalAlignment="Center" x:Name="AmountEntry" Value="{Binding AmountBtc, Mode=TwoWay}" ExchangeRate="{Binding ExchangeRate}">
-            <i:Interaction.Behaviors>
-              <behaviors:FlyoutSuggestionBehavior Target="{Binding #AmountEntry.BtcTextBox^}" Content="{Binding BitcoinContent^}"
-                                                  EqualityComparer="{x:Static helpers:AmountStringComparer.Instance}"
-                                                  PlacementMode="BottomEdgeAlignedLeft" />
-              <behaviors:FlyoutSuggestionBehavior Target="{Binding #AmountEntry.UsdTextBox^}" Content="{Binding UsdContent^}"
-                                                  EqualityComparer="{x:Static helpers:AmountStringComparer.Instance}"
-                                                  PlacementMode="BottomEdgeAlignedRight" />
-            </i:Interaction.Behaviors>
+           
           </c:DualCurrencyBox2>
         </DockPanel>
       </DockPanel>
