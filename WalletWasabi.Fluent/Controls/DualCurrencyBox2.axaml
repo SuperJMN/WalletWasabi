@@ -26,7 +26,6 @@
     <Setter Property="Background" Value="{DynamicResource TextControlBackground}" />
     <Setter Property="BorderBrush" Value="{DynamicResource TextControlBorderBrush}" />
     <Setter Property="BorderThickness" Value="0 0 0 2" />
-    <Setter Property="Cursor" Value="IBeam" />
     <Setter Property="Template">
       <ControlTemplate>
         <DataValidationErrors>
@@ -44,7 +43,7 @@
           <Border BorderThickness="{TemplateBinding BorderThickness}"
                   Background="{TemplateBinding Background}"
                   BorderBrush="{TemplateBinding BorderBrush}" CornerRadius="4" HorizontalAlignment="Stretch">
-            <Panel>
+            <Grid ColumnDefinitions="* Auto *">
 
               <c:DecimalTextEntry Classes="Transparent" Format="{x:Static fluent:MyFormatter.BtcFormat}"
                                   x:Name="BtcEntry"
@@ -66,7 +65,7 @@
                 </c:DecimalTextEntry.RightContentTemplate>
               </c:DecimalTextEntry>
 
-              <ToggleButton Background="Transparent" x:Name="Invert" VerticalAlignment="Center"
+              <ToggleButton Grid.Column="1" Background="Transparent" x:Name="Invert" VerticalAlignment="Center"
                             HorizontalAlignment="Center">
                 <ToggleButton.Content>
                   <PathIcon Data="{StaticResource arrow_swap}" Width="16" />
@@ -75,19 +74,21 @@
 
               <i:Interaction.Behaviors>
                 <d:DataTriggerBehavior Binding="{Binding #Invert.IsChecked}" Value="False">
-                  <d:ChangePropertyAction TargetObject="BtcEntry" PropertyName="HorizontalAlignment"
-                                          Value="Left" />
-                  <d:ChangePropertyAction TargetObject="UsdEntry" PropertyName="HorizontalAlignment"
-                                          Value="Right" />
+                  <d:ChangePropertyAction TargetObject="BtcEntry" PropertyName="Grid.Column" Value="0" />
+                  <d:ChangePropertyAction TargetObject="UsdEntry" PropertyName="Grid.Column" Value="2" />
+                  <d:ChangePropertyAction TargetObject="BtcEntry" PropertyName="HorizontalContentAlignment" Value="Left" />
+                  <d:ChangePropertyAction TargetObject="UsdEntry" PropertyName="HorizontalContentAlignment" Value="Right"  />
                 </d:DataTriggerBehavior>
                 <d:DataTriggerBehavior Binding="{Binding #Invert.IsChecked}" Value="True">
-                  <d:ChangePropertyAction TargetObject="BtcEntry" PropertyName="HorizontalAlignment" Value="Right" />
-                  <d:ChangePropertyAction TargetObject="UsdEntry" PropertyName="HorizontalAlignment"
-                                          Value="Left" />
+                  <d:ChangePropertyAction TargetObject="BtcEntry" PropertyName="Grid.Column" Value="2" />
+                  <d:ChangePropertyAction TargetObject="UsdEntry" PropertyName="Grid.Column" Value="0" />
+                  <d:ChangePropertyAction TargetObject="BtcEntry" PropertyName="HorizontalContentAlignment" Value="Right" />
+                  <d:ChangePropertyAction TargetObject="UsdEntry" PropertyName="HorizontalContentAlignment" Value="Left"  />
+
                 </d:DataTriggerBehavior>
               </i:Interaction.Behaviors>
 
-            </Panel>
+            </Grid>
           </Border>
         </DataValidationErrors>
       </ControlTemplate>
