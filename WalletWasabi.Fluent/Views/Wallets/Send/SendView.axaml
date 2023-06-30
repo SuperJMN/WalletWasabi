@@ -50,7 +50,6 @@
                                         Target="{Binding $self}"
                                         EqualityComparer="{x:Static helpers:AmountStringComparer.Instance}"
                                         PlacementMode="BottomEdgeAlignedLeft" />
-            <SelectAllOnGotFocusBehavior />
           </i:BehaviorCollection>
         </BehaviorCollectionTemplate>
       </Setter>
@@ -63,7 +62,6 @@
                                         Target="{Binding $self}"
                                         EqualityComparer="{x:Static helpers:AmountStringComparer.Instance}"
                                         PlacementMode="BottomEdgeAlignedRight" />
-            <SelectAllOnGotFocusBehavior />
           </i:BehaviorCollection>
         </BehaviorCollectionTemplate>
       </Setter>

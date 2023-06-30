@@ -22,21 +22,16 @@
     <Setter Property="Opacity" Value="0.6" />
   </Style>
 
-  <Style Selector="c|DualCurrencyBox2 TextBox.Modified">
-    <Setter Property="VerticalAlignment" Value="Center" />
-    <Setter Property="Background" Value="Transparent" />
-    <Setter Property="BorderThickness" Value="0" />
-  </Style>
-
   <Style Selector="c|DualCurrencyBox2">
     <Setter Property="Background" Value="{DynamicResource TextControlBackground}" />
     <Setter Property="BorderBrush" Value="{DynamicResource TextControlBorderBrush}" />
     <Setter Property="BorderThickness" Value="0 0 0 2" />
+    <Setter Property="Cursor" Value="IBeam" />
     <Setter Property="Template">
       <ControlTemplate>
         <DataValidationErrors>
           <DataValidationErrors.ErrorTemplate>
-            <DataTemplate>  
+            <DataTemplate>
               <ItemsControl Margin="0 5 0 0" Items="{Binding}">
                 <ItemsControl.ItemTemplate>
                   <DataTemplate DataType="models:ErrorDescriptor">
