@@ -42,7 +42,7 @@
       <Setter Property="Foreground" Value="{DynamicResource AcrylicTrimForeground}" />
     </Style>
 
-    <Style Selector="c|DualCurrencyBox2 /template/ c|DecimalTextEntry#BtcEntry /template/ TextBox#FocusedTextBox">
+    <Style Selector="c|DualCurrencyBox2 /template/ c|DecimalTextEntry#BtcEntry /template/ TextBox#MainTextBox">
       <Setter Property="(i:Interaction.Behaviors)">
         <BehaviorCollectionTemplate>
           <i:BehaviorCollection>
@@ -50,11 +50,12 @@
                                         Target="{Binding $self}"
                                         EqualityComparer="{x:Static helpers:AmountStringComparer.Instance}"
                                         PlacementMode="BottomEdgeAlignedLeft" />
+            <SelectAllOnGotFocusBehavior />
           </i:BehaviorCollection>
         </BehaviorCollectionTemplate>
       </Setter>
     </Style>
-    <Style Selector="c|DualCurrencyBox2 /template/ c|DecimalTextEntry#UsdEntry /template/ TextBox#FocusedTextBox">
+    <Style Selector="c|DualCurrencyBox2 /template/ c|DecimalTextEntry#UsdEntry /template/ TextBox#MainTextBox">
       <Setter Property="(i:Interaction.Behaviors)">
         <BehaviorCollectionTemplate>
           <i:BehaviorCollection>
@@ -62,6 +63,7 @@
                                         Target="{Binding $self}"
                                         EqualityComparer="{x:Static helpers:AmountStringComparer.Instance}"
                                         PlacementMode="BottomEdgeAlignedRight" />
+            <SelectAllOnGotFocusBehavior />
           </i:BehaviorCollection>
         </BehaviorCollectionTemplate>
       </Setter>

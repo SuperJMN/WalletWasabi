@@ -116,6 +116,16 @@
     </Setter>
   </Style>
 
+  <Style Selector="controls|DecimalTextEntry /template/ TextBox#MainTextBox[IsKeyboardFocusWithin=True]">
+    <Setter Property="Opacity" Value="1" />
+  </Style>
+  <Style Selector="controls|DecimalTextEntry /template/ TextBox#MainTextBox[IsKeyboardFocusWithin=False]">
+    <Setter Property="Opacity" Value="0" />
+  </Style>
+  <Style Selector="controls|DecimalTextEntry /template/ TextBox#FormattedTextBox.Hidden">
+    <Setter Property="Opacity" Value="0" />
+  </Style>
+
   <Style Selector="controls|DecimalTextEntry">
 
     <Setter Property="Template">
@@ -137,22 +147,20 @@
               </DataTemplate>
             </DataValidationErrors.ErrorTemplate>
             <Panel>
-              <TextBox x:Name="FocusedTextBox"
-                       IsVisible="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=IsKeyboardFocusWithin}"
+              <TextBox x:Name="MainTextBox"
                        Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Text, Mode=TwoWay}">
                 <TextBox.InnerRightContent>
                   <ContentControl
                     Template="{Binding RightContentTemplate, RelativeSource={RelativeSource FindAncestor, AncestorType=controls:DecimalTextEntry}}" />
                 </TextBox.InnerRightContent>
-                <i:Interaction.Behaviors>
-                  <ic:EventTriggerBehavior SourceObject="UnfocusedTextBox" EventName="GotFocus">
-                    <ic:CallMethodAction TargetObject="FocusedTextBox" MethodName="Focus" />
+                <!--<i:Interaction.Behaviors>
+                  <ic:EventTriggerBehavior SourceObject="FormattedTextBox" EventName="GotFocus">
+                    <ic:CallMethodAction TargetObject="MainTextBox" MethodName="Focus" />
                   </ic:EventTriggerBehavior>
-                </i:Interaction.Behaviors>
+                </i:Interaction.Behaviors>-->
               </TextBox>
-              <TextBox x:Name="UnfocusedTextBox"
-                       IsVisible="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=!IsKeyboardFocusWithin}"
-                       Text="{TemplateBinding FormattedValue}">
+              <TextBox x:Name="FormattedTextBox" IsHitTestVisible="False" Focusable="False"
+                       Text="{TemplateBinding FormattedValue}" Classes.Hidden="{Binding #MainTextBox.IsKeyboardFocusWithin}">
                 <TextBox.InnerRightContent>
                   <ContentControl
                     Template="{Binding RightContentTemplate, RelativeSource={RelativeSource FindAncestor, AncestorType=controls:DecimalTextEntry}}" />

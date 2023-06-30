@@ -36,7 +36,7 @@
       <ControlTemplate>
         <DataValidationErrors>
           <DataValidationErrors.ErrorTemplate>
-            <DataTemplate>
+            <DataTemplate>  
               <ItemsControl Margin="0 5 0 0" Items="{Binding}">
                 <ItemsControl.ItemTemplate>
                   <DataTemplate DataType="models:ErrorDescriptor">
