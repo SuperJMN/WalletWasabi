@@ -1,7 +1,9 @@
 using System.Linq;
 using System.Reactive.Linq;
 using System.Windows.Input;
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
 using ReactiveUI;
 using WalletWasabi.Fluent.Helpers;
 using WalletWasabi.Fluent.Models.UI;
@@ -72,7 +74,10 @@ public partial class ApplicationViewModel : ViewModelBase, ICanShutdownProvider
 
 	public void OnShutdownPrevented(bool restartRequest)
 	{
-		MainViewModel.Instance.ApplyUiConfigWindowState(); // Will pop the window if it was minimized.
+		if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime { MainWindow: { } w })
+		{
+			w.Activate();
+		}
 
 		if (!MainViewCanShutdown() && !restartRequest)
 		{
