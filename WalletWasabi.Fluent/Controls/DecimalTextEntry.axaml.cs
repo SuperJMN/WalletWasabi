@@ -23,37 +23,11 @@ public class DecimalTextEntry : TemplatedControl
 
 	public static readonly StyledProperty<string?> FormatProperty = AvaloniaProperty.Register<DecimalTextEntry, string?>(nameof(Format));
 
-	public static readonly StyledProperty<TextBox?> TextBoxProperty = AvaloniaProperty.Register<DecimalTextEntry, TextBox?>(nameof(TextBox));
-
 	public static readonly StyledProperty<TextAlignment> TextAlignmentProperty = AvaloniaProperty.Register<DecimalTextEntry, TextAlignment>(nameof(TextAlignment));
 
-	/// <summary>
-	/// Defines the <see cref="HorizontalAlignment"/> property.
-	/// </summary>
 	public static readonly StyledProperty<HorizontalAlignment> HorizontalContentAlignmentProperty = ContentControl.HorizontalContentAlignmentProperty.AddOwner<DecimalTextEntry>();
 
-	/// <summary>
-	/// Defines the <see cref="VerticalAlignment"/> property.
-	/// </summary>
 	public static readonly StyledProperty<VerticalAlignment> VerticalContentAlignmentProperty = ContentControl.VerticalContentAlignmentProperty.AddOwner<DecimalTextEntry>();
-
-	/// <summary>
-	/// Gets or sets the horizontal alignment of the content within the control.
-	/// </summary>
-	public HorizontalAlignment HorizontalContentAlignment
-	{
-		get { return GetValue(HorizontalContentAlignmentProperty); }
-		set { SetValue(HorizontalContentAlignmentProperty, value); }
-	}
-
-	/// <summary>
-	/// Gets or sets the vertical alignment of the content within the control.
-	/// </summary>
-	public VerticalAlignment VerticalContentAlignment
-	{
-		get { return GetValue(VerticalContentAlignmentProperty); }
-		set { SetValue(VerticalContentAlignmentProperty, value); }
-	}
 
 	private string? _formattedValue;
 
@@ -75,6 +49,18 @@ public class DecimalTextEntry : TemplatedControl
 		this.WhenAnyValue(x => x.Value)
 			.Do(v => Text = v?.ToString(CultureInfo.CurrentCulture) ?? "")
 			.Subscribe();
+	}
+
+	public HorizontalAlignment HorizontalContentAlignment
+	{
+		get => GetValue(HorizontalContentAlignmentProperty);
+		set => SetValue(HorizontalContentAlignmentProperty, value);
+	}
+
+	public VerticalAlignment VerticalContentAlignment
+	{
+		get => GetValue(VerticalContentAlignmentProperty);
+		set => SetValue(VerticalContentAlignmentProperty, value);
 	}
 
 	public TextAlignment TextAlignment
@@ -113,22 +99,9 @@ public class DecimalTextEntry : TemplatedControl
 		set => SetValue(TextProperty, value);
 	}
 
-	public TextBox? TextBox
-	{
-		get => GetValue(TextBoxProperty);
-		set => SetValue(TextBoxProperty, value);
-	}
-
 	protected override void UpdateDataValidation<T>(AvaloniaProperty<T> property, BindingValue<T> value)
 	{
 		DataValidationErrors.SetError(this, value.Error);
-	}
-
-	protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
-	{
-		base.OnApplyTemplate(e);
-
-		TextBox = e.NameScope.Find<TextBox>("FocusedTextBox");
 	}
 
 	private static decimal? Parse(string s)

@@ -30,14 +30,6 @@ public class DualCurrencyBox2 : TemplatedControl
 
 	public static readonly StyledProperty<decimal> ExchangeRateProperty = AvaloniaProperty.Register<DualCurrencyBox2, decimal>(nameof(ExchangeRate), new decimal(1));
 
-	public static readonly DirectProperty<DualCurrencyBox2, DecimalTextEntry?> BtcEntryProperty = AvaloniaProperty.RegisterDirect<DualCurrencyBox2, DecimalTextEntry?>("BtcEntry", o => o.BtcEntry, (o, v) => o.BtcEntry = v);
-
-	public static readonly DirectProperty<DualCurrencyBox2, DecimalTextEntry?> UsdEntryProperty = AvaloniaProperty.RegisterDirect<DualCurrencyBox2, DecimalTextEntry?>("UsdEntry", o => o.UsdEntry, (o, v) => o.UsdEntry = v);
-
-	private DecimalTextEntry? _btcEntry;
-
-	private DecimalTextEntry? _usdEntry;
-
 	private decimal? _value;
 
 	public DualCurrencyBox2()
@@ -65,9 +57,6 @@ public class DualCurrencyBox2 : TemplatedControl
 					UsdBoxValue = BtcToUsd(btcValue);
 				})
 			.Subscribe();
-
-		BtcTextBox = this.WhenAnyValue(x => x.BtcEntry.TextBox);
-		UsdTextBox = this.WhenAnyValue(x => x.UsdEntry.TextBox);
 	}
 
 	public decimal? Value
@@ -94,33 +83,9 @@ public class DualCurrencyBox2 : TemplatedControl
 		set => SetValue(ExchangeRateProperty, value);
 	}
 
-	public IObservable<TextBox?> UsdTextBox { get; private set; }
-
-	public DecimalTextEntry? BtcEntry
-	{
-		get => _btcEntry;
-		set => SetAndRaise(BtcEntryProperty, ref _btcEntry, value);
-	}
-
-	public DecimalTextEntry? UsdEntry
-	{
-		get => _usdEntry;
-		set => SetAndRaise(UsdEntryProperty, ref _usdEntry, value);
-	}
-
-	public IObservable<TextBox?> BtcTextBox { get; private set; }
-
 	protected override void UpdateDataValidation<T>(AvaloniaProperty<T> property, BindingValue<T> value)
 	{
 		DataValidationErrors.SetError(this, value.Error);
-	}
-
-	protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
-	{
-		base.OnApplyTemplate(e);
-
-		BtcEntry = e.NameScope.Find<DecimalTextEntry>("BtcEntry");
-		UsdEntry = e.NameScope.Find<DecimalTextEntry>("UsdEntry");
 	}
 
 	private static decimal? SetCoercedValue(decimal? currentValue, decimal? newValue)
