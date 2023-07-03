@@ -29,6 +29,10 @@ public class DecimalTextEntry : TemplatedControl
 
 	public static readonly StyledProperty<VerticalAlignment> VerticalContentAlignmentProperty = ContentControl.VerticalContentAlignmentProperty.AddOwner<DecimalTextEntry>();
 
+	public static readonly StyledProperty<ControlTemplate> LeftContentTemplateProperty = AvaloniaProperty.Register<DecimalTextEntry, ControlTemplate>(nameof(LeftContentTemplate));
+
+	public static readonly StyledProperty<bool> IsReadOnlyProperty = AvaloniaProperty.Register<DecimalTextEntry, bool>(nameof(IsReadOnly));
+
 	private string? _formattedValue;
 
 	private decimal? _value;
@@ -49,6 +53,18 @@ public class DecimalTextEntry : TemplatedControl
 		this.WhenAnyValue(x => x.Value)
 			.Do(v => Text = v?.ToString(CultureInfo.CurrentCulture) ?? "")
 			.Subscribe();
+	}
+
+	public bool IsReadOnly
+	{
+		get => GetValue(IsReadOnlyProperty);
+		set => SetValue(IsReadOnlyProperty, value);
+	}
+
+	public ControlTemplate LeftContentTemplate
+	{
+		get => GetValue(LeftContentTemplateProperty);
+		set => SetValue(LeftContentTemplateProperty, value);
 	}
 
 	public HorizontalAlignment HorizontalContentAlignment

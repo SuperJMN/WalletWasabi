@@ -8,7 +8,7 @@
         xmlns:models="clr-namespace:WalletWasabi.Models;assembly=WalletWasabi">
   <Design.PreviewWith>
     <Border Width="640">
-      <c:DualCurrencyBox2 ExchangeRate="5">
+      <c:DualCurrencyBox2 ExchangeRate="5" IsReadOnly="True">
         <c:DualCurrencyBox2.Value>
           <system:Decimal>3.2444411</system:Decimal>
         </c:DualCurrencyBox2.Value>
@@ -17,8 +17,6 @@
   </Design.PreviewWith>
 
   <Style Selector="c|DualCurrencyBox2 TextBlock.Unit">
-    <Setter Property="VerticalAlignment" Value="Center" />
-    <Setter Property="Margin" Value="0 0 10 0" />
     <Setter Property="Opacity" Value="0.6" />
   </Style>
 
@@ -34,7 +32,8 @@
               <ItemsControl Margin="0 5 0 0" Items="{Binding}">
                 <ItemsControl.ItemTemplate>
                   <DataTemplate DataType="models:ErrorDescriptor">
-                    <TextBlock Text="{Binding Message}" Foreground="{DynamicResource SystemControlErrorTextForegroundBrush}" />
+                    <TextBlock Text="{Binding Message}"
+                               Foreground="{DynamicResource SystemControlErrorTextForegroundBrush}" />
                   </DataTemplate>
                 </ItemsControl.ItemTemplate>
               </ItemsControl>
@@ -47,25 +46,33 @@
 
               <c:DecimalTextEntry Classes="Transparent" Format="{x:Static fluent:MyFormatter.BtcFormat}"
                                   x:Name="BtcEntry"
+                                  IsReadOnly="{TemplateBinding IsReadOnly}"
                                   Value="{Binding BtcBoxValue, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
                 <c:DecimalTextEntry.RightContentTemplate>
                   <ControlTemplate>
-                    <TextBlock Classes="Unit" Text="BTC" />
+                    <TextBlock Classes="Unit" Margin="4 0 0 0" Text="BTC" />
                   </ControlTemplate>
                 </c:DecimalTextEntry.RightContentTemplate>
               </c:DecimalTextEntry>
 
               <c:DecimalTextEntry Classes="Transparent" Format="{x:Static fluent:MyFormatter.UsdFormat}"
                                   x:Name="UsdEntry"
+                                  IsReadOnly="{TemplateBinding IsReadOnly}"
                                   Value="{Binding UsdBoxValue, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
                 <c:DecimalTextEntry.RightContentTemplate>
                   <ControlTemplate>
-                    <TextBlock Classes="Unit" Text="USD" />
+                    <TextBlock Classes="Unit" Margin="4 0 0 0" Text="USD" />
                   </ControlTemplate>
                 </c:DecimalTextEntry.RightContentTemplate>
+                <c:DecimalTextEntry.LeftContentTemplate>
+                  <ControlTemplate>
+                    <TextBlock Classes="Unit" Margin="0 0 4 0" Text="≈" />
+                  </ControlTemplate>
+                </c:DecimalTextEntry.LeftContentTemplate>
               </c:DecimalTextEntry>
 
-              <ToggleButton Grid.Column="1" Background="Transparent" x:Name="Invert" VerticalAlignment="Center"
+              <ToggleButton Grid.Column="1" Background="Transparent" IsChecked="{Binding IsInverted, RelativeSource={RelativeSource TemplatedParent}}"
+                            x:Name="Invert" VerticalAlignment="Center"
                             HorizontalAlignment="Center">
                 <ToggleButton.Content>
                   <PathIcon Data="{StaticResource arrow_swap}" Width="16" />
@@ -76,14 +83,18 @@
                 <d:DataTriggerBehavior Binding="{Binding #Invert.IsChecked}" Value="False">
                   <d:ChangePropertyAction TargetObject="BtcEntry" PropertyName="Grid.Column" Value="0" />
                   <d:ChangePropertyAction TargetObject="UsdEntry" PropertyName="Grid.Column" Value="2" />
-                  <d:ChangePropertyAction TargetObject="BtcEntry" PropertyName="HorizontalContentAlignment" Value="Left" />
-                  <d:ChangePropertyAction TargetObject="UsdEntry" PropertyName="HorizontalContentAlignment" Value="Right"  />
+                  <d:ChangePropertyAction TargetObject="BtcEntry" PropertyName="HorizontalContentAlignment"
+                                          Value="Left" />
+                  <d:ChangePropertyAction TargetObject="UsdEntry" PropertyName="HorizontalContentAlignment"
+                                          Value="Right" />
                 </d:DataTriggerBehavior>
                 <d:DataTriggerBehavior Binding="{Binding #Invert.IsChecked}" Value="True">
                   <d:ChangePropertyAction TargetObject="BtcEntry" PropertyName="Grid.Column" Value="2" />
                   <d:ChangePropertyAction TargetObject="UsdEntry" PropertyName="Grid.Column" Value="0" />
-                  <d:ChangePropertyAction TargetObject="BtcEntry" PropertyName="HorizontalContentAlignment" Value="Right" />
-                  <d:ChangePropertyAction TargetObject="UsdEntry" PropertyName="HorizontalContentAlignment" Value="Left"  />
+                  <d:ChangePropertyAction TargetObject="BtcEntry" PropertyName="HorizontalContentAlignment"
+                                          Value="Right" />
+                  <d:ChangePropertyAction TargetObject="UsdEntry" PropertyName="HorizontalContentAlignment"
+                                          Value="Left" />
 
                 </d:DataTriggerBehavior>
               </i:Interaction.Behaviors>

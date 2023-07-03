@@ -13,7 +13,6 @@ using WalletWasabi.Extensions;
 using WalletWasabi.Fluent.Validation;
 using WalletWasabi.Fluent.ViewModels.Dialogs;
 using WalletWasabi.Fluent.ViewModels.Navigation;
-using WalletWasabi.Fluent.ViewModels.Wallets.Home.Tiles;
 using WalletWasabi.Logging;
 using WalletWasabi.Models;
 using WalletWasabi.Tor.Http;
@@ -156,8 +155,6 @@ public partial class SendViewModel : RoutableViewModel
 	public ICommand QrCommand { get; }
 
 	public ICommand InsertMaxCommand { get; }
-
-	public WalletBalanceTileViewModel Balance { get; }
 
 	public WalletViewModel WalletVm { get; }
 

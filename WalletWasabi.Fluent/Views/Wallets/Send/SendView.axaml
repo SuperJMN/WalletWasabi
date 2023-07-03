@@ -17,7 +17,8 @@
   <UserControl.DataTemplates>
 
     <DataTemplate DataType="models:Suggestion">
-      <Button Background="Transparent" HorizontalAlignment="Center" Padding="8" DockPanel.Dock="Right" Command="{Binding AcceptCommand}" Focusable="False" Cursor="Hand">
+      <Button Background="Transparent" HorizontalAlignment="Center" Padding="8" DockPanel.Dock="Right"
+              Command="{Binding AcceptCommand}" Focusable="False" Cursor="Hand">
         <DockPanel HorizontalAlignment="Center">
           <PathIcon Data="{StaticResource paste_regular}" Width="20" DockPanel.Dock="Left" />
           <TextBlock Margin="4 0 0 0" Text="{Binding Text}" VerticalAlignment="Center" />
@@ -70,18 +71,19 @@
   </UserControl.Styles>
 
   <c:ContentArea
-                 EnableBack="{Binding EnableBack}"
-                 EnableNext="True"
-                 NextContent="Continue"
-                 EnableCancel="{Binding EnableCancel}"
-                 IsBusy="{Binding IsBusy}"
-                 ScrollViewer.VerticalScrollBarVisibility="Auto">
+    EnableBack="{Binding EnableBack}"
+    EnableNext="True"
+    NextContent="Continue"
+    EnableCancel="{Binding EnableCancel}"
+    IsBusy="{Binding IsBusy}"
+    ScrollViewer.VerticalScrollBarVisibility="Auto">
     <c:ContentArea.Title>
       <DockPanel>
         <TextBlock Text="Send" />
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10" VerticalAlignment="Center">
           <!-- Balance -->
-          <c:PrivacyContentControl PrivacyReplacementMode="Text" DockPanel.Dock="Top" HorizontalAlignment="Center" Classes="h8" Opacity="0.6">
+          <c:PrivacyContentControl PrivacyReplacementMode="Text" DockPanel.Dock="Top" HorizontalAlignment="Center"
+                                   Classes="h8" Opacity="0.6">
             <Button Focusable="False" Classes="plainHyperlink h8" Command="{Binding InsertMaxCommand}">
               <TextBlock DataContext="{Binding Balances}">
                 <TextBlock.Text>
@@ -162,9 +164,10 @@
         <DockPanel>
           <Image Width="120" Source="avares://WalletWasabi.Fluent/Assets/TechnologyLogos/payjoin.png"
                  DockPanel.Dock="Right" IsVisible="{Binding IsPayJoin}" Margin="0 8 8 0" VerticalAlignment="Top" />
-          <c:DualCurrencyBox2 VerticalAlignment="Center" x:Name="AmountEntry" Value="{Binding AmountBtc, Mode=TwoWay}" ExchangeRate="{Binding ExchangeRate}">
-           
-          </c:DualCurrencyBox2>
+          <c:DualCurrencyBox2 VerticalAlignment="Center" x:Name="AmountEntry" Value="{Binding AmountBtc, Mode=TwoWay}"
+                              ExchangeRate="{Binding ExchangeRate}"
+                              IsInverted="{Binding ConversionReversed}"
+                              IsReadOnly="{Binding IsFixedAmount}" />
         </DockPanel>
       </DockPanel>
     </DockPanel>

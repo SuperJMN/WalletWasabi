@@ -30,6 +30,10 @@ public class DualCurrencyBox2 : TemplatedControl
 
 	public static readonly StyledProperty<decimal> ExchangeRateProperty = AvaloniaProperty.Register<DualCurrencyBox2, decimal>(nameof(ExchangeRate), new decimal(1));
 
+	public static readonly StyledProperty<bool> IsReadOnlyProperty = AvaloniaProperty.Register<DualCurrencyBox2, bool>(nameof(IsReadOnly));
+
+	public static readonly StyledProperty<bool> IsInvertedProperty = AvaloniaProperty.Register<DualCurrencyBox2, bool>(nameof(IsInverted), defaultBindingMode: BindingMode.TwoWay);
+
 	private decimal? _value;
 
 	public DualCurrencyBox2()
@@ -57,6 +61,18 @@ public class DualCurrencyBox2 : TemplatedControl
 					UsdBoxValue = BtcToUsd(btcValue);
 				})
 			.Subscribe();
+	}
+
+	public bool IsInverted
+	{
+		get => GetValue(IsInvertedProperty);
+		set => SetValue(IsInvertedProperty, value);
+	}
+
+	public bool IsReadOnly
+	{
+		get => GetValue(IsReadOnlyProperty);
+		set => SetValue(IsReadOnlyProperty, value);
 	}
 
 	public decimal? Value

@@ -7,24 +7,19 @@
   <Design.PreviewWith>
     <Border Background="#0DB35F" Padding="10" Width="200" Focusable="True">
       <StackPanel>
-        <controls:DecimalTextEntry TextAlignment="Right"
+        <controls:DecimalTextEntry Height="100"
                                    Background="GreenYellow" HorizontalAlignment="Stretch"
-                                   HorizontalContentAlignment="Center">
+                                   HorizontalContentAlignment="Center" VerticalContentAlignment="Bottom">
           <controls:DecimalTextEntry.RightContentTemplate>
             <ControlTemplate>
-              <TextBlock VerticalAlignment="Center" Margin="0 0 10 0">BTC</TextBlock>
+              <TextBlock Margin="3 0 0 0">BTC</TextBlock>
             </ControlTemplate>
           </controls:DecimalTextEntry.RightContentTemplate>
-          <controls:DecimalTextEntry.Value>
-            <system:Decimal>12</system:Decimal>
-          </controls:DecimalTextEntry.Value>
-        </controls:DecimalTextEntry>
-        <controls:DecimalTextEntry Classes="Transparent" HorizontalAlignment="Left">
-          <controls:DecimalTextEntry.RightContentTemplate>
+          <controls:DecimalTextEntry.LeftContentTemplate>
             <ControlTemplate>
-              <TextBlock VerticalAlignment="Center" Margin="0 0 10 0">BTC</TextBlock>
+              <TextBlock Margin="0 0 3 0">≈</TextBlock>
             </ControlTemplate>
-          </controls:DecimalTextEntry.RightContentTemplate>
+          </controls:DecimalTextEntry.LeftContentTemplate>
           <controls:DecimalTextEntry.Value>
             <system:Decimal>12</system:Decimal>
           </controls:DecimalTextEntry.Value>
@@ -60,14 +55,15 @@
               CornerRadius="{TemplateBinding CornerRadius}"
               MinWidth="{TemplateBinding MinWidth}"
               MinHeight="{TemplateBinding MinHeight}" />
-
             <Border
               Margin="{TemplateBinding BorderThickness}">
-              <StackPanel Orientation="Horizontal" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+              <StackPanel Orientation="Horizontal"
+                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                           Margin="{TemplateBinding Padding}">
                 <ContentPresenter Content="{TemplateBinding InnerLeftContent}" />
                 <DockPanel x:Name="PART_InnerDockPanel">
-                  <TextBlock Name="PART_FloatingWatermark"
+                  <TextBlock x:Name="PART_FloatingWatermark"
                              Foreground="{DynamicResource SystemAccentColor}"
                              FontSize="{TemplateBinding FontSize}"
                              Text="{TemplateBinding Watermark}"
@@ -76,15 +72,13 @@
                     HorizontalScrollBarVisibility="{TemplateBinding (ScrollViewer.HorizontalScrollBarVisibility)}"
                     VerticalScrollBarVisibility="{TemplateBinding (ScrollViewer.VerticalScrollBarVisibility)}">
                     <Panel>
-                      <TextBlock Name="PART_Watermark"
+                      <TextBlock x:Name="PART_Watermark"
                                  Opacity="0.5"
                                  Text="{TemplateBinding Watermark}"
                                  TextAlignment="{TemplateBinding TextAlignment}"
                                  TextWrapping="{TemplateBinding TextWrapping}"
-                                 IsVisible="{TemplateBinding Text, Converter={x:Static StringConverters.IsNullOrEmpty}}"
-                                 HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                 VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
-                      <TextPresenter Name="PART_TextPresenter"
+                                 IsVisible="{TemplateBinding Text, Converter={x:Static StringConverters.IsNullOrEmpty}}" />
+                      <TextPresenter x:Name="PART_TextPresenter"
                                      Text="{TemplateBinding Text, Mode=TwoWay}"
                                      CaretIndex="{TemplateBinding CaretIndex}"
                                      SelectionStart="{TemplateBinding SelectionStart}"
@@ -95,9 +89,7 @@
                                      RevealPassword="{TemplateBinding RevealPassword}"
                                      SelectionBrush="{TemplateBinding SelectionBrush}"
                                      SelectionForegroundBrush="{TemplateBinding SelectionForegroundBrush}"
-                                     CaretBrush="{TemplateBinding CaretBrush}"
-                                     HorizontalAlignment="Center"
-                                     VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                                     CaretBrush="{TemplateBinding CaretBrush}" />
                     </Panel>
                   </ScrollViewer>
                 </DockPanel>
@@ -121,7 +113,7 @@
   </Style>
 
   <Style Selector="controls|DecimalTextEntry">
-
+    <Setter Property="VerticalContentAlignment" Value="Bottom" />
     <Setter Property="Template">
       <ControlTemplate>
         <Border Background="{TemplateBinding Background}"
@@ -141,29 +133,33 @@
               </DataTemplate>
             </DataValidationErrors.ErrorTemplate>
             <Panel>
-
-              <Panel.Styles>
-                <Style Selector="ContentControl">
-                  <Setter Property="Margin" Value="4 0" />
-                </Style>
-              </Panel.Styles>
-
               <TextBox x:Name="MainTextBox"
+                       IsReadOnly="{TemplateBinding IsReadOnly}"
                        HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                       VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
                        Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Text, Mode=TwoWay}">
                 <TextBox.InnerRightContent>
                   <ContentControl
                     Template="{Binding RightContentTemplate, RelativeSource={RelativeSource FindAncestor, AncestorType=controls:DecimalTextEntry}}" />
                 </TextBox.InnerRightContent>
+                <TextBox.InnerLeftContent>
+                  <ContentControl
+                    Template="{Binding LeftContentTemplate, RelativeSource={RelativeSource FindAncestor, AncestorType=controls:DecimalTextEntry}}" />
+                </TextBox.InnerLeftContent>         
               </TextBox>
-              <TextBox x:Name="FormattedTextBox" IsHitTestVisible="False" Focusable="False"
-                       HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+              <TextBox HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                       VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" x:Name="FormattedTextBox"
+                       IsHitTestVisible="False" Focusable="False"
                        Text="{TemplateBinding FormattedValue}"
                        Classes.Hidden="{Binding #MainTextBox.IsKeyboardFocusWithin}">
                 <TextBox.InnerRightContent>
                   <ContentControl
                     Template="{Binding RightContentTemplate, RelativeSource={RelativeSource FindAncestor, AncestorType=controls:DecimalTextEntry}}" />
                 </TextBox.InnerRightContent>
+                <TextBox.InnerLeftContent>
+                  <ContentControl
+                    Template="{Binding LeftContentTemplate, RelativeSource={RelativeSource FindAncestor, AncestorType=controls:DecimalTextEntry}}" />
+                </TextBox.InnerLeftContent>
               </TextBox>
             </Panel>
           </DataValidationErrors>
