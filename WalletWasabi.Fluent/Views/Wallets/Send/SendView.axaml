@@ -44,13 +44,19 @@
     </Style>
 
     <Style Selector="c|DualCurrencyBox2 /template/ c|DecimalTextEntry#BtcEntry /template/ TextBox#MainTextBox">
+      <Style.Resources>
+        <converters:BooleanConverter x:Key="SuggestionPlacementConverter"
+                                     TrueValue="{x:Static FlyoutPlacementMode.BottomEdgeAlignedRight}"
+                                     FalseValue="{x:Static FlyoutPlacementMode.BottomEdgeAlignedLeft}">
+        </converters:BooleanConverter>
+      </Style.Resources>
       <Setter Property="(i:Interaction.Behaviors)">
         <BehaviorCollectionTemplate>
           <i:BehaviorCollection>
             <b:FlyoutSuggestionBehavior Content="{Binding BitcoinContent^}"
                                         Target="{Binding $self}"
                                         EqualityComparer="{x:Static helpers:AmountStringComparer.Instance}"
-                                        PlacementMode="BottomEdgeAlignedLeft" />
+                                        PlacementMode="{Binding ConversionReversed, Converter={StaticResource SuggestionPlacementConverter}}" />
           </i:BehaviorCollection>
         </BehaviorCollectionTemplate>
       </Setter>
@@ -62,7 +68,7 @@
             <b:FlyoutSuggestionBehavior Content="{Binding UsdContent^}"
                                         Target="{Binding $self}"
                                         EqualityComparer="{x:Static helpers:AmountStringComparer.Instance}"
-                                        PlacementMode="BottomEdgeAlignedRight" />
+                                        PlacementMode="{Binding !ConversionReversed, Converter={StaticResource SuggestionPlacementConverter}}" />
           </i:BehaviorCollection>
         </BehaviorCollectionTemplate>
       </Setter>
