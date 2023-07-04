@@ -2,7 +2,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:system="clr-namespace:System;assembly=System.Runtime"
         xmlns:controls="clr-namespace:WalletWasabi.Fluent.Controls"
-        xmlns:models="clr-namespace:WalletWasabi.Models;assembly=WalletWasabi">
+        xmlns:models="clr-namespace:WalletWasabi.Models;assembly=WalletWasabi"
+        xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
+        xmlns:b="clr-namespace:WalletWasabi.Fluent.Behaviors">
 
   <Design.PreviewWith>
     <Border Padding="10" Width="200" Focusable="True">
@@ -110,11 +112,32 @@
   <Style Selector="controls|DecimalTextEntry /template/ TextBox#MainTextBox[IsKeyboardFocusWithin=True]">
     <Setter Property="Opacity" Value="1" />
   </Style>
+
   <Style Selector="controls|DecimalTextEntry /template/ TextBox#MainTextBox[IsKeyboardFocusWithin=False]">
     <Setter Property="Opacity" Value="0" />
   </Style>
+
   <Style Selector="controls|DecimalTextEntry /template/ TextBox#FormattedTextBox.Hidden">
     <Setter Property="Opacity" Value="0" />
+  </Style>
+
+  <Style Selector="controls|DecimalTextEntry.Transparent">
+    <Setter Property="BorderThickness" Value="0" />
+  </Style>
+
+  <Style Selector="controls|DecimalTextEntry.Transparent /template/ TextBox /template/ Border#PART_BorderElement">
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="Background" Value="Transparent" />
+  </Style>
+
+  <Style Selector="controls|DecimalTextEntry /template/ TextBox#MainTextBox">
+    <Setter Property="i:Interaction.Behaviors">
+      <BehaviorCollectionTemplate>
+        <i:BehaviorCollection>
+          <b:NumberBoxBehavior />
+        </i:BehaviorCollection>
+      </BehaviorCollectionTemplate>
+    </Setter>
   </Style>
 
   <Style Selector="controls|DecimalTextEntry">
@@ -171,15 +194,6 @@
         </Border>
       </ControlTemplate>
     </Setter>
-  </Style>
-
-  <Style Selector="controls|DecimalTextEntry.Transparent">
-    <Setter Property="BorderThickness" Value="0" />
-  </Style>
-
-  <Style Selector="controls|DecimalTextEntry.Transparent /template/ TextBox /template/ Border#PART_BorderElement">
-    <Setter Property="BorderThickness" Value="0" />
-    <Setter Property="Background" Value="Transparent" />
   </Style>
 
 </Styles>

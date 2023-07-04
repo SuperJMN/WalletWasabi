@@ -29,7 +29,7 @@ public partial class BitcoinTabSettingsViewModel : SettingsTabViewModelBase
 	[AutoNotify] private string _localBitcoinCoreDataDir;
 	[AutoNotify] private bool _stopLocalBitcoinCoreOnShutdown;
 	[AutoNotify] private string _bitcoinP2PEndPoint;
-	[AutoNotify] private decimal _dustThreshold;
+	[AutoNotify] private decimal? _dustThreshold;
 
 	public BitcoinTabSettingsViewModel()
 	{
@@ -82,8 +82,12 @@ public partial class BitcoinTabSettingsViewModel : SettingsTabViewModelBase
 	private void ValidateDustThreshold(IValidationErrors errors) =>
 		ValidateDustThreshold(errors, DustThreshold);
 
-	private static void ValidateDustThreshold(IValidationErrors errors, decimal dustThreshold)
+	private static void ValidateDustThreshold(IValidationErrors errors, decimal? dustThreshold)
 	{
+		if (dustThreshold is null)
+		{
+			errors.Add(ErrorSeverity.Error, "Please, enter a number.");
+		}
 		if (dustThreshold < 0)
 		{
 			errors.Add(ErrorSeverity.Error, "Invalid dust threshold.");
@@ -102,7 +106,7 @@ public partial class BitcoinTabSettingsViewModel : SettingsTabViewModelBase
 			persistentConfig.StartLocalBitcoinCoreOnStartup = StartLocalBitcoinCoreOnStartup;
 			persistentConfig.StopLocalBitcoinCoreOnShutdown = StopLocalBitcoinCoreOnShutdown;
 			persistentConfig.LocalBitcoinCoreDataDir = Guard.Correct(LocalBitcoinCoreDataDir);
-			persistentConfig.DustThreshold = new Money(DustThreshold, MoneyUnit.BTC);
+			persistentConfig.DustThreshold = new Money(DustThreshold!.Value, MoneyUnit.BTC);
 		}
 		else
 		{
