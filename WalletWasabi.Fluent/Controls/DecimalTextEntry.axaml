@@ -5,7 +5,7 @@
         xmlns:models="clr-namespace:WalletWasabi.Models;assembly=WalletWasabi">
 
   <Design.PreviewWith>
-    <Border Background="#0DB35F" Padding="10" Width="200" Focusable="True">
+    <Border Padding="10" Width="200" Focusable="True">
       <StackPanel>
         <controls:DecimalTextEntry Height="100"
                                    Background="GreenYellow" HorizontalAlignment="Stretch"
@@ -20,6 +20,11 @@
               <TextBlock Margin="0 0 3 0">≈</TextBlock>
             </ControlTemplate>
           </controls:DecimalTextEntry.LeftContentTemplate>
+          <controls:DecimalTextEntry.Value>
+            <system:Decimal>12</system:Decimal>
+          </controls:DecimalTextEntry.Value>
+        </controls:DecimalTextEntry>
+        <controls:DecimalTextEntry>
           <controls:DecimalTextEntry.Value>
             <system:Decimal>12</system:Decimal>
           </controls:DecimalTextEntry.Value>
@@ -39,7 +44,7 @@
     <Setter Property="FontSize" Value="{DynamicResource ControlContentThemeFontSize}" />
     <Setter Property="MinHeight" Value="{DynamicResource TextControlThemeMinHeight}" />
     <Setter Property="MinWidth" Value="{DynamicResource TextControlThemeMinWidth}" />
-    <Setter Property="Padding" Value="10 6" />
+    <Setter Property="Padding" Value="10 9" />
     <Setter Property="FocusAdorner" Value="{x:Null}" />
     <Setter Property="Cursor" Value="IBeam" />
     <Setter Property="ContextFlyout" Value="{StaticResource DefaultTextBoxContextFlyout}" />
