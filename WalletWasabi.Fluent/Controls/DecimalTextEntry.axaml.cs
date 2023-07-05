@@ -4,6 +4,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Data;
+using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Markup.Xaml.Templates;
 using Avalonia.Media;
@@ -34,6 +35,7 @@ public class DecimalTextEntry : TemplatedControl
 	public static readonly StyledProperty<bool> IsReadOnlyProperty = AvaloniaProperty.Register<DecimalTextEntry, bool>(nameof(IsReadOnly));
 
 	private string? _formattedValue;
+	private TextBox _mainTextBox;
 
 	private decimal? _value;
 
@@ -118,6 +120,17 @@ public class DecimalTextEntry : TemplatedControl
 	protected override void UpdateDataValidation<T>(AvaloniaProperty<T> property, BindingValue<T> value)
 	{
 		DataValidationErrors.SetError(this, value.Error);
+	}
+
+	protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
+	{
+		base.OnApplyTemplate(e);
+		_mainTextBox = e.NameScope.Find<TextBox>("MainTextBox");
+	}
+
+	protected override void OnGotFocus(GotFocusEventArgs e)
+	{
+		_mainTextBox.Focus();
 	}
 
 	private static decimal? Parse(string s)

@@ -142,13 +142,14 @@
 
   <Style Selector="controls|DecimalTextEntry">
     <Setter Property="VerticalContentAlignment" Value="Bottom" />
+    <Setter Property="Focusable" Value="False" />
     <Setter Property="Template">
       <ControlTemplate>
         <Border Background="{TemplateBinding Background}"
                 BorderThickness="{TemplateBinding BorderThickness}"
                 BorderBrush="{TemplateBinding BorderBrush}"
                 HorizontalAlignment="{TemplateBinding HorizontalAlignment}">
-          <DataValidationErrors>
+          <DataValidationErrors Focusable="False">
             <DataValidationErrors.ErrorTemplate>
               <DataTemplate>
                 <ItemsControl Items="{Binding}">
