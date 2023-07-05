@@ -11,16 +11,12 @@ namespace WalletWasabi.Fluent.Controls;
 public class DualCurrencyBox2 : TemplatedControl
 {
 	public static readonly StyledProperty<decimal?> BtcBoxValueProperty = AvaloniaProperty.Register<DualCurrencyBox2, decimal?>(nameof(BtcBoxValue), defaultBindingMode: BindingMode.TwoWay);
-
 	public static readonly StyledProperty<decimal?> UsdBoxValueProperty = AvaloniaProperty.Register<DualCurrencyBox2, decimal?>(nameof(UsdBoxValue), defaultBindingMode: BindingMode.TwoWay);
-
 	public static readonly DirectProperty<DualCurrencyBox2, Money?> ValueProperty = AvaloniaProperty.RegisterDirect<DualCurrencyBox2, Money?>(nameof(Value), o => o.Value, (o, v) => o.Value = v, enableDataValidation: true);
-
 	public static readonly StyledProperty<decimal> ExchangeRateProperty = AvaloniaProperty.Register<DualCurrencyBox2, decimal>(nameof(ExchangeRate), new decimal(1));
-
 	public static readonly StyledProperty<bool> IsReadOnlyProperty = AvaloniaProperty.Register<DualCurrencyBox2, bool>(nameof(IsReadOnly));
-
 	public static readonly StyledProperty<bool> IsInvertedProperty = AvaloniaProperty.Register<DualCurrencyBox2, bool>(nameof(IsInverted), defaultBindingMode: BindingMode.TwoWay);
+
 	private bool _areChangeNotificationsDisabled;
 
 	private Money? _value;
@@ -132,6 +128,11 @@ public class DualCurrencyBox2 : TemplatedControl
 		if (money is null)
 		{
 			return default;
+		}
+
+		if (money == Money.Zero)
+		{
+			return 0;
 		}
 
 		return Math.Round(money.ToDecimal(MoneyUnit.BTC) * ExchangeRate, 2);

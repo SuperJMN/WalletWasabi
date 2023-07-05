@@ -1,12 +1,12 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:c="using:WalletWasabi.Fluent.Controls"
-        xmlns:system="clr-namespace:System;assembly=System.Runtime"
         xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
         xmlns:d="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
         xmlns:fluent="clr-namespace:WalletWasabi.Fluent"
         xmlns:models="clr-namespace:WalletWasabi.Models;assembly=WalletWasabi"
-        xmlns:nBitcoin="clr-namespace:NBitcoin;assembly=NBitcoin">
+        xmlns:nBitcoin="clr-namespace:NBitcoin;assembly=NBitcoin"
+        xmlns:h="clr-namespace:WalletWasabi.Fluent.Helpers">
   <Design.PreviewWith>
     <Border Width="640">
       <c:DualCurrencyBox2 IsReadOnly="True">
@@ -45,7 +45,7 @@
                   BorderBrush="{TemplateBinding BorderBrush}" CornerRadius="4" HorizontalAlignment="Stretch">
             <Grid ColumnDefinitions="* Auto *">
 
-              <c:DecimalTextEntry Classes="Transparent" Format="{x:Static fluent:MyFormatter.BtcFormat}"
+              <c:DecimalTextEntry Classes="Transparent" Format="{x:Static h:MoneyFormat.Btc}"
                                   x:Name="BtcEntry"
                                   IsReadOnly="{TemplateBinding IsReadOnly}"
                                   Value="{Binding BtcBoxValue, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
@@ -56,7 +56,7 @@
                 </c:DecimalTextEntry.RightContentTemplate>
               </c:DecimalTextEntry>
 
-              <c:DecimalTextEntry Classes="Transparent" Format="{x:Static fluent:MyFormatter.UsdFormat}"
+              <c:DecimalTextEntry Classes="Transparent" Format="{x:Static h:MoneyFormat.Usd}"
                                   x:Name="UsdEntry"
                                   IsReadOnly="{TemplateBinding IsReadOnly}"
                                   Value="{Binding UsdBoxValue, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
