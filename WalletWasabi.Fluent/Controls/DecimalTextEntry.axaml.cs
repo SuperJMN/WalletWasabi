@@ -7,7 +7,6 @@ using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Markup.Xaml.Templates;
-using Avalonia.Media;
 using ReactiveUI;
 
 namespace WalletWasabi.Fluent.Controls;
@@ -15,27 +14,17 @@ namespace WalletWasabi.Fluent.Controls;
 public class DecimalTextEntry : TemplatedControl
 {
 	public static readonly DirectProperty<DecimalTextEntry, string?> FormattedValueProperty = AvaloniaProperty.RegisterDirect<DecimalTextEntry, string?>(nameof(FormattedValue), o => o.FormattedValue, (o, v) => o.FormattedValue = v);
-
 	public static readonly StyledProperty<string> TextProperty = AvaloniaProperty.Register<DecimalTextEntry, string>(nameof(Text), "");
-
 	public static readonly DirectProperty<DecimalTextEntry, decimal?> ValueProperty = AvaloniaProperty.RegisterDirect<DecimalTextEntry, decimal?>(nameof(Value), o => o.Value, (o, v) => o.Value = v, enableDataValidation: true, defaultBindingMode: BindingMode.TwoWay);
-
 	public static readonly StyledProperty<ControlTemplate> RightContentTemplateProperty = AvaloniaProperty.Register<DecimalTextEntry, ControlTemplate>(nameof(RightContentTemplate));
-
 	public static readonly StyledProperty<string?> FormatProperty = AvaloniaProperty.Register<DecimalTextEntry, string?>(nameof(Format));
-
-	public static readonly StyledProperty<TextAlignment> TextAlignmentProperty = AvaloniaProperty.Register<DecimalTextEntry, TextAlignment>(nameof(TextAlignment));
-
 	public static readonly StyledProperty<HorizontalAlignment> HorizontalContentAlignmentProperty = ContentControl.HorizontalContentAlignmentProperty.AddOwner<DecimalTextEntry>();
-
 	public static readonly StyledProperty<VerticalAlignment> VerticalContentAlignmentProperty = ContentControl.VerticalContentAlignmentProperty.AddOwner<DecimalTextEntry>();
-
 	public static readonly StyledProperty<ControlTemplate> LeftContentTemplateProperty = AvaloniaProperty.Register<DecimalTextEntry, ControlTemplate>(nameof(LeftContentTemplate));
-
 	public static readonly StyledProperty<bool> IsReadOnlyProperty = AvaloniaProperty.Register<DecimalTextEntry, bool>(nameof(IsReadOnly));
 
 	private string? _formattedValue;
-	private TextBox _mainTextBox;
+	private TextBox? _mainTextBox;
 
 	private decimal? _value;
 
@@ -81,12 +70,6 @@ public class DecimalTextEntry : TemplatedControl
 		set => SetValue(VerticalContentAlignmentProperty, value);
 	}
 
-	public TextAlignment TextAlignment
-	{
-		get => GetValue(TextAlignmentProperty);
-		set => SetValue(TextAlignmentProperty, value);
-	}
-
 	public string? Format
 	{
 		get => GetValue(FormatProperty);
@@ -130,7 +113,7 @@ public class DecimalTextEntry : TemplatedControl
 
 	protected override void OnGotFocus(GotFocusEventArgs e)
 	{
-		_mainTextBox.Focus();
+		_mainTextBox?.Focus();
 	}
 
 	private static decimal? Parse(string s)
