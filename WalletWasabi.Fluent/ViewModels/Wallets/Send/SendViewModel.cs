@@ -47,7 +47,7 @@ public partial class SendViewModel : RoutableViewModel
 	private LabelsArray _parsedLabel = LabelsArray.Empty;
 
 	[AutoNotify] private string _to;
-	[AutoNotify] private decimal _amountBtc;
+	[AutoNotify] private Money? _amountBtc;
 	[AutoNotify] private decimal _exchangeRate;
 	[AutoNotify] private bool _isFixedAmount;
 	[AutoNotify] private bool _isPayJoin;
@@ -83,7 +83,7 @@ public partial class SendViewModel : RoutableViewModel
 
 		PasteCommand = ReactiveCommand.CreateFromTask(async () => await OnPasteAsync());
 		AutoPasteCommand = ReactiveCommand.CreateFromTask(async () => await OnAutoPasteAsync());
-		InsertMaxCommand = ReactiveCommand.Create(() => AmountBtc = _wallet.Coins.TotalAmount().ToDecimal(MoneyUnit.BTC));
+		InsertMaxCommand = ReactiveCommand.Create(() => AmountBtc = _wallet.Coins.TotalAmount());
 		QrCommand = ReactiveCommand.Create(async () =>
 		{
 			ShowQrCameraDialogViewModel dialog = new(UiContext, _wallet.Network);
@@ -99,7 +99,7 @@ public partial class SendViewModel : RoutableViewModel
 				.Select(tup =>
 				{
 					var (amountBtc, to) = tup;
-					var allFilled = !string.IsNullOrEmpty(to) && amountBtc > 0;
+					var allFilled = !string.IsNullOrEmpty(to) && amountBtc is { } money && money > 0;
 					var hasError = Validations.Any;
 
 					return allFilled && !hasError;
@@ -114,14 +114,13 @@ public partial class SendViewModel : RoutableViewModel
 					return;
 				}
 
-				var amount = new Money(AmountBtc, MoneyUnit.BTC);
 				var transactionInfo = new TransactionInfo(BitcoinAddress.Create(To, _wallet.Network), _wallet.AnonScoreTarget)
 				{
-					Amount = amount,
+					Amount = AmountBtc!,
 					Recipient = label,
 					PayJoinClient = GetPayjoinClient(PayJoinEndPoint),
 					IsFixedAmount = IsFixedAmount,
-					SubtractFee = amount == _wallet.Coins.TotalAmount() && !(IsFixedAmount || IsPayJoin)
+					SubtractFee = AmountBtc == _wallet.Coins.TotalAmount() && !(IsFixedAmount || IsPayJoin)
 				};
 
 				if (_coinJoinManager is { } coinJoinManager)
@@ -214,11 +213,17 @@ public partial class SendViewModel : RoutableViewModel
 
 	private void ValidateAmount(IValidationErrors errors)
 	{
-		if (AmountBtc > Constants.MaximumNumberOfBitcoins)
+		if (AmountBtc is null)
+		{
+			errors.Add(ErrorSeverity.Error, "Amount can't be empty.");
+			return;
+		}
+
+		if (AmountBtc > new Money(Constants.MaximumNumberOfBitcoins, MoneyUnit.BTC))
 		{
 			errors.Add(ErrorSeverity.Error, "Amount must be less than the total supply of BTC.");
 		}
-		else if (AmountBtc > _wallet.Coins.TotalAmount().ToDecimal(MoneyUnit.BTC))
+		else if (AmountBtc > _wallet.Coins.TotalAmount())
 		{
 			errors.Add(ErrorSeverity.Error, "Insufficient funds to cover the amount requested.");
 		}
@@ -284,7 +289,7 @@ public partial class SendViewModel : RoutableViewModel
 
 			if (url.Amount is { })
 			{
-				AmountBtc = url.Amount.ToDecimal(MoneyUnit.BTC);
+				AmountBtc = url.Amount;
 				IsFixedAmount = true;
 			}
 			else

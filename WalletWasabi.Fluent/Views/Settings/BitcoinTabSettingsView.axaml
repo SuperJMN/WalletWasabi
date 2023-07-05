@@ -52,7 +52,7 @@
       <c:DecimalTextEntry Format="{x:Static fluent:MyFormatter.BtcFormat}" Value="{Binding DustThreshold}">
         <c:DecimalTextEntry.RightContentTemplate>
           <ControlTemplate>
-            <TextBlock VerticalAlignment="Center" Text="BTC" Margin="0 0 10 0" />
+            <TextBlock VerticalAlignment="Center" Text="BTC" Margin="4 0 0 0"  />
           </ControlTemplate>
         </c:DecimalTextEntry.RightContentTemplate>
       </c:DecimalTextEntry>

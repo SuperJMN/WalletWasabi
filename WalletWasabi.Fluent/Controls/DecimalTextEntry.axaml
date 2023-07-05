@@ -162,6 +162,7 @@
             </DataValidationErrors.ErrorTemplate>
             <Panel>
               <TextBox x:Name="MainTextBox"
+                       Focusable="True"
                        IsReadOnly="{TemplateBinding IsReadOnly}"
                        HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                        VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"

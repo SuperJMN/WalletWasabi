@@ -20,14 +20,14 @@ public partial class CustomFeeRateDialogViewModel : DialogViewModelBase<FeeRate>
 	{
 		_transactionInfo = transactionInfo;
 
-		_customFee = transactionInfo.IsCustomFeeUsed
-			? transactionInfo.FeeRate.SatoshiPerByte
-			: null;
-
 		EnableBack = false;
 		SetupCancel(enableCancel: true, enableCancelOnEscape: true, enableCancelOnPressed: true);
 
 		this.ValidateProperty(x => x.CustomFee, ValidateCustomFee);
+
+		CustomFee = transactionInfo.IsCustomFeeUsed
+			? transactionInfo.FeeRate.SatoshiPerByte
+			: null;
 
 		var nextCommandCanExecute =
 			this.WhenAnyValue(x => x.CustomFee)
@@ -60,6 +60,7 @@ public partial class CustomFeeRateDialogViewModel : DialogViewModelBase<FeeRate>
 	{
 		if (CustomFee is null)
 		{
+			errors.Add(ErrorSeverity.Error, "Fee rate can't be empty.");
 			return;
 		}
 

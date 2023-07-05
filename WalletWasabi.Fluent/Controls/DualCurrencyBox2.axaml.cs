@@ -3,63 +3,42 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Data;
+using NBitcoin;
 using ReactiveUI;
 
 namespace WalletWasabi.Fluent.Controls;
 
 public class DualCurrencyBox2 : TemplatedControl
 {
-	private const decimal Tolerance = (decimal) 0.00000100;
-
-	public static readonly StyledProperty<decimal?> BtcBoxValueProperty = AvaloniaProperty.Register<DualCurrencyBox2, decimal?>(
-		nameof(BtcBoxValue),
-		defaultBindingMode: BindingMode.TwoWay,
-		coerce: (_, newValue) =>
-		{
-			if (newValue == null)
-			{
-				return default;
-			}
-
-			return Math.Round(newValue.Value, 8);
-		});
+	public static readonly StyledProperty<decimal?> BtcBoxValueProperty = AvaloniaProperty.Register<DualCurrencyBox2, decimal?>(nameof(BtcBoxValue), defaultBindingMode: BindingMode.TwoWay);
 
 	public static readonly StyledProperty<decimal?> UsdBoxValueProperty = AvaloniaProperty.Register<DualCurrencyBox2, decimal?>(nameof(UsdBoxValue), defaultBindingMode: BindingMode.TwoWay);
 
-	public static readonly DirectProperty<DualCurrencyBox2, decimal?> ValueProperty = AvaloniaProperty.RegisterDirect<DualCurrencyBox2, decimal?>(nameof(Value), o => o.Value, (o, v) => o.Value = SetCoercedValue(o.Value, v), enableDataValidation: true);
+	public static readonly DirectProperty<DualCurrencyBox2, Money?> ValueProperty = AvaloniaProperty.RegisterDirect<DualCurrencyBox2, Money?>(nameof(Value), o => o.Value, (o, v) => o.Value = v, enableDataValidation: true);
 
 	public static readonly StyledProperty<decimal> ExchangeRateProperty = AvaloniaProperty.Register<DualCurrencyBox2, decimal>(nameof(ExchangeRate), new decimal(1));
 
 	public static readonly StyledProperty<bool> IsReadOnlyProperty = AvaloniaProperty.Register<DualCurrencyBox2, bool>(nameof(IsReadOnly));
 
 	public static readonly StyledProperty<bool> IsInvertedProperty = AvaloniaProperty.Register<DualCurrencyBox2, bool>(nameof(IsInverted), defaultBindingMode: BindingMode.TwoWay);
+	private bool _areChangeNotificationsDisabled;
 
-	private decimal? _value;
+	private Money? _value;
 
 	public DualCurrencyBox2()
 	{
 		this
 			.WhenAnyValue(x => x.BtcBoxValue)
-			.Do(
-				btcValue =>
-				{
-					Value = btcValue;
-					UsdBoxValue = BtcToUsd(btcValue);
-				})
+			.Do(OnBtcValueChanged)
 			.Subscribe();
 
 		this
 			.WhenAnyValue(x => x.UsdBoxValue)
-			.Do(x => Value = x / ExchangeRate)
+			.Do(OnUsdValueChanged)
 			.Subscribe();
 
 		this.WhenAnyValue(x => x.Value)
-			.Do(
-				btcValue =>
-				{
-					BtcBoxValue = btcValue;
-					UsdBoxValue = BtcToUsd(btcValue);
-				})
+			.Do(OnValueChanged)
 			.Subscribe();
 	}
 
@@ -75,7 +54,7 @@ public class DualCurrencyBox2 : TemplatedControl
 		set => SetValue(IsReadOnlyProperty, value);
 	}
 
-	public decimal? Value
+	public Money? Value
 	{
 		get => _value;
 		set => SetAndRaise(ValueProperty, ref _value, value);
@@ -104,35 +83,67 @@ public class DualCurrencyBox2 : TemplatedControl
 		DataValidationErrors.SetError(this, value.Error);
 	}
 
-	private static decimal? SetCoercedValue(decimal? currentValue, decimal? newValue)
+	private void ExclusiveSet(Action action)
 	{
-		if (currentValue is null)
+		if (_areChangeNotificationsDisabled)
 		{
-			return newValue;
+			return;
 		}
 
-		if (newValue is null)
-		{
-			return default;
-		}
+		_areChangeNotificationsDisabled = true;
 
-		var diff = (decimal) (currentValue - newValue);
+		action();
 
-		if (Math.Abs(diff) <= Tolerance)
-		{
-			return currentValue;
-		}
-
-		return newValue.Value;
+		_areChangeNotificationsDisabled = false;
 	}
 
-	private decimal? BtcToUsd(decimal? x)
+	private void OnValueChanged(Money? btcValue)
 	{
-		if (x is null)
+		ExclusiveSet(
+			() =>
+			{
+				BtcBoxValue = btcValue?.ToDecimal(MoneyUnit.BTC);
+				UsdBoxValue = BtcToUsd(btcValue);
+			});
+	}
+
+	private void OnUsdValueChanged(decimal? x)
+	{
+		ExclusiveSet(
+			() =>
+			{
+				Value = x.HasValue ? new Money((decimal) x / ExchangeRate, MoneyUnit.BTC) : null;
+				BtcBoxValue = Value?.ToDecimal(MoneyUnit.BTC);
+			});
+	}
+
+	private void OnBtcValueChanged(decimal? btcValue)
+	{
+		ExclusiveSet(
+			() =>
+			{
+				Value = btcValue.HasValue ? new Money((decimal) btcValue, MoneyUnit.BTC) : null;
+				UsdBoxValue = BtcToUsd(btcValue);
+			});
+	}
+
+	private decimal? BtcToUsd(Money? money)
+	{
+		if (money is null)
 		{
 			return default;
 		}
 
-		return Math.Round((decimal) (x * ExchangeRate), 2);
+		return Math.Round(money.ToDecimal(MoneyUnit.BTC) * ExchangeRate, 2);
+	}
+
+	private decimal? BtcToUsd(decimal? money)
+	{
+		if (money is null)
+		{
+			return default;
+		}
+
+		return Math.Round(money.Value * ExchangeRate, 2);
 	}
 }

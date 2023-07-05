@@ -22,7 +22,7 @@
                           Width="220" x:Name="CustomFee">
         <c:DecimalTextEntry.RightContentTemplate>
           <ControlTemplate>
-            <TextBlock VerticalAlignment="Center">sat/vByte</TextBlock>
+            <TextBlock VerticalAlignment="Center" Margin="4 0 0 0">sats/vByte</TextBlock>
           </ControlTemplate>
         </c:DecimalTextEntry.RightContentTemplate>
         <i:Interaction.Behaviors>
