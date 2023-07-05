@@ -25,20 +25,19 @@ public class DecimalTextEntry : TemplatedControl
 
 	private string? _formattedValue;
 	private TextBox? _mainTextBox;
-
 	private decimal? _value;
 
 	public DecimalTextEntry()
 	{
 		this
 			.WhenAnyValue(x => x.Value, x => x.Format, (value, format) => new { value, format })
-			.Do(tuple => { FormattedValue = tuple.value?.ToString(tuple.format, CultureInfo.CurrentCulture) ?? ""; })
+			.Do(tuple => FormattedValue = tuple.value?.ToString(tuple.format, CultureInfo.CurrentCulture) ?? "")
 			.Subscribe();
 
 		this
 			.WhenAnyValue(x => x.Text)
 			.Select(Parse)
-			.Do(x => Value = x)
+			.Do(v => Value = v)
 			.Subscribe();
 
 		this.WhenAnyValue(x => x.Value)
@@ -123,11 +122,6 @@ public class DecimalTextEntry : TemplatedControl
 			return default;
 		}
 
-		if (decimal.TryParse(s, NumberStyles.Any, CultureInfo.CurrentCulture, out var n))
-		{
-			return n;
-		}
-
-		return default;
+		return decimal.TryParse(s, NumberStyles.Any, CultureInfo.CurrentCulture, out var n) ? n : default(decimal?);
 	}
 }
