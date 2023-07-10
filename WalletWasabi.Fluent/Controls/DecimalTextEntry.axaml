@@ -130,16 +130,6 @@
     <Setter Property="Background" Value="Transparent" />
   </Style>
 
-  <Style Selector="controls|DecimalTextEntry /template/ TextBox#MainTextBox">
-    <Setter Property="i:Interaction.Behaviors">
-      <BehaviorCollectionTemplate>
-        <i:BehaviorCollection>
-          <b:NumberBoxBehavior />
-        </i:BehaviorCollection>
-      </BehaviorCollectionTemplate>
-    </Setter>
-  </Style>
-
   <Style Selector="controls|DecimalTextEntry">
     <Setter Property="VerticalContentAlignment" Value="Bottom" />
     <Setter Property="Focusable" Value="False" />

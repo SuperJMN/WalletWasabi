@@ -7,41 +7,36 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
-using Avalonia.Xaml.Interactivity;
 using WalletWasabi.Fluent.Extensions;
+using WalletWasabi.Helpers;
 
 namespace WalletWasabi.Fluent.Behaviors;
 
-public class NumberBoxBehavior : Behavior<TextBox>
+public class TextBoxNumberController : IDisposable
 {
 	private static readonly string Separator = CultureInfo.CurrentUICulture.NumberFormat.NumberDecimalSeparator;
 	private readonly CompositeDisposable _disposables = new();
+	private readonly int _maxDecimalPlaces;
 
-	protected override void OnAttachedToVisualTree()
+	public TextBoxNumberController(TextBox textBox, int maxDecimalPlaces)
 	{
-		base.OnAttachedToVisualTree();
-
-		if (AssociatedObject is null)
-		{
-			return;
-		}
-
-		AssociatedObject.OnEvent(InputElement.TextInputEvent, RoutingStrategies.Tunnel)
+		_maxDecimalPlaces = maxDecimalPlaces;
+		textBox.OnEvent(InputElement.TextInputEvent, RoutingStrategies.Tunnel)
 			.Select(x => x.EventArgs)
-			.Do(x => InsertImplicitZero(x, AssociatedObject, x.Text ?? ""))
-			.Do(x => Filter(x, AssociatedObject, x.Text))
+			.Do(x => InsertImplicitZero(x, textBox, x.Text ?? ""))
+			.Do(x => Filter(x, textBox, x.Text))
 			.Subscribe()
 			.DisposeWith(_disposables);
 
-		AssociatedObject.OnEvent(TextBox.PastingFromClipboardEvent)
+		textBox.OnEvent(TextBox.PastingFromClipboardEvent)
 			.SelectMany(async x => (x.EventArgs, Text: await GetClipboardTextAsync()))
-			.Do(x => PrependZeroOnPaste(x.EventArgs, AssociatedObject, x.Text))
-			.Do(pasting => Filter(pasting.EventArgs, AssociatedObject, pasting.Text))
+			.Do(x => PrependZeroOnPaste(x.EventArgs, textBox, x.Text))
+			.Do(pasting => Filter(pasting.EventArgs, textBox, pasting.Text))
 			.Subscribe()
 			.DisposeWith(_disposables);
 	}
 
-	protected override void OnDetachedFromVisualTree()
+	public void Dispose()
 	{
 		_disposables.Dispose();
 	}
@@ -82,31 +77,6 @@ public class NumberBoxBehavior : Behavior<TextBox>
 		textBox.Text = "0" + toPaste;
 	}
 
-	private static void Filter(RoutedEventArgs arg, TextBox tb, string? newText)
-	{
-		if (tb.Text is null)
-		{
-			return;
-		}
-
-		arg.Handled = !IsValid(SimulateNextText(newText, tb), tb.Text);
-	}
-
-	private static bool IsValid(string str, string currentText)
-	{
-		if (currentText == "" && str == CultureInfo.CurrentUICulture.NumberFormat.NegativeSign)
-		{
-			return true;
-		}
-
-		if (str.Any(char.IsWhiteSpace))
-		{
-			return false;
-		}
-
-		return decimal.TryParse(str, NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.CurrentUICulture, out _);
-	}
-
 	private static string SimulateNextText(string? text, TextBox tb)
 	{
 		var start = Math.Min(tb.SelectionStart, tb.SelectionEnd);
@@ -145,5 +115,32 @@ public class NumberBoxBehavior : Behavior<TextBox>
 		}
 
 		textInputEventArgs.Text = finalText;
+	}
+
+	private void Filter(RoutedEventArgs arg, TextBox tb, string? newText)
+	{
+		if (tb.Text is null)
+		{
+			return;
+		}
+
+		arg.Handled = !IsValid(SimulateNextText(newText, tb), tb.Text);
+	}
+
+	private bool IsValid(string str, string currentText)
+	{
+		if (currentText == "" && str == CultureInfo.CurrentUICulture.NumberFormat.NegativeSign)
+		{
+			return true;
+		}
+
+		if (str.Any(char.IsWhiteSpace))
+		{
+			return false;
+		}
+
+		var wasParsed = decimal.TryParse(str, NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.CurrentUICulture, out var d);
+
+		return wasParsed && d.CountDecimalPlaces() <= _maxDecimalPlaces;
 	}
 }

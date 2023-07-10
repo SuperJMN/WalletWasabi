@@ -3,7 +3,6 @@
         xmlns:c="using:WalletWasabi.Fluent.Controls"
         xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
         xmlns:d="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
-        xmlns:fluent="clr-namespace:WalletWasabi.Fluent"
         xmlns:models="clr-namespace:WalletWasabi.Models;assembly=WalletWasabi"
         xmlns:nBitcoin="clr-namespace:NBitcoin;assembly=NBitcoin"
         xmlns:h="clr-namespace:WalletWasabi.Fluent.Helpers">
@@ -47,6 +46,7 @@
 
               <c:DecimalTextEntry Classes="Transparent" Format="{x:Static h:MoneyFormat.Btc}"
                                   x:Name="BtcEntry"
+                                  MaxDecimalPlaces="8"
                                   IsReadOnly="{TemplateBinding IsReadOnly}"
                                   Value="{Binding BtcBoxValue, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
                 <c:DecimalTextEntry.RightContentTemplate>
@@ -58,6 +58,7 @@
 
               <c:DecimalTextEntry Classes="Transparent" Format="{x:Static h:MoneyFormat.Usd}"
                                   x:Name="UsdEntry"
+                                  MaxDecimalPlaces="2"
                                   IsReadOnly="{TemplateBinding IsReadOnly}"
                                   Value="{Binding UsdBoxValue, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
                 <c:DecimalTextEntry.RightContentTemplate>

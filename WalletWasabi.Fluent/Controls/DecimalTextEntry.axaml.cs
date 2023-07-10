@@ -8,6 +8,8 @@ using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Markup.Xaml.Templates;
 using ReactiveUI;
+using SQLitePCL;
+using WalletWasabi.Fluent.Behaviors;
 
 namespace WalletWasabi.Fluent.Controls;
 
@@ -22,9 +24,22 @@ public class DecimalTextEntry : TemplatedControl
 	public static readonly StyledProperty<VerticalAlignment> VerticalContentAlignmentProperty = ContentControl.VerticalContentAlignmentProperty.AddOwner<DecimalTextEntry>();
 	public static readonly StyledProperty<ControlTemplate> LeftContentTemplateProperty = AvaloniaProperty.Register<DecimalTextEntry, ControlTemplate>(nameof(LeftContentTemplate));
 	public static readonly StyledProperty<bool> IsReadOnlyProperty = AvaloniaProperty.Register<DecimalTextEntry, bool>(nameof(IsReadOnly));
+	public static readonly StyledProperty<int> MaxDecimalPlacesProperty = AvaloniaProperty.Register<DecimalTextEntry, int>(nameof(MaxDecimalPlaces));
+	private TextBox? _mainTextBox;
+
+	public static readonly DirectProperty<DecimalTextEntry, TextBox?> MainTextBoxProperty = AvaloniaProperty.RegisterDirect<DecimalTextEntry, TextBox?>("MainTextBox", o => o.MainTextBox, (o, v) => o.MainTextBox = v);
+
+	public TextBox? MainTextBox
+	{
+		get => _mainTextBox;
+		set => SetAndRaise(MainTextBoxProperty, ref _mainTextBox, value);
+	}
+
+	private TextBoxNumberController? _behavior;
 
 	private string? _formattedValue;
-	private TextBox? _mainTextBox;
+
+	
 	private decimal? _value;
 
 	public DecimalTextEntry()
@@ -43,6 +58,27 @@ public class DecimalTextEntry : TemplatedControl
 		this.WhenAnyValue(x => x.Value)
 			.Do(v => Text = v?.ToString(CultureInfo.CurrentCulture) ?? "")
 			.Subscribe();
+
+		this.WhenAnyValue(x => x.MainTextBox, x => x.MaxDecimalPlaces)
+			.Do(x =>
+			{
+				_behavior?.Dispose();
+				if (x.Item1 is { } textBox)
+				{
+					_behavior = new TextBoxNumberController(textBox, x.Item2);
+				}
+				else
+				{
+					_behavior = null;
+				}
+			})
+			.Subscribe();
+	}
+
+	public int MaxDecimalPlaces
+	{
+		get => GetValue(MaxDecimalPlacesProperty);
+		set => SetValue(MaxDecimalPlacesProperty, value);
 	}
 
 	public bool IsReadOnly
@@ -107,12 +143,19 @@ public class DecimalTextEntry : TemplatedControl
 	protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
 	{
 		base.OnApplyTemplate(e);
-		_mainTextBox = e.NameScope.Find<TextBox>("MainTextBox");
+		MainTextBox = e.NameScope.Find<TextBox>("MainTextBox");
 	}
 
 	protected override void OnGotFocus(GotFocusEventArgs e)
 	{
-		_mainTextBox?.Focus();
+		MainTextBox?.Focus();
+		MainTextBox?.SelectAll();
+	}
+
+	protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+	{
+		base.OnDetachedFromVisualTree(e);
+		_behavior.Dispose();
 	}
 
 	private static decimal? Parse(string s)
