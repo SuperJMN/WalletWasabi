@@ -80,7 +80,7 @@ public class HdPubKey : NotifyPropertyChangedBase, IEquatable<HdPubKey>
 
 	[JsonProperty(Order = 3, PropertyName = "Label")]
 	[JsonConverter(typeof(LabelsArrayJsonConverter))]
-	public LabelsArray Labels { get; private set; }
+	public LabelsArray? Labels { get; private set; }
 
 	[JsonProperty(Order = 4)]
 	public KeyState KeyState { get; private set; }

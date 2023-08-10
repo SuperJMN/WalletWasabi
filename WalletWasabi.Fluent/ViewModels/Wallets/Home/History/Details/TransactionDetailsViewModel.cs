@@ -79,7 +79,7 @@ public partial class TransactionDetailsViewModel : RoutableViewModel
 		BlockHash = transactionSummary.BlockHash?.ToString();
 
 		IsConfirmationTimeVisible = ConfirmationTime.HasValue && ConfirmationTime != TimeSpan.Zero;
-		IsLabelsVisible = Labels.HasValue && Labels.Value.Any();
+		IsLabelsVisible = Labels is not null && Labels.Any();
 	}
 
 	private void OnNext()

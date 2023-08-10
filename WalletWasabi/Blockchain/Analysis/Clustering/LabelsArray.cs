@@ -1,163 +1,104 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 
 namespace WalletWasabi.Blockchain.Analysis.Clustering;
 
-public readonly struct LabelsArray : IReadOnlyCollection<string>, IEquatable<LabelsArray>, IComparable<LabelsArray>
+public class LabelsArray : IComparable<LabelsArray>, IEnumerable<string>
 {
-	private readonly string[]? _labels;
+	private readonly HashSet<string> _labels;
+	private static LabelsArray? EmptyInstance;
 
-	public LabelsArray(params string[] labels) : this(labels as IEnumerable<string>)
+	public LabelsArray() : this(Enumerable.Empty<string>().ToArray())
 	{
 	}
 
-	public LabelsArray(IEnumerable<string>? labels)
+	public LabelsArray(IEnumerable<string> labels) : this(labels.ToArray())
 	{
-		_labels = (labels ?? Array.Empty<string>())
-			.SelectMany(x => x?.Split(Separators, StringSplitOptions.RemoveEmptyEntries) ?? Array.Empty<string>())
-			.Select(x => x.Trim())
-			.Where(x => x.Length != 0)
-			.Distinct(StringComparer.OrdinalIgnoreCase)
-			.OrderBy(x => x, StringComparer.OrdinalIgnoreCase)
-			.ToArray();
 	}
 
-	public static LabelsArray Empty { get; } = new();
-	public static char[] Separators { get; } = new[] { ',', ':' };
+	public LabelsArray(IEnumerable<LabelsArray> labels) : this(labels.SelectMany(x => x._labels))
+	{
+	}
 
-	public int Count => AsSpan().Length;
-	public bool IsEmpty => AsSpan().IsEmpty;
+	public LabelsArray(params string[] labels)
+	{
+		_labels = new HashSet<string>(labels, StringComparer.OrdinalIgnoreCase);
+	}
 
-	public ReadOnlySpan<string> AsSpan() => _labels;
+	public bool IsEmpty => !_labels.Any();
+
+	public static LabelsArray Empty => EmptyInstance ??= new();
+
+	public int Count => _labels.Count;
+
+	public int CompareTo(LabelsArray? other)
+	{
+		return StringComparer.CurrentCultureIgnoreCase.Compare(this, other);
+	}
+
+	IEnumerator IEnumerable.GetEnumerator()
+	{
+		return GetEnumerator();
+	}
+
+	public IEnumerator<string> GetEnumerator()
+	{
+		return _labels.GetEnumerator();
+	}
 
 	public override string ToString()
 	{
-		const string Separator = ", ";
-		int length = 0;
-
-		foreach (var label in this)
-		{
-			length += label.Length + Separator.Length;
-		}
-
-		if (length == 0)
-		{
-			return string.Empty;
-		}
-
-		return string.Create(length - Separator.Length, this, static (span, self) =>
-		{
-			var index = 0;
-
-			foreach (var label in self)
-			{
-				label.CopyTo(span[index..]);
-				index += label.Length;
-
-				if (index < span.Length)
-				{
-					Separator.CopyTo(span[index..]);
-					index += Separator.Length;
-				}
-			}
-		});
+		return string.Join(", ", _labels);
 	}
 
-	public override int GetHashCode() => GetHashCode(null);
-
-	public int GetHashCode(IEqualityComparer<string>? comparer)
+	public override bool Equals(object? obj)
 	{
-		var hashCode = new HashCode();
-
-		foreach (var label in this)
+		if (ReferenceEquals(this, obj))
 		{
-			hashCode.Add(label, comparer);
+			return true;
 		}
 
-		return hashCode.ToHashCode();
+		if (obj?.GetType() != GetType())
+		{
+			return false;
+		}
+
+		return Equals((LabelsArray) obj);
 	}
 
-	public override bool Equals(object? other)
+	public override int GetHashCode()
 	{
-		return other is LabelsArray label && label.Equals(this);
+		return 0;
 	}
 
-	public bool Equals(LabelsArray other) =>
-		AsSpan().SequenceEqual(other.AsSpan());
-
-	public bool Equals(LabelsArray other, IEqualityComparer<string>? comparer) =>
-		AsSpan().SequenceEqual(other.AsSpan(), comparer);
-
-	public int CompareTo(LabelsArray other) =>
-		AsSpan().SequenceCompareTo(other.AsSpan());
-
-	public int CompareTo(LabelsArray other, IComparer<string>? comparer)
+	protected bool Equals(LabelsArray other)
 	{
-		if (comparer is null)
-		{
-			return CompareTo(other);
-		}
-
-		// The following code repeats what .NET could have
-		// if SequenceCompareTo is accepted and implemented`.
-		var thisLabels = AsSpan();
-		var otherLabels = other.AsSpan();
-
-		return CompareToSlow(
-			ref MemoryMarshal.GetReference(thisLabels),
-			thisLabels.Length,
-			ref MemoryMarshal.GetReference(otherLabels),
-			otherLabels.Length,
-			comparer);
-
-		static int CompareToSlow(ref string first, int firstLength, ref string second, int secondLength, IComparer<string> comparer)
-		{
-			int minLength = firstLength;
-			if (minLength > secondLength)
-			{
-				minLength = secondLength;
-			}
-
-			for (int i = 0; i < minLength; i++)
-			{
-				int result = comparer.Compare(
-					Unsafe.Add(ref first, i),
-					Unsafe.Add(ref second, i));
-
-				if (result != 0)
-				{
-					return result;
-				}
-			}
-
-			return firstLength.CompareTo(secondLength);
-		}
+		return _labels.SetEquals(other._labels);
 	}
 
-	public ReadOnlySpan<string>.Enumerator GetEnumerator() =>
-		AsSpan().GetEnumerator();
+	public static implicit operator LabelsArray(string label)
+	{
+		return new LabelsArray(label);
+	}
 
-	IEnumerator<string> IEnumerable<string>.GetEnumerator() => GetEnumeratorAllocating();
+	public static implicit operator string?(LabelsArray label)
+	{
+		return label._labels.FirstOrDefault();
+	}
 
-	IEnumerator IEnumerable.GetEnumerator() => GetEnumeratorAllocating();
+	public static bool operator ==(LabelsArray array, string label)
+	{
+		return new LabelsArray(label).Equals(array);
+	}
 
-	private IEnumerator<string> GetEnumeratorAllocating() =>
-		(_labels ?? Enumerable.Empty<string>()).GetEnumerator();
+	public static bool operator !=(LabelsArray array, string label)
+	{
+		return !new LabelsArray(label).Equals(array);
+	}
 
-	public static LabelsArray Merge(params LabelsArray[] labels) =>
-		Merge(labels as IEnumerable<LabelsArray>);
-
-	public static LabelsArray Merge(IEnumerable<LabelsArray> labels) =>
-		new(labels?.SelectMany(x => x));
-
-	public static bool operator ==(LabelsArray x, LabelsArray y) => x.Equals(y);
-
-	public static bool operator !=(LabelsArray x, LabelsArray y) => !(x == y);
-
-	public static implicit operator LabelsArray(string labels) => new(labels);
-
-	public static implicit operator string(LabelsArray labels) => labels.ToString();
+	public static LabelsArray Merge(params LabelsArray[] labels)
+	{
+		return new LabelsArray(labels.SelectMany(array => array));
+	}
 }

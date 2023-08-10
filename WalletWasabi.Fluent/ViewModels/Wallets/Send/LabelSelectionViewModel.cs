@@ -65,8 +65,8 @@ public partial class LabelSelectionViewModel : ViewModelBase
 		var privateAndSemiPrivateAndUnknownPockets = privateAndSemiPrivatePockets.Union(unknownPockets).ToArray();
 		var privateAndSemiPrivateAndKnownPockets = privateAndSemiPrivatePockets.Union(knownPockets).ToArray();
 
-		var knownByRecipientPockets = knownPockets.Where(pocket => pocket.Labels.Any(label => _info.Recipient.Contains(label, StringComparer.OrdinalIgnoreCase))).ToArray();
-		var onlyKnownByRecipientPockets = knownByRecipientPockets.Where(pocket => pocket.Labels.Equals(_info.Recipient, StringComparer.OrdinalIgnoreCase)).ToArray();
+		var knownByRecipientPockets = knownPockets.Where(pocket => pocket.Labels.Any(label => _info.Recipient.Contains(label))).ToArray();
+		var onlyKnownByRecipientPockets = knownByRecipientPockets.Where(pocket => pocket.Labels.Equals(_info.Recipient)).ToArray();
 
 		if (await IsPocketEnoughAsync(onlyKnownByRecipientPockets))
 		{
@@ -193,7 +193,7 @@ public partial class LabelSelectionViewModel : ViewModelBase
 
 		NonPrivatePockets = _allPockets.Where(x => x != _privatePocket && x != _semiPrivatePocket).ToArray();
 
-		var allLabels = LabelsArray.Merge(NonPrivatePockets.Select(x => x.Labels));
+		var allLabels = new LabelsArray(NonPrivatePockets.Select(x => x.Labels));
 		AllLabelsViewModel = allLabels.Select(x => new LabelViewModel(this, x)).ToArray();
 
 		if (AllLabelsViewModel.FirstOrDefault(x => x.Value == CoinPocketHelper.UnlabelledFundsText) is { } unlabelledViewModel)
@@ -219,7 +219,7 @@ public partial class LabelSelectionViewModel : ViewModelBase
 		{
 			var associatedPockets = NonPrivatePockets.Where(x => x.Labels.Contains(labelViewModel.Value));
 			var notAssociatedPockets = NonPrivatePockets.Except(associatedPockets);
-			var allNotAssociatedLabels = LabelsArray.Merge(notAssociatedPockets.Select(x => x.Labels));
+			var allNotAssociatedLabels = new LabelsArray(notAssociatedPockets.Select(x => x.Labels));
 			return LabelsWhiteList.Where(x => !allNotAssociatedLabels.Contains(x.Value)).ToArray();
 		}
 	}
@@ -309,7 +309,7 @@ public partial class LabelSelectionViewModel : ViewModelBase
 
 		usedCoins = usedCoins.ToImmutableArray();
 
-		var usedLabels = LabelsArray.Merge(usedCoins.Select(x => x.GetLabels(privateThreshold)));
+		var usedLabels = new LabelsArray(usedCoins.Select(x => x.GetLabels(privateThreshold)));
 		var usedLabelViewModels = AllLabelsViewModel.Where(x => usedLabels.Contains(x.Value, StringComparer.OrdinalIgnoreCase)).ToArray();
 		var notUsedLabelViewModels = AllLabelsViewModel.Except(usedLabelViewModels);
 
@@ -350,8 +350,8 @@ public partial class LabelSelectionViewModel : ViewModelBase
 			return false;
 		}
 
-		var labels = LabelsArray.Merge(usedPockets.Select(x => x.Labels));
-		if (labels.Equals(recipient, StringComparer.OrdinalIgnoreCase))
+		var labels = new LabelsArray(usedPockets.Select(x => x.Labels));
+		if (labels.Equals(recipient))
 		{
 			return false;
 		}

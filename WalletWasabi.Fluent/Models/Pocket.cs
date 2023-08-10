@@ -24,7 +24,7 @@ public class Pocket
 
 	public static Pocket Merge(params Pocket[] pockets)
 	{
-		var mergedLabels = LabelsArray.Merge(pockets.Select(p => p.Labels));
+		var mergedLabels = new LabelsArray(pockets.Select(p => p.Labels));
 		var mergedCoins = new CoinsView(pockets.SelectMany(x => x.Coins).ToHashSet());
 
 		return new Pocket((mergedLabels, mergedCoins));

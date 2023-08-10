@@ -19,7 +19,7 @@ public class Cluster : NotifyPropertyChangedBase, IEquatable<Cluster>
 		Lock = new object();
 		Keys = keys.ToList();
 		KeysSet = Keys.ToHashSet();
-		_labels = LabelsArray.Merge(Keys.Select(x => x.Labels));
+		_labels = new LabelsArray(Keys.Select(x => x.Labels ?? new LabelsArray()));
 	}
 
 	public LabelsArray Labels
@@ -64,10 +64,10 @@ public class Cluster : NotifyPropertyChangedBase, IEquatable<Cluster>
 
 	private void UpdateLabelsNoLock()
 	{
-		Labels = LabelsArray.Merge(Keys.Select(x => x.Labels));
+		Labels = new LabelsArray(Keys.Select(x => x.Labels));
 	}
 
-	public override string ToString() => Labels;
+	public override string ToString() => Labels.ToString();
 
 	#region EqualityAndComparison
 

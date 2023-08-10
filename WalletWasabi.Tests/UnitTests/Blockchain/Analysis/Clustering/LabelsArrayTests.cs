@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using WalletWasabi.Blockchain.Analysis.Clustering;
 using Xunit;
 
@@ -12,87 +13,87 @@ public class LabelsArrayTests
 		var label = new LabelsArray();
 		Assert.Equal("", label);
 		Assert.Equal(Array.Empty<string>(), label);
-		Assert.Equal(Array.Empty<string>(), label.AsSpan().ToArray());
+		Assert.Equal(Array.Empty<string>(), label.ToArray());
 
 		label = new LabelsArray("");
 		Assert.Equal("", label);
 		Assert.Equal(Array.Empty<string>(), label);
-		Assert.Equal(Array.Empty<string>(), label.AsSpan().ToArray());
+		Assert.Equal(Array.Empty<string>(), label.ToArray());
 
-		label = new LabelsArray(null!);
+		label = new LabelsArray((string)null!);
 		Assert.Equal("", label);
 		Assert.Equal(Array.Empty<string>(), label);
-		Assert.Equal(Array.Empty<string>(), label.AsSpan().ToArray());
+		Assert.Equal(Array.Empty<string>(), label.ToArray());
 
 		label = new LabelsArray(null!, null!);
 		Assert.Equal("", label);
 		Assert.Equal(Array.Empty<string>(), label);
-		Assert.Equal(Array.Empty<string>(), label.AsSpan().ToArray());
+		Assert.Equal(Array.Empty<string>(), label.ToArray());
 
 		label = new LabelsArray(" ");
 		Assert.Equal("", label);
 		Assert.Equal(Array.Empty<string>(), label);
-		Assert.Equal(Array.Empty<string>(), label.AsSpan().ToArray());
+		Assert.Equal(Array.Empty<string>(), label.ToArray());
 
 		label = new LabelsArray(",");
 		Assert.Equal("", label);
 		Assert.Equal(Array.Empty<string>(), label);
-		Assert.Equal(Array.Empty<string>(), label.AsSpan().ToArray());
+		Assert.Equal(Array.Empty<string>(), label.ToArray());
 
 		label = new LabelsArray(":");
 		Assert.Equal("", label);
 		Assert.Equal(Array.Empty<string>(), label);
-		Assert.Equal(Array.Empty<string>(), label.AsSpan().ToArray());
+		Assert.Equal(Array.Empty<string>(), label.ToArray());
 
 		label = new LabelsArray("foo");
 		Assert.Equal("foo", label);
 		Assert.Equal(new[] { "foo" }, label);
-		Assert.Equal(new[] { "foo" }, label.AsSpan().ToArray());
+		Assert.Equal(new[] { "foo" }, label.ToArray());
 
 		label = new LabelsArray("foo", "bar");
 		Assert.Equal("bar, foo", label);
 		Assert.Equal(new[] { "bar", "foo" }, label);
-		Assert.Equal(new[] { "bar", "foo" }, label.AsSpan().ToArray());
+		Assert.Equal(new[] { "bar", "foo" }, label.ToArray());
 
 		label = new LabelsArray("foo bar");
 		Assert.Equal("foo bar", label);
 		Assert.Equal(new[] { "foo bar" }, label);
-		Assert.Equal(new[] { "foo bar" }, label.AsSpan().ToArray());
+		Assert.Equal(new[] { "foo bar" }, label.ToArray());
 
 		label = new LabelsArray("foo bar", "Buz quX@");
 		Assert.Equal("Buz quX@, foo bar", label);
 		Assert.Equal(new[] { "Buz quX@", "foo bar" }, label);
-		Assert.Equal(new[] { "Buz quX@", "foo bar" }, label.AsSpan().ToArray());
+		Assert.Equal(new[] { "Buz quX@", "foo bar" }, label.ToArray());
 
 		label = new LabelsArray(new List<string>() { "foo", "bar" });
 		Assert.Equal("bar, foo", label);
 		Assert.Equal(new[] { "bar", "foo" }, label);
-		Assert.Equal(new[] { "bar", "foo" }, label.AsSpan().ToArray());
+		Assert.Equal(new[] { "bar", "foo" }, label.ToArray());
 
 		label = new LabelsArray("  foo    ");
 		Assert.Equal("foo", label);
 		Assert.Equal(new[] { "foo" }, label);
-		Assert.Equal(new[] { "foo" }, label.AsSpan().ToArray());
+		Assert.Equal(new[] { "foo" }, label.ToArray());
 
 		label = new LabelsArray("foo      ", "      bar");
 		Assert.Equal("bar, foo", label);
 		Assert.Equal(new[] { "bar", "foo" }, label);
-		Assert.Equal(new[] { "bar", "foo" }, label.AsSpan().ToArray());
+		Assert.Equal(new[] { "bar", "foo" }, label.ToArray());
 
 		label = new LabelsArray(new List<string>() { "   foo   ", "   bar    " });
 		Assert.Equal("bar, foo", label);
 		Assert.Equal(new[] { "bar", "foo" }, label);
-		Assert.Equal(new[] { "bar", "foo" }, label.AsSpan().ToArray());
+		Assert.Equal(new[] { "bar", "foo" }, label.ToArray());
 
 		label = new LabelsArray(new List<string>() { "foo:", ":bar", null!, ":buz:", ",", ": , :", "qux:quux", "corge,grault", "", "  ", " , garply, waldo,", " : ,  :  ,  fred  , : , :   plugh, : , : ," });
 		Assert.Equal("bar, buz, corge, foo, fred, garply, grault, plugh, quux, qux, waldo", label);
 		Assert.Equal(new[] { "bar", "buz", "corge", "foo", "fred", "garply", "grault", "plugh", "quux", "qux", "waldo" }, label);
-		Assert.Equal(new[] { "bar", "buz", "corge", "foo", "fred", "garply", "grault", "plugh", "quux", "qux", "waldo" }, label.AsSpan().ToArray());
+		Assert.Equal(new[] { "bar", "buz", "corge", "foo", "fred", "garply", "grault", "plugh", "quux", "qux", "waldo" }, label.ToArray());
 
 		label = new LabelsArray(",: foo::bar :buz:,: , :qux:quux, corge,grault  , garply, waldo, : ,  :  ,  fred  , : , :   plugh, : , : ,");
 		Assert.Equal("bar, buz, corge, foo, fred, garply, grault, plugh, quux, qux, waldo", label);
 		Assert.Equal(new[] { "bar", "buz", "corge", "foo", "fred", "garply", "grault", "plugh", "quux", "qux", "waldo" }, label);
-		Assert.Equal(new[] { "bar", "buz", "corge", "foo", "fred", "garply", "grault", "plugh", "quux", "qux", "waldo" }, label.AsSpan().ToArray());
+		Assert.Equal(new[] { "bar", "buz", "corge", "foo", "fred", "garply", "grault", "plugh", "quux", "qux", "waldo" }, label.ToArray());
 	}
 
 	[Fact]
@@ -151,15 +152,11 @@ public class LabelsArrayTests
 		var labelToCheck = new LabelsArray("fOO");
 
 		Assert.False(label.Equals(labelToCheck));
-		Assert.False(label.Equals(labelToCheck, StringComparer.Ordinal));
-		Assert.True(label.Equals(labelToCheck, StringComparer.OrdinalIgnoreCase));
-		Assert.Equal(0, LabelsArrayComparer.OrdinalIgnoreCase.Compare(label, labelToCheck));
+		Assert.False(label.Equals(labelToCheck));
 
 		label = new LabelsArray("bAr, FOO, Buz");
 		labelToCheck = new LabelsArray("buZ, BaR, fOo");
 		Assert.False(label.Equals(labelToCheck));
-		Assert.False(label.Equals(labelToCheck, StringComparer.Ordinal));
-		Assert.True(label.Equals(labelToCheck, StringComparer.OrdinalIgnoreCase));
-		Assert.Equal(0, LabelsArrayComparer.OrdinalIgnoreCase.Compare(label, labelToCheck));
+		Assert.True(label.Equals(labelToCheck));
 	}
 }

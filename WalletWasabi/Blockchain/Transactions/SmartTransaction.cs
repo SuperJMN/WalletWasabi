@@ -403,7 +403,7 @@ public class SmartTransaction : IEquatable<SmartTransaction>
 		// Merge labels.
 		if (Labels != tx.Labels)
 		{
-			Labels = LabelsArray.Merge(Labels, tx.Labels);
+			Labels = new LabelsArray(Labels.Concat(tx.Labels));
 			updated = true;
 		}
 

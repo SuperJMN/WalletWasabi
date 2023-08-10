@@ -110,7 +110,7 @@ public class PrivacySuggestionsModel
 
 		var transactionLabels = originalTransaction.SpentCoins.SelectMany(x => x.GetLabels(_wallet.AnonScoreTarget));
 		var onlyKnownByRecipient =
-			transactionInfo.Recipient.Equals(new LabelsArray(transactionLabels), StringComparer.OrdinalIgnoreCase);
+			transactionInfo.Recipient.Equals(new LabelsArray(transactionLabels));
 
 		var foundNonPrivate = !onlyKnownByRecipient &&
 							  originalTransaction.SpentCoins.Any(x => x.GetPrivacyLevel(_wallet.AnonScoreTarget) == PrivacyLevel.NonPrivate);
@@ -136,7 +136,7 @@ public class PrivacySuggestionsModel
 
 		allPrivateCoin = wasCoinjoiningCoinUsed ? allPrivateCoin : allPrivateCoin.Except(coinsToExclude).ToArray();
 
-		var onlyKnownByTheRecipientCoins = _wallet.Coins.Where(x => transactionInfo.Recipient.Equals(x.GetLabels(_wallet.AnonScoreTarget), StringComparer.OrdinalIgnoreCase)).ToArray();
+		var onlyKnownByTheRecipientCoins = _wallet.Coins.Where(x => transactionInfo.Recipient.Equals(x.GetLabels(_wallet.AnonScoreTarget))).ToArray();
 		var allSemiPrivateCoin =
 			_wallet.Coins.Where(x => x.GetPrivacyLevel(_wallet.AnonScoreTarget) == PrivacyLevel.SemiPrivate)
 			.Union(onlyKnownByTheRecipientCoins)

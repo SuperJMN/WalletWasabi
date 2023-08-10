@@ -38,7 +38,7 @@ public class TransactionHistoryBuilder
 			{
 				found.DateTime = found.DateTime < dateTime ? found.DateTime : dateTime;
 				found.Amount += coin.Amount;
-				found.Labels = LabelsArray.Merge(found.Labels, containingTransaction.Labels);
+				found.Labels = new LabelsArray(found.Labels.Concat(containingTransaction.Labels));
 			}
 			else
 			{

@@ -47,7 +47,7 @@ public class WasabiJsonRpcService : IJsonRpcService
 				anonymityScore = x.HdPubKey.AnonymitySet,
 				confirmed = x.Confirmed,
 				confirmations = x.Confirmed ? serverTipHeight - (uint)x.Height.Value + 1 : 0,
-				label = x.HdPubKey.Labels.ToString(),
+				label = x.HdPubKey.Labels?.ToString(),
 				keyPath = x.HdPubKey.FullKeyPath.ToString(),
 				address = x.HdPubKey.GetAddress(Global.Network).ToString()
 			}).ToArray();
@@ -139,7 +139,7 @@ public class WasabiJsonRpcService : IJsonRpcService
 		{
 			address = hdKey.GetAddress(Global.Network).ToString(),
 			keyPath = hdKey.FullKeyPath.ToString(),
-			label = hdKey.Labels.ToString(),
+			label = hdKey.Labels?.ToString(),
 			publicKey = hdKey.PubKey.ToHex(),
 			scriptPubKey = hdKey.GetAssumedScriptPubKey().ToHex()
 		};
@@ -264,7 +264,7 @@ public class WasabiJsonRpcService : IJsonRpcService
 				fullKeyPath = x.FullKeyPath.ToString(),
 				@internal = x.IsInternal,
 				keyState = x.KeyState,
-				label = x.Labels.ToString(),
+				label = x.Labels?.ToString(),
 				scriptPubKey = x.GetAssumedScriptPubKey().ToString(),
 				pubkey = x.PubKey.ToString(),
 				pubKeyHash = x.PubKeyHash.ToString(),
