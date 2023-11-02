@@ -13,6 +13,7 @@ namespace WalletWasabi.Fluent.ViewModels.CoinJoinProfiles;
 [NavigationMetaData(Title = "Coinjoin Strategy", NavigationTarget = NavigationTarget.DialogScreen)]
 public partial class CoinJoinProfilesViewModel : DialogViewModelBase<bool>
 {
+	private readonly IWalletSettingsModel _walletSettings;
 	private readonly WalletCreationOptions? _options;
 	[AutoNotify] private CoinJoinProfileViewModelBase? _selectedProfile;
 
@@ -26,6 +27,7 @@ public partial class CoinJoinProfilesViewModel : DialogViewModelBase<bool>
 		ManualSetupCommand = ReactiveCommand.CreateFromTask(OnManualSetupAsync);
 
 		_selectedProfile = walletSettings.IsNewWallet ? Profiles[1] : IdentifySelectedProfile(walletSettings);
+		_walletSettings = walletSettings;
 		_options = options;
 	}
 
@@ -56,10 +58,17 @@ public partial class CoinJoinProfilesViewModel : DialogViewModelBase<bool>
 
 	public ManualCoinJoinProfileViewModel? SelectedManualProfile { get; private set; }
 
+	public bool IsNewWalletFlow => _options is not null;
+	
 	private async Task OnManualSetupAsync()
 	{
 		var current = SelectedProfile ?? SelectedManualProfile ?? Profiles.First();
-		var result = await Navigate().To().ManualCoinJoinProfileDialog(current).GetResultAsync();
+		var result = await Navigate().To().ManualCoinJoinProfileDialog(current, IsNewWalletFlow).GetResultAsync();
+
+		if (result is { } && IsNewWalletFlow)
+		{
+			_walletSettings.AutoCoinjoin = result.IsAutoCoinJoinEnabled;
+		}
 
 		if (result is { } && result.Profile != current)
 		{

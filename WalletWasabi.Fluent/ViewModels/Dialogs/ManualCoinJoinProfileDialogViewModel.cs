@@ -1,5 +1,6 @@
 using ReactiveUI;
 using System.Linq;
+using System.Windows.Input;
 using WalletWasabi.Fluent.ViewModels.CoinJoinProfiles;
 using WalletWasabi.Fluent.ViewModels.Dialogs.Base;
 using WalletWasabi.Helpers;
@@ -16,8 +17,9 @@ public partial class ManualCoinJoinProfileDialogViewModel : DialogViewModelBase<
 	[AutoNotify] private TimeFrameItem[] _timeFrames;
 	[AutoNotify] private TimeFrameItem _selectedTimeFrame;
 
-	public ManualCoinJoinProfileDialogViewModel(CoinJoinProfileViewModelBase current)
+	public ManualCoinJoinProfileDialogViewModel(CoinJoinProfileViewModelBase current, bool isNewWalletFlow)
 	{
+		IsNewWalletFlow = isNewWalletFlow;
 		_redCoinIsolation = current.RedCoinIsolation;
 		_skipFactors = current.SkipFactors;
 
@@ -44,9 +46,11 @@ public partial class ManualCoinJoinProfileDialogViewModel : DialogViewModelBase<
 			var hours = (int)Math.Floor(SelectedTimeFrame.TimeFrame.TotalHours);
 			var skipFactors = SkipFactors;
 
-			Close(DialogResultKind.Normal, new ManualCoinJoinProfileDialogViewModelResult(new ManualCoinJoinProfileViewModel(target, hours, isolateRed, skipFactors)));
+			Close(DialogResultKind.Normal, new ManualCoinJoinProfileDialogViewModelResult(new ManualCoinJoinProfileViewModel(target, hours, isolateRed, skipFactors), IsAutoCoinJoinEnabled));
 		});
 	}
+
+	public bool IsNewWalletFlow { get; }
 
 	public record TimeFrameItem(string Name, TimeSpan TimeFrame)
 	{
@@ -56,5 +60,7 @@ public partial class ManualCoinJoinProfileDialogViewModel : DialogViewModelBase<
 		}
 	}
 
-	public record ManualCoinJoinProfileDialogViewModelResult(ManualCoinJoinProfileViewModel Profile);
+	public record ManualCoinJoinProfileDialogViewModelResult(ManualCoinJoinProfileViewModel Profile, bool IsAutoCoinJoinEnabled);
+
+	public bool IsAutoCoinJoinEnabled { get; set; }
 }
