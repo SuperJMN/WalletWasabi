@@ -4,7 +4,7 @@ using DynamicData;
 
 namespace WalletWasabi.Fluent.ViewModels.Wallets.Buy;
 
-public class Conversation
+public class Conversation : IConversation
 {
 	private readonly ReadOnlyObservableCollection<Message> _messages;
 

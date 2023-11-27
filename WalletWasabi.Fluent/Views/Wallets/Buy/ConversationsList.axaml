@@ -3,26 +3,54 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:buy="clr-namespace:WalletWasabi.Fluent.ViewModels.Wallets.Buy"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             mc:Ignorable="d" d:DesignHeight="450" d:DesignWidth="200"
              x:Class="WalletWasabi.Fluent.Views.Wallets.Buy.ConversationsList"
-             x:DataType="buy:ConversationViewModel"
+             x:DataType="buy:IConversationViewModel"
              x:CompileBindings="True">
+
+  <Design.DataContext>
+    <buy:ConversationViewModelDesign />
+  </Design.DataContext>
+
+  <UserControl.Resources>
+    <SolidColorBrush x:Key="MildGray" Color="#343A47" />
+    <SolidColorBrush x:Key="MildGraySemi" Color="#343A47" Opacity="0.5" />
+    <SolidColorBrush x:Key="MildGrayHigh" Color="#343A47" Opacity="0.8" />
+  </UserControl.Resources>
+
   <DockPanel>
-  <TextBlock Background="Transparent" Text="CONVERSATIONS" Foreground="#A5A7AA" Margin="10" DockPanel.Dock="Top" TextAlignment="Center" FontWeight="Bold"  />
-  <ListBox Background="Transparent" DockPanel.Dock="Left" Width="200" Items="{Binding Conversations}"
-           SelectedItem="{Binding CurrentConversation}">
-    <ListBox.ItemTemplate>
-      <DataTemplate>
-        <Border Background="#343A47" Padding="8" CornerRadius="8">
+    <TextBlock Background="Transparent" Text="CONVERSATIONS" Foreground="#A5A7AA" Margin="0 14 0 10" DockPanel.Dock="Top"
+               TextAlignment="Center" FontWeight="Bold" />
+    <ListBox Background="Transparent" DockPanel.Dock="Left" Items="{Binding Conversations}"
+             Margin="10"
+             SelectedItem="{Binding CurrentConversation}">
+      <ListBox.ItemTemplate>
+        <DataTemplate>
           <TextBlock Text="{Binding Title}" />
-        </Border>
-      </DataTemplate>
-    </ListBox.ItemTemplate>
-    <ListBox.Styles>
-      <Style Selector="ListBoxItem">
-        <Setter Property="Padding" Value="8"></Setter>
-      </Style>
-    </ListBox.Styles>
-  </ListBox>
-</DockPanel>
+        </DataTemplate>
+      </ListBox.ItemTemplate>
+      <ListBox.Styles>
+        <Style Selector="ListBoxItem">
+          <Setter Property="Margin" Value="4" />
+          <Setter Property="Padding" Value="14, 14" />
+          <Setter Property="Template">
+            <ControlTemplate>
+              <Border x:Name="PART_Container" CornerRadius="10">
+                <ContentPresenter Background="Transparent" Margin="{TemplateBinding Padding}" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" />
+              </Border>
+            </ControlTemplate>
+          </Setter>
+        </Style>
+        <Style Selector="ListBoxItem:pointerover /template/ Border#PART_Container">
+          <Setter Property="Background" Value="{StaticResource MildGraySemi}"></Setter>
+        </Style>
+        <Style Selector="ListBoxItem:selected /template/ Border#PART_Container">
+          <Setter Property="Background" Value="{StaticResource MildGray}"></Setter>
+        </Style>
+        <Style Selector="ListBoxItem:pressed /template/ Border#PART_Container">
+          <Setter Property="Background" Value="{StaticResource MildGrayHigh}"></Setter>
+        </Style>
+      </ListBox.Styles>
+    </ListBox>
+  </DockPanel>
 </UserControl>

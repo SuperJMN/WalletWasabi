@@ -6,7 +6,7 @@ using ReactiveUI;
 
 namespace WalletWasabi.Fluent.ViewModels.Wallets.Buy;
 
-public partial class ConversationViewModel : ReactiveObject
+public partial class ConversationViewModel : ReactiveObject, IConversationViewModel
 {
 	private readonly ReadOnlyObservableCollection<Conversation> _conversations;
 	[AutoNotify] private Conversation? _currentConversation;

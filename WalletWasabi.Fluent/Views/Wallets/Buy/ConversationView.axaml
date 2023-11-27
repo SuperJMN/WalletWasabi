@@ -6,10 +6,24 @@
              xmlns:b="clr-namespace:WalletWasabi.Fluent.Views.Wallets.Buy"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="WalletWasabi.Fluent.Views.Wallets.Buy.ConversationView"
-             x:DataType="buy:ConversationViewModel"
+             x:DataType="buy:IConversationViewModel"
              x:CompileBindings="True">
-  <DockPanel Background="#21252D">
-    <b:ConversationsList DockPanel.Dock="Left" />
-    <b:CurrentConversationView DataContext="{Binding CurrentConversation}" />
-  </DockPanel>
+
+  <Design.DataContext>
+    <buy:ConversationViewModelDesign />
+  </Design.DataContext>
+
+  <UserControl.Resources>
+    <SolidColorBrush x:Key="BlueishDarkGray" Color="#21252D" />
+    <SolidColorBrush x:Key="BlueishGray" Color="#343A47" />
+  </UserControl.Resources>
+
+  <Border CornerRadius="12" Background="{StaticResource BlueishDarkGray}">
+    <DockPanel >
+      <b:ConversationsList Width="200" DockPanel.Dock="Left" />
+      <Border CornerRadius="0 12 12 0" Background="{StaticResource BlueishGray}">
+        <b:CurrentConversationView DataContext="{Binding CurrentConversation}" />
+      </Border>
+    </DockPanel>
+  </Border>
 </UserControl>

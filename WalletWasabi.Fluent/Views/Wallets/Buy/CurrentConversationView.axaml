@@ -5,51 +5,64 @@
              xmlns:buy="clr-namespace:WalletWasabi.Fluent.ViewModels.Wallets.Buy"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="WalletWasabi.Fluent.Views.Wallets.Buy.CurrentConversationView"
-             x:DataType="buy:Conversation"
+             x:DataType="buy:IConversation"
              x:CompileBindings="True">
-      <Border Background="#343A47">
-      <DockPanel x:Name="RightSide" Margin="8">
-        <DockPanel Dock="Bottom">
-          <Button DockPanel.Dock="Right" Margin="8 0 0 0" Content="Request" Classes="action"></Button>
-          <TextBox VerticalAlignment="Center" Background="#232932">
-            <TextBox.Styles>
-              <Style Selector="TextBox /template/ DataValidationErrors">
-                <Setter Property="IsVisible" Value="False" />
-              </Style>
-            </TextBox.Styles>
-          </TextBox>
-        </DockPanel>
-        <ScrollViewer HorizontalScrollBarVisibility="Disabled">
-          <ItemsControl Items="{Binding Messages}">
-            <ItemsControl.ItemTemplate>
-              <DataTemplate>
-                <Border Padding="8" Margin="8" CornerRadius="12">
-                  <TextBlock TextWrapping="Wrap" Text="{Binding Text}" />
 
-                  <Interaction.Behaviors>
-                    <DataTriggerBehavior Binding="{Binding Sender}" Value="User">
-                      <AddClassAction ClassName="User" />
-                    </DataTriggerBehavior>
-                    <DataTriggerBehavior Binding="{Binding Sender}" Value="Backend">
-                      <AddClassAction ClassName="Backend" />
-                    </DataTriggerBehavior>
-                  </Interaction.Behaviors>
-                  <Border.Styles>
-                    <Style Selector="Border.User">
-                      <Setter Property="HorizontalAlignment" Value="Right" />
-                      <Setter Property="Background" Value="#6591EC" />
-                    </Style>
-                    <Style Selector="Border.Backend">
-                      <Setter Property="HorizontalAlignment" Value="Left" />
-                      <Setter Property="Background" Value="#21252D" />
-                    </Style>
-                  </Border.Styles>
-                </Border>
-              </DataTemplate>
-            </ItemsControl.ItemTemplate>
-          </ItemsControl>
-        </ScrollViewer>
+  <UserControl.Resources>
+    <SolidColorBrush x:Key="MildGray" Color="#343A47" />
+    <SolidColorBrush x:Key="MildGraySemi" Color="#343A47" Opacity="0.5" />
+    <SolidColorBrush x:Key="MildGrayHigh" Color="#343A47" Opacity="0.8" />
+    <SolidColorBrush x:Key="BlueishDarkGray" Color="#21252D" />
+    <SolidColorBrush x:Key="AccentColor" Color="#6591EC" />
+  </UserControl.Resources>
+
+  <Design.DataContext>
+    <buy:ConversationDesign />
+  </Design.DataContext>
+
+  <Border>
+    <DockPanel x:Name="RightSide" Margin="8">
+      <DockPanel Dock="Bottom">
+        <Button DockPanel.Dock="Right" Margin="8 0 0 0" Content="Send" Classes="action"></Button>
+        <TextBox Watermark="Type here..." VerticalAlignment="Center" Background="#232932">
+          <TextBox.Styles>
+            <Style Selector="TextBox /template/ DataValidationErrors">
+              <Setter Property="IsVisible" Value="False" />
+            </Style>
+          </TextBox.Styles>
+        </TextBox>
       </DockPanel>
-    </Border>
+      <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+        <ItemsControl Items="{Binding Messages}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <Border Padding="14, 14" Margin="8" CornerRadius="12">
+                <TextBlock TextWrapping="Wrap" Text="{Binding Text}" />
+
+                <Interaction.Behaviors>
+                  <DataTriggerBehavior Binding="{Binding Sender}" Value="User">
+                    <AddClassAction ClassName="User" />
+                  </DataTriggerBehavior>
+                  <DataTriggerBehavior Binding="{Binding Sender}" Value="Backend">
+                    <AddClassAction ClassName="Backend" />
+                  </DataTriggerBehavior>
+                </Interaction.Behaviors>
+                <Border.Styles>
+                  <Style Selector="Border.User">
+                    <Setter Property="HorizontalAlignment" Value="Right" />
+                    <Setter Property="Background" Value="{StaticResource AccentColor}" />
+                  </Style>
+                  <Style Selector="Border.Backend">
+                    <Setter Property="HorizontalAlignment" Value="Left" />
+                    <Setter Property="Background" Value="{StaticResource BlueishDarkGray}" />
+                  </Style>
+                </Border.Styles>
+              </Border>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </ScrollViewer>
+    </DockPanel>
+  </Border>
 
 </UserControl>

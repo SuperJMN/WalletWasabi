@@ -17,8 +17,6 @@
     EnableCancel="{Binding EnableCancel}"
     IsBusy="{Binding IsBusy}"
     ScrollViewer.VerticalScrollBarVisibility="Auto" Title="{Binding Title}">
-
     <buy:ConversationView DataContext="{Binding Conversation}" />
-
   </c:ContentArea>
 </UserControl>
