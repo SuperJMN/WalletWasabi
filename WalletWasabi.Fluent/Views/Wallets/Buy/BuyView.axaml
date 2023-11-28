@@ -24,10 +24,21 @@
       </DockPanel>
     </c:ContentArea.Title>
 
-    <DockPanel Background="#21252D">
-      <buy:OrdersListView DockPanel.Dock="Left" />
-      <buy:OrderMessagesView></buy:OrderMessagesView>
-    </DockPanel>
+    <Panel>
+      <DockPanel Background="#21252D">
+        <buy:OrdersListView DockPanel.Dock="Left" />
+        <buy:OrderMessagesView x:Name="Messages" />
+      </DockPanel>
+      <Border Background="Black" Opacity="0.5" IsVisible="{Binding #Popup.IsOpen}" />
+      <Popup x:Name="Popup" IsOpen="True" IsLightDismissEnabled="True" PlacementMode="Left" PlacementTarget="Messages">
+        <DockPanel>
+          <Border Background="White" Padding="10" CornerRadius="10" Width="180">
+            <TextBlock Foreground="Black" TextWrapping="Wrap" Text="This is where your cast your wishes to make them come true"></TextBlock>
+          </Border>
+          <Polygon Points="0,0 20,10 0,20" Fill="White" HorizontalAlignment="Right" VerticalAlignment="Center" />
+        </DockPanel>
+      </Popup>
+    </Panel>
 
   </c:ContentArea>
 </UserControl>
