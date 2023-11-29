@@ -74,13 +74,13 @@
           </Setter>
         </Style>
         <Style Selector="ListBoxItem:pointerover /template/ Border#PART_Container">
-          <Setter Property="Background" Value="{StaticResource MildGraySemi}"></Setter>
+          <Setter Property="Background" Value="{StaticResource MildGraySemi}" />
         </Style>
         <Style Selector="ListBoxItem:selected /template/ Border#PART_Container">
-          <Setter Property="Background" Value="{StaticResource MildGray}"></Setter>
+          <Setter Property="Background" Value="{StaticResource MildGray}" />
         </Style>
         <Style Selector="ListBoxItem:pressed /template/ Border#PART_Container">
-          <Setter Property="Background" Value="{StaticResource MildGrayHigh}"></Setter>
+          <Setter Property="Background" Value="{StaticResource MildGrayHigh}" />
         </Style>
       </ListBox.Styles>
     </ListBox>
