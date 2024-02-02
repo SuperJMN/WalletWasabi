@@ -34,11 +34,6 @@ public partial class WalletNamePageViewModel : RoutableViewModel
 		NextCommand = ReactiveCommand.CreateFromTask(OnNextAsync, nextCommandCanExecute);
 
 		this.ValidateProperty(x => x.WalletName, ValidateWalletName);
-
-		if (!UiContext.WalletRepository.HasWallet && NextCommand.CanExecute(default))
-		{
-			NextCommand.Execute(default);
-		}
 	}
 
 	private async Task OnNextAsync()
